@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { motion, useInView } from 'framer-motion'
 
 const SKILL_GROUPS = [
@@ -39,7 +39,7 @@ const SKILL_GROUPS = [
   },
 ]
 
-function SkillGroup({ group, index }) {
+function SkillGroup({ group, index, isMobile }) {
   const ref  = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
@@ -55,7 +55,7 @@ function SkillGroup({ group, index }) {
   return (
     <motion.div
       ref={ref}
-      style={S.group}
+      style={{...S.group, padding: isMobile ? '16px 18px' : '22px 24px'}}
       initial={{ opacity: 0, y: 24 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.55, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
@@ -79,6 +79,8 @@ function SkillGroup({ group, index }) {
               color: group.color,
               background: group.bg,
               borderColor: group.border,
+              fontSize: isMobile ? '11px' : '12px',
+              padding: isMobile ? '3px 10px' : '4px 12px',
             }}
             variants={chipVariant}
             whileHover={{ scale: 1.06, transition: { duration: 0.15 } }}
@@ -94,9 +96,17 @@ function SkillGroup({ group, index }) {
 export default function Skills() {
   const headRef = useRef(null)
   const headInView = useInView(headRef, { once: true, margin: '-60px' })
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   return (
-    <section id="skills" style={S.section}>
+    <section id="skills" style={{...S.section, padding: isMobile ? '80px 16px' : '100px 24px'}}>
       <div style={S.inner}>
 
         {/* section header */}
@@ -109,7 +119,7 @@ export default function Skills() {
         >
           <span style={S.eyebrow}>// tech stack</span>
           <h2 style={S.heading}>Skills &amp; Technologies</h2>
-          <p style={S.subheading}>
+          <p style={{...S.subheading, fontSize: isMobile ? '14px' : '15px'}}>
             Tools I use to build things from scratch — frontend to deployment.
           </p>
         </motion.div>
@@ -117,7 +127,7 @@ export default function Skills() {
         {/* skill groups */}
         <div style={S.groups}>
           {SKILL_GROUPS.map((group, i) => (
-            <SkillGroup key={group.category} group={group} index={i} />
+            <SkillGroup key={group.category} group={group} index={i} isMobile={isMobile} />
           ))}
         </div>
       </div>
@@ -131,7 +141,6 @@ export default function Skills() {
 const S = {
   section: {
     position: 'relative',
-    padding: '100px 24px',
     background: '#07070e',
     overflow: 'hidden',
   },
@@ -156,7 +165,7 @@ const S = {
     letterSpacing: '-0.02em', marginBottom: '12px',
   },
   subheading: {
-    fontSize: '15px', color: '#64748b',
+    color: '#64748b',
     lineHeight: '1.7', maxWidth: '440px',
     margin: '0 auto',
   },
@@ -166,11 +175,10 @@ const S = {
     background: 'rgba(255,255,255,0.02)',
     border: '1px solid rgba(255,255,255,0.055)',
     borderRadius: '14px',
-    padding: '22px 24px',
   },
   groups: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
     gap: '16px',
   },
   catRow: {
@@ -190,8 +198,6 @@ const S = {
     display: 'flex', flexWrap: 'wrap', gap: '7px',
   },
   chip: {
-    fontSize: '12px',
-    padding: '4px 12px',
     borderRadius: '6px',
     border: '1px solid',
     fontWeight: '500',

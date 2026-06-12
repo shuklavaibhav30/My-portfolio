@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { motion, useInView } from 'framer-motion'
 
 const TIMELINE_ITEMS = [
@@ -48,7 +48,7 @@ const TIMELINE_ITEMS = [
   },
 ]
 
-function TimelineItem({ item, index }) {
+function TimelineItem({ item, index, isMobile }) {
   const ref    = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-50px' })
 
@@ -71,23 +71,23 @@ function TimelineItem({ item, index }) {
       </div>
 
       {/* content */}
-      <div style={S.content}>
+      <div style={{...S.content, padding: isMobile ? '16px 18px' : '20px 22px'}}>
         <div style={S.metaRow}>
-          <span style={{ ...S.yearTag, color: item.color, borderColor: `${item.color}40`, background: `${item.color}0d` }}>
+          <span style={{ ...S.yearTag, color: item.color, borderColor: `${item.color}40`, background: `${item.color}0d`, fontSize: isMobile ? '10px' : '11px' }}>
             {item.year}
           </span>
-          <span style={{ ...S.typeTag, color: item.type === 'education' ? '#fb923c' : item.type === 'work' ? '#34d399' : '#f472b6' }}>
+          <span style={{ ...S.typeTag, color: item.type === 'education' ? '#fb923c' : item.type === 'work' ? '#34d399' : '#f472b6', fontSize: isMobile ? '12px' : '14px' }}>
             {item.type === 'education' ? '🎓' : item.type === 'work' ? '💻' : '🚀'}
           </span>
         </div>
 
-        <h3 style={S.title}>{item.title}</h3>
-        <p style={S.subtitle}>{item.subtitle}</p>
-        <p style={S.desc}>{item.description}</p>
+        <h3 style={{...S.title, fontSize: isMobile ? '14px' : '16px'}}>{item.title}</h3>
+        <p style={{...S.subtitle, fontSize: isMobile ? '11px' : '12px'}}>{item.subtitle}</p>
+        <p style={{...S.desc, fontSize: isMobile ? '13px' : '13.5px'}}>{item.description}</p>
 
         <div style={S.tagsRow}>
           {item.tags.map(tag => (
-            <span key={tag} style={{ ...S.tag, color: item.color, borderColor: `${item.color}30`, background: `${item.color}0a` }}>
+            <span key={tag} style={{ ...S.tag, color: item.color, borderColor: `${item.color}30`, background: `${item.color}0a`, fontSize: isMobile ? '10px' : '11px', padding: isMobile ? '2px 8px' : '3px 10px' }}>
               {tag}
             </span>
           ))}
@@ -100,9 +100,17 @@ function TimelineItem({ item, index }) {
 export default function Timeline() {
   const headRef    = useRef(null)
   const headInView = useInView(headRef, { once: true, margin: '-60px' })
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   return (
-    <section id="timeline" style={S.section}>
+    <section id="timeline" style={{...S.section, padding: isMobile ? '80px 16px 100px' : '100px 24px 120px'}}>
       <div style={S.inner}>
 
         <motion.div
@@ -112,9 +120,9 @@ export default function Timeline() {
           animate={headInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span style={S.eyebrow}>//my journey</span>
+          <span style={S.eyebrow}>// my journey</span>
           <h2 style={S.heading}>Academic Journey</h2>
-          <p style={S.subheading}>
+          <p style={{...S.subheading, fontSize: isMobile ? '14px' : '15px'}}>
             From foundational schooling to pursuing Computer Science & Engineering, each step has strengthened my analytical thinking, technical skills, and passion for learning.
           </p>
         </motion.div>
@@ -125,13 +133,13 @@ export default function Timeline() {
           <div style={S.line} aria-hidden="true" />
 
           {TIMELINE_ITEMS.map((item, i) => (
-            <TimelineItem key={i} item={item} index={i} />
+            <TimelineItem key={i} item={item} index={i} isMobile={isMobile} />
           ))}
         </div>
 
         {/* footer note */}
         <motion.p
-          style={S.footNote}
+          style={{...S.footNote, fontSize: isMobile ? '12px' : '14px'}}
           initial={{ opacity: 0 }}
           animate={headInView ? { opacity: 1 } : {}}
           transition={{ delay: 0.6, duration: 0.5 }}
@@ -147,7 +155,6 @@ export default function Timeline() {
 
 const S = {
   section: {
-    padding: '100px 24px 120px',
     background: '#07070e',
     position: 'relative',
     overflow: 'hidden',
@@ -166,7 +173,7 @@ const S = {
     letterSpacing: '-0.02em', marginBottom: '12px',
   },
   subheading: {
-    fontSize: '15px', color: '#64748b',
+    color: '#64748b',
     lineHeight: '1.7', maxWidth: '400px', margin: '0 auto',
   },
 
@@ -201,7 +208,6 @@ const S = {
     background: 'rgba(255,255,255,0.02)',
     border: '1px solid rgba(255,255,255,0.055)',
     borderRadius: '12px',
-    padding: '20px 22px',
   },
   metaRow: {
     display: 'flex', alignItems: 'center',
@@ -209,37 +215,36 @@ const S = {
   },
   yearTag: {
     fontFamily: "'Fira Code', monospace",
-    fontSize: '11px', fontWeight: '500',
+    fontWeight: '500',
     padding: '2px 10px', borderRadius: '4px',
     border: '1px solid',
     letterSpacing: '0.04em',
   },
-  typeTag: { fontSize: '14px' },
+  typeTag: { },
 
   title: {
-    fontSize: '16px', fontWeight: '700',
+    fontWeight: '700',
     color: '#f1f5f9', marginBottom: '3px',
     letterSpacing: '-0.01em',
   },
   subtitle: {
-    fontSize: '12px', color: '#64748b',
+    color: '#64748b',
     marginBottom: '10px',
     fontFamily: "'Fira Code', monospace",
   },
   desc: {
-    fontSize: '13.5px', color: '#94a3b8',
+    color: '#94a3b8',
     lineHeight: '1.75', marginBottom: '14px',
   },
   tagsRow: { display: 'flex', flexWrap: 'wrap', gap: '6px' },
   tag: {
-    fontSize: '11px', padding: '3px 10px',
     borderRadius: '5px', border: '1px solid',
     fontWeight: '500',
   },
 
   footNote: {
     textAlign: 'center',
-    fontSize: '14px', color: '#475569',
+    color: '#475569',
     marginTop: '16px',
     fontFamily: "'Fira Code', monospace",
   },

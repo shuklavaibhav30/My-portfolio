@@ -11,6 +11,14 @@ const NAV_LINKS = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -30,36 +38,47 @@ export default function Navbar() {
       background: scrolled ? 'rgba(7,7,14,0.85)' : 'transparent',
       borderBottom: scrolled ? '1px solid rgba(99,102,241,0.15)' : '1px solid transparent',
       backdropFilter: scrolled ? 'blur(14px)' : 'none',
+      padding: isMobile ? '0 20px' : '0 48px',
     }}>
-      <a href="#hero" onClick={e => handleNav(e, '#hero')} style={S.logo}>
+      <a href="#hero" onClick={e => handleNav(e, '#hero')} style={{
+        ...S.logo,
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        maxWidth: isMobile ? '180px' : 'none',
+      }}>
         &lt;vaibhav.dev /&gt;
       </a>
 
       {/* desktop links */}
-      <div style={S.links}>
-        {NAV_LINKS.map(({ label, href }) => (
-          <a key={label} href={href} onClick={e => handleNav(e, href)} style={S.link}>
-            {label}
+      {!isMobile && (
+        <div style={S.links}>
+          {NAV_LINKS.map(({ label, href }) => (
+            <a key={label} href={href} onClick={e => handleNav(e, href)} style={S.link}>
+              {label}
+            </a>
+          ))}
+          <a href={resume} target="_blank" rel="noreferrer" style={S.resumeBtn}>
+            Resume ↗
           </a>
-        ))}
-        <a href={resume} target="_blank" rel="noreferrer" style={S.resumeBtn}>
-          Resume ↗
-        </a>
-      </div>
+        </div>
+      )}
 
       {/* mobile hamburger */}
-      <button
-        style={S.burger}
-        onClick={() => setMenuOpen(o => !o)}
-        aria-label="Toggle menu"
-      >
-        <span style={{ ...S.burgerLine, transform: menuOpen ? 'rotate(45deg) translate(5px,5px)' : 'none' }} />
-        <span style={{ ...S.burgerLine, opacity: menuOpen ? 0 : 1 }} />
-        <span style={{ ...S.burgerLine, transform: menuOpen ? 'rotate(-45deg) translate(5px,-5px)' : 'none' }} />
-      </button>
+      {isMobile && (
+        <button
+          style={S.burger}
+          onClick={() => setMenuOpen(o => !o)}
+          aria-label="Toggle menu"
+        >
+          <span style={{ ...S.burgerLine, transform: menuOpen ? 'rotate(45deg) translate(5px,5px)' : 'none' }} />
+          <span style={{ ...S.burgerLine, opacity: menuOpen ? 0 : 1 }} />
+          <span style={{ ...S.burgerLine, transform: menuOpen ? 'rotate(-45deg) translate(5px,-5px)' : 'none' }} />
+        </button>
+      )}
 
       {/* mobile menu */}
-      {menuOpen && (
+      {isMobile && menuOpen && (
         <div style={S.mobileMenu}>
           {NAV_LINKS.map(({ label, href }) => (
             <a key={label} href={href} onClick={e => handleNav(e, href)} style={S.mobileLink}>
@@ -83,7 +102,6 @@ const S = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: '0 48px',
     height: '64px',
     transition: 'background 0.3s, border-color 0.3s',
   },
@@ -119,7 +137,7 @@ const S = {
     transition: 'background 0.2s',
   },
   burger: {
-    display: 'none',
+    display: 'flex',
     flexDirection: 'column',
     gap: '5px',
     background: 'none',

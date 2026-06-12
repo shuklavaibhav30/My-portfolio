@@ -37,6 +37,14 @@ export default function Hero() {
   const [phraseIdx,   setPhraseIdx]     = useState(0)
   const [charIdx,     setCharIdx]       = useState(0)
   const [isDeleting,  setIsDeleting]    = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // particles engine init
   const particlesInit = useCallback(async (engine) => {
@@ -75,7 +83,7 @@ export default function Hero() {
   }
 
   return (
-    <section id="hero" style={S.section}>
+    <section id="hero" style={{...S.section, padding: isMobile ? '80px 16px 60px' : '80px 24px 60px'}}>
 
       {/* particles bg */}
       <Particles
@@ -86,7 +94,7 @@ export default function Hero() {
           background: { color: { value: 'transparent' } },
           fpsLimit: 60,
           particles: {
-            number: { value: 55, density: { enable: true, area: 850 } },
+            number: { value: isMobile ? 35 : 55, density: { enable: true, area: 850 } },
             color: { value: ['#818cf8', '#a78bfa', '#ec4899', '#38bdf8'] },
             shape: { type: 'circle' },
             opacity: {
@@ -116,8 +124,8 @@ export default function Hero() {
       <div style={S.grid} aria-hidden="true" />
 
       {/* gradient orbs */}
-      <div style={{ ...S.orb, ...S.orb1 }} aria-hidden="true" />
-      <div style={{ ...S.orb, ...S.orb2 }} aria-hidden="true" />
+      <div style={{ ...S.orb, ...S.orb1, width: isMobile ? '300px' : '420px', height: isMobile ? '300px' : '420px' }} aria-hidden="true" />
+      <div style={{ ...S.orb, ...S.orb2, width: isMobile ? '220px' : '320px', height: isMobile ? '220px' : '320px' }} aria-hidden="true" />
 
       {/* main content */}
       <motion.div
@@ -128,26 +136,26 @@ export default function Hero() {
       >
         {/* ── avatar ── */}
         <motion.div variants={item} style={S.avatarWrap}>
-          <div style={S.avatarGlow} aria-hidden="true" />
-          <div style={S.avatarRingOuter} aria-hidden="true" />
-          <div style={S.avatarRingInner} aria-hidden="true" />
+          <div style={{...S.avatarGlow, inset: isMobile ? '-16px' : '-24px'}} aria-hidden="true" />
+          <div style={{...S.avatarRingOuter, inset: isMobile ? '-6px' : '-10px'}} aria-hidden="true" />
+          <div style={{...S.avatarRingInner, inset: isMobile ? '-2px' : '-4px'}} aria-hidden="true" />
 
           {SHOW_INITIALS ? (
-            <div style={S.avatarInitials} role="img" aria-label="Vaibhav Kumar Shukla">
+            <div style={{...S.avatarInitials, width: isMobile ? '140px' : '172px', height: isMobile ? '140px' : '172px', fontSize: isMobile ? '38px' : '48px'}} role="img" aria-label="Vaibhav Kumar Shukla">
               VK
             </div>
           ) : (
             <img
               src={profile}
               alt="Vaibhav Kumar Shukla"
-              style={S.avatarImg}
+              style={{...S.avatarImg, width: isMobile ? '140px' : '172px', height: isMobile ? '140px' : '172px'}}
             />
           )}
-          <span style={S.statusDot} title="Open to work" aria-label="Open to work" />
+          <span style={{...S.statusDot, bottom: isMobile ? '6px' : '10px', right: isMobile ? '6px' : '10px', width: isMobile ? '12px' : '15px', height: isMobile ? '12px' : '15px'}} title="Open to work" aria-label="Open to work" />
         </motion.div>
 
         {/* greeting */}
-        <motion.p variants={item} style={S.greeting}>
+        <motion.p variants={item} style={{...S.greeting, fontSize: isMobile ? '12px' : '13px'}}>
           &lt; Hello, World! /&gt;
         </motion.p>
 
@@ -159,11 +167,11 @@ export default function Hero() {
         {/* typing */}
         <motion.div variants={item} style={S.typingRow} aria-live="polite">
           <span style={S.typingText}>{displayText}</span>
-          <span style={S.cursor} aria-hidden="true" />
+          <span style={{...S.cursor, height: isMobile ? '18px' : '20px'}} aria-hidden="true" />
         </motion.div>
 
         {/* bio */}
-        <motion.p variants={item} style={S.bio}>
+        <motion.p variants={item} style={{...S.bio, fontSize: isMobile ? '14px' : '15px', padding: isMobile ? '0 16px' : '0'}}>
           3rd-year CSE student building backends that scale and frontends that feel alive.
           <br />Shipping real projects with Node.js, React &amp; MongoDB — powered by curiosity.
         </motion.p>
@@ -171,35 +179,35 @@ export default function Hero() {
         {/* tech pills */}
         <motion.div variants={item} style={S.pillRow}>
           {['React', 'Node.js', 'Express', 'MongoDB', 'JWT', 'Cloudinary', 'C++ / DSA','Github','Git'].map(t => (
-            <span key={t} style={S.pill}>{t}</span>
+            <span key={t} style={{...S.pill, fontSize: isMobile ? '10px' : '11px', padding: isMobile ? '3px 10px' : '4px 13px'}}>{t}</span>
           ))}
         </motion.div>
 
         {/* CTAs */}
-        <motion.div variants={item} style={S.ctaRow}>
+        <motion.div variants={item} style={{...S.ctaRow, flexDirection: isMobile ? 'column' : 'row', width: '100%', gap: isMobile ? '10px' : '12px'}}>
           <a
             href="#projects"
             onClick={e => { e.preventDefault(); document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' }) }}
-            style={{ ...S.btn, ...S.btnPrimary }}
+            style={{ ...S.btn, ...S.btnPrimary, width: isMobile ? '100%' : 'auto' }}
           >
             View Projects
           </a>
-          <a href="mailto:imvksofficial@gmail.com" style={{ ...S.btn, ...S.btnGhost }}>
+          <a href="mailto:imvksofficial@gmail.com" style={{ ...S.btn, ...S.btnGhost, width: isMobile ? '100%' : 'auto' }}>
             Get in Touch
           </a>
         </motion.div>
 
         {/* socials */}
-        <motion.div variants={item} style={S.socialRow}>
+        <motion.div variants={item} style={{...S.socialRow, flexWrap: 'wrap', justifyContent: 'center'}}>
           {SOCIALS.map(({ label, href, path }) => (
-            <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label} style={S.socialBtn}>
-              <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true">
+            <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label} style={{...S.socialBtn, width: isMobile ? '44px' : '36px', height: isMobile ? '44px' : '36px'}}>
+              <svg viewBox="0 0 24 24" width={isMobile ? 20 : 17} height={isMobile ? 20 : 17} fill="currentColor" aria-hidden="true">
                 <path d={path} />
               </svg>
             </a>
           ))}
           <span style={S.divider} aria-hidden="true" />
-          <a href={resume} target="_blank" rel="noreferrer" style={S.resumeLink}>
+          <a href={resume} target="_blank" rel="noreferrer" style={{...S.resumeLink, fontSize: isMobile ? '13px' : '12px'}}>
             Resume ↗
           </a>
         </motion.div>
@@ -230,7 +238,6 @@ const S = {
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-    padding: '80px 24px 60px',
   },
   particles: { position: 'absolute', inset: 0, zIndex: 0 },
   grid: {
@@ -245,14 +252,12 @@ const S = {
     pointerEvents: 'none', zIndex: 0,
   },
   orb1: {
-    width: '420px', height: '420px',
-    background: 'radial-gradient(circle, rgba(99,102,241,0.13) 0%, transparent 70%)',
     top: '-80px', right: '-60px',
+    background: 'radial-gradient(circle, rgba(99,102,241,0.13) 0%, transparent 70%)',
   },
   orb2: {
-    width: '320px', height: '320px',
-    background: 'radial-gradient(circle, rgba(236,72,153,0.1) 0%, transparent 70%)',
     bottom: '40px', left: '-80px',
+    background: 'radial-gradient(circle, rgba(236,72,153,0.1) 0%, transparent 70%)',
   },
 
   content: {
@@ -265,40 +270,40 @@ const S = {
   // avatar
   avatarWrap: { position: 'relative', marginBottom: '32px' },
   avatarGlow: {
-    position: 'absolute', inset: '-24px', borderRadius: '50%',
+    position: 'absolute', borderRadius: '50%',
     background: 'radial-gradient(circle, rgba(99,102,241,0.22) 0%, transparent 68%)',
     zIndex: 0, pointerEvents: 'none',
   },
   avatarRingOuter: {
-    position: 'absolute', inset: '-10px', borderRadius: '50%',
+    position: 'absolute', borderRadius: '50%',
     border: '1.5px dashed rgba(129,140,248,0.35)',
     animation: 'spin 12s linear infinite',
     zIndex: 1,
   },
   avatarRingInner: {
-    position: 'absolute', inset: '-4px', borderRadius: '50%',
+    position: 'absolute', borderRadius: '50%',
     border: '1px solid rgba(236,72,153,0.2)',
     animation: 'spin 7s linear infinite reverse',
     zIndex: 1,
   },
   avatarInitials: {
-    width: '172px', height: '172px', borderRadius: '50%',
+    borderRadius: '50%',
     background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%)',
     border: '3px solid rgba(99,102,241,0.55)',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
-    fontSize: '48px', fontWeight: '700', color: '#a5b4fc',
+    fontWeight: '700', color: '#a5b4fc',
     position: 'relative', zIndex: 2,
     letterSpacing: '-0.02em',
   },
   avatarImg: {
-    width: '172px', height: '172px', borderRadius: '50%',
+    borderRadius: '50%',
     objectFit: 'cover',
     border: '3px solid rgba(99,102,241,0.55)',
     position: 'relative', zIndex: 2, display: 'block',
   },
   statusDot: {
-    position: 'absolute', bottom: '10px', right: '10px',
-    width: '15px', height: '15px', borderRadius: '50%',
+    position: 'absolute',
+    borderRadius: '50%',
     background: '#10b981',
     border: '2.5px solid #07070e',
     zIndex: 3,
@@ -308,11 +313,11 @@ const S = {
   // text
   greeting: {
     fontFamily: "'Fira Code', monospace",
-    fontSize: '13px', color: '#818cf8',
+    color: '#818cf8',
     marginBottom: '10px', letterSpacing: '0.06em',
   },
   name: {
-    fontSize: 'clamp(2rem, 5.5vw, 3.2rem)',
+    fontSize: 'clamp(1.8rem, 6vw, 3.2rem)',
     fontWeight: '700', color: '#f1f5f9',
     marginBottom: '16px', lineHeight: '1.12',
     letterSpacing: '-0.025em',
@@ -330,16 +335,16 @@ const S = {
   },
   typingText: {
     fontFamily: "'Fira Code', monospace",
-    fontSize: 'clamp(0.95rem, 2.5vw, 1.2rem)',
+    fontSize: 'clamp(0.9rem, 2.5vw, 1.2rem)',
     color: '#a5b4fc', fontWeight: '500',
   },
   cursor: {
-    display: 'inline-block', width: '2px', height: '20px',
+    display: 'inline-block', width: '2px',
     background: '#818cf8', borderRadius: '1px',
     animation: 'blink 1s step-end infinite', flexShrink: 0,
   },
   bio: {
-    fontSize: '15px', color: '#94a3b8',
+    color: '#94a3b8',
     lineHeight: '1.8', marginBottom: '26px',
     maxWidth: '500px',
   },
@@ -351,7 +356,6 @@ const S = {
     marginBottom: '30px',
   },
   pill: {
-    fontSize: '11px', padding: '4px 13px',
     borderRadius: '20px',
     border: '1px solid rgba(129,140,248,0.28)',
     background: 'rgba(99,102,241,0.07)',
@@ -388,7 +392,7 @@ const S = {
     display: 'flex', alignItems: 'center', gap: '10px',
   },
   socialBtn: {
-    width: '36px', height: '36px', borderRadius: '8px',
+    borderRadius: '8px',
     border: '1px solid rgba(129,140,248,0.22)',
     background: 'rgba(99,102,241,0.06)',
     color: '#94a3b8',
@@ -400,7 +404,7 @@ const S = {
     background: 'rgba(129,140,248,0.18)', margin: '0 4px',
   },
   resumeLink: {
-    fontSize: '12px', color: '#818cf8',
+    color: '#818cf8',
     fontFamily: "'Fira Code', monospace",
     letterSpacing: '0.04em',
   },
