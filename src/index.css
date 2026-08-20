@@ -1,3 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap');
+
+:root {
+  --accent: #6366f1;
+  --bg: #030307;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -6,27 +13,72 @@
 
 html {
   scroll-behavior: smooth;
-  background: #07070e;
+  background: var(--bg);
   min-height: 100%;
 }
 
 body {
-  background: #07070e;
-  color: #e2e8f0;
-  font-family: 'Space Grotesk', -apple-system, sans-serif;
+  background: var(--bg);
+  color: #f8fafc;
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
   min-height: 100vh;
 }
 
+/* Hide default cursor on desktop */
+@media (pointer: fine) {
+  body {
+    cursor: none;
+  }
+  a, button, input {
+    cursor: none;
+  }
+}
+
 #root {
-  background: #07070e;
+  background: var(--bg);
   min-height: 100vh;
+  position: relative;
+}
+
+/* Futuristic Micro-Matrix Grid Dot Layer */
+#root::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(var(--accent) 1px, transparent 0);
+  background-size: 24px 24px;
+  opacity: 0.025;
+  z-index: 10;
+}
+
+/* Moving Radar Grid Line Scanner */
+#root::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.2;
+  animation: cyberScan 8s linear infinite;
+  pointer-events: none;
+  z-index: 11;
 }
 
 a {
   text-decoration: none;
   color: inherit;
+}
+
+@keyframes cyberScan {
+  0% { transform: translateY(-10vh); opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { transform: translateY(110vh); opacity: 0; }
 }
 
 @keyframes spin {
@@ -38,28 +90,23 @@ a {
   50%       { opacity: 0; }
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-10px); }
+@keyframes glitchGlow {
+  0%, 100% { text-shadow: 0 0 10px rgba(99,102,241,0.2); }
+  50%       { text-shadow: 0 0 20px rgba(99,102,241,0.5), 0 0 30px rgba(236,72,153,0.2); }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 8px rgba(16,185,129,0.5); }
-  50%       { box-shadow: 0 0 18px rgba(16,185,129,0.9); }
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
 }
 
+/* Premium Thin Tech Scrollbar */
 ::-webkit-scrollbar        { width: 4px; }
-::-webkit-scrollbar-track  { background: #07070e; }
-::-webkit-scrollbar-thumb  { background: rgba(99,102,241,0.45); border-radius: 4px; }
+::-webkit-scrollbar-track  { background: var(--bg); }
+::-webkit-scrollbar-thumb  { background: linear-gradient(180deg, var(--accent), #ec4899); border-radius: 2px; }
 
 ::selection {
-  background: rgba(99,102,241,0.35);
-  color: #f1f5f9;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
+  background: rgba(99,102,241,0.25);
+  color: #ffffff;
+}

@@ -1,251 +1,150 @@
-import { useRef, useState, useEffect } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { motion, useInView, useScroll, useTransform } from 'framer-motion'
+import useReducedMotion from '../hooks/useReducedMotion'
 
 const TIMELINE_ITEMS = [
   {
-    year: '2024 — Present',
-    title: 'Bachelor of Technology (B.Tech) – Computer Science & Engineering',
+    year: '2024 — PRESENT',
+    title: 'Bachelor of Technology – Computer Science & Engineering',
     subtitle: 'AJAY KUMAR GARG ENGINEERING COLLEGE, Ghaziabad(UP)',
-    description:
-      'Currently pursuing a Bachelor of Technology (B.Tech) in Computer Science & Engineering with a CGPA of 8.8. Focused on Data Structures & Algorithms, Web Development, Object-Oriented Programming, and Software Engineering. Actively developing real-world projects and enhancing problem-solving skills through coding challenges and continuous learning.',
-    tags: ['B.Tech', 'Computer Science & Engineering', 'Object-Oriented Programming', 'Data Structures & Algorithms','Web Development','Software Engineering','Operating Systems'],
-    color: '#34d399',
-    dot: '#34d399',
-    type: 'education',
+    description: 'Developing high-level problem solving nodes inside algorithmic environments. Accumulating theoretical data principles alongside application paradigms with an 8.8 CGPA standard.',
+    tags: ['DSA', 'OOP', 'Software Engineering', 'Operating Systems'],
+    color: '#10b981',
   },
   {
-    year: '2021-22',
-    title: 'Senior Secondary Education (Class XII-CBSE)',
+    year: '2021 — 2022',
+    title: 'Senior Secondary Education (Class XII)',
     subtitle: 'LUCKNOW PUBLIC SCHOOL, Lucknow(UP)',
-    description:
-      'Completed Senior Secondary Education (CBSE) with 92% marks in the Physics, Chemistry, and Mathematics (PCM) stream. Developed strong analytical thinking, quantitative aptitude, and problem-solving skills through rigorous coursework, building a solid foundation for engineering and technology studies.',
-    tags: ['CBSE', 'PHYSICS', 'CHEMISTRY', 'MATHEMATICS','PROBLEM SOLVING','ANALYTICAL THINKING'],
-    color: '#818cf8',
-    dot: '#818cf8',
-    type: 'education',
+    description: 'Configured mathematical vector tracks scoring a 92% absolute evaluation profile output.',
+    tags: ['CBSE', 'Mathematics', 'Logic Frameworks'],
+    color: '#6366f1',
   },
   {
-    year: '2020-2021',
+    year: '2020 — 2021',
     title: 'Matriculation (Grade X)',
     subtitle: 'LUCKNOW PUBLIC SCHOOL, LUCKNOW(UP)',
-    description:
-      'Completed Matriculation with 95% marks, demonstrating academic excellence, strong analytical skills, and consistent performance across core subjects.',
-    tags: ['CBSE','Academic Excellence','CONSISTENCY','MATHEMATICS','SCIENCE','PROBLEM SOLVING','DISCIPLINE'],
-    color: '#f472b6',
-    dot: '#f472b6',
-    type: 'education',
-  },
-  {
-    year: '2008-2020',
-    title: 'Completed schooling up to Grade 9',
-    subtitle: 'LUCKNOW PUBLIC SCHOOL, LUCKNOW(UP)',
-    description:
-      'Built a strong foundation in academics, critical thinking, and extracurricular activities during the early years of education.',
-    tags: ['CBSE','ENGLISH','MATHEMATICS','DISCIPLINE','LEARNING'],
-    color: '#fb923c',
-    dot: '#fb923c',
-    type: 'education',
-  },
+    description: 'Assembled core primary logic systems achieving a 95% total compilation score.',
+    tags: ['CBSE', 'Core Analytics'],
+    color: '#ec4899',
+  }
 ]
 
 function TimelineItem({ item, index, isMobile }) {
-  const ref    = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-50px' })
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-100px' })
+  const [hovered, setHovered] = useState(false)
+  const isReduced = useReducedMotion()
 
   return (
     <motion.div
       ref={ref}
       style={S.item}
-      initial={{ opacity: 0, x: -24 }}
-      animate={inView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.55, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+      initial={{ opacity: 0, x: isReduced ? 0 : -20, filter: isReduced ? 'blur(0px)' : 'blur(4px)' }}
+      animate={inView ? { opacity: 1, x: 0, filter: 'blur(0px)' } : {}}
+      transition={{ duration: 0.6, delay: isReduced ? 0 : index * 0.1, type: 'spring', damping: 20 }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
-      {/* dot */}
       <div style={S.dotCol}>
         <motion.div
-          style={{ ...S.dot, background: item.dot, boxShadow: `0 0 10px ${item.dot}60` }}
-          initial={{ scale: 0 }}
-          animate={inView ? { scale: 1 } : {}}
-          transition={{ duration: 0.35, delay: index * 0.1 + 0.15, type: 'spring', stiffness: 200 }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={inView ? { scale: 1, opacity: 1 } : {}}
+          transition={{ duration: 0.4, delay: isReduced ? 0 : index * 0.1 + 0.2 }}
+          style={{ ...S.dot, background: hovered ? '#fff' : item.color, boxShadow: hovered ? `0 0 15px ${item.color}` : `0 0 0px ${item.color}` }}
         />
       </div>
 
-      {/* content */}
-      <div style={{...S.content, padding: isMobile ? '16px 18px' : '20px 22px'}}>
+      <motion.div
+        style={{ ...S.content, padding: isMobile ? '16px' : '24px', borderColor: hovered ? item.color : 'rgba(255,255,255,0.04)' }}
+        animate={{
+          boxShadow: hovered ? `0 10px 30px -10px ${item.color}20` : '0 0 0 transparent',
+          x: hovered && !isMobile && !isReduced ? 5 : 0
+        }}
+      >
         <div style={S.metaRow}>
-          <span style={{ ...S.yearTag, color: item.color, borderColor: `${item.color}40`, background: `${item.color}0d`, fontSize: isMobile ? '10px' : '11px' }}>
+          <span style={{ ...S.yearTag, color: hovered ? '#fff' : item.color, borderColor: `${item.color}30`, background: hovered ? item.color : `${item.color}05` }}>
             {item.year}
           </span>
-          <span style={{ ...S.typeTag, color: item.type === 'education' ? '#fb923c' : item.type === 'work' ? '#34d399' : '#f472b6', fontSize: isMobile ? '12px' : '14px' }}>
-            {item.type === 'education' ? '🎓' : item.type === 'work' ? '💻' : '🚀'}
-          </span>
         </div>
-
-        <h3 style={{...S.title, fontSize: isMobile ? '14px' : '16px'}}>{item.title}</h3>
-        <p style={{...S.subtitle, fontSize: isMobile ? '11px' : '12px'}}>{item.subtitle}</p>
-        <p style={{...S.desc, fontSize: isMobile ? '13px' : '13.5px'}}>{item.description}</p>
-
+        <h3 style={S.title}>{item.title}</h3>
+        <p style={S.subtitle}>{item.subtitle}</p>
+        <p style={S.desc}>{item.description}</p>
         <div style={S.tagsRow}>
-          {item.tags.map(tag => (
-            <span key={tag} style={{ ...S.tag, color: item.color, borderColor: `${item.color}30`, background: `${item.color}0a`, fontSize: isMobile ? '10px' : '11px', padding: isMobile ? '2px 8px' : '3px 10px' }}>
-              {tag}
+          {item.tags.map(t =>
+            <span key={t} style={{ ...S.tag, color: hovered ? '#fff' : item.color, borderColor: hovered ? `${item.color}40` : `${item.color}15`, background: hovered ? `${item.color}10` : 'transparent' }}>
+              {t}
             </span>
-          ))}
+          )}
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   )
 }
 
-export default function Timeline() {
-  const headRef    = useRef(null)
+export default function Timeline({ isMobile }) {
+  const containerRef = useRef(null)
+  const headRef = useRef(null)
   const headInView = useInView(headRef, { once: true, margin: '-60px' })
-  const [isMobile, setIsMobile] = useState(false)
+  const isReduced = useReducedMotion()
 
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start center", "end center"]
+  });
+
+  const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section id="timeline" style={{...S.section, padding: isMobile ? '80px 16px 100px' : '100px 24px 120px'}}>
+    <section id="timeline" style={S.section} ref={containerRef}>
       <div style={S.inner}>
-
-        <motion.div
-          ref={headRef}
-          style={S.header}
-          initial={{ opacity: 0, y: 20 }}
-          animate={headInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <span style={S.eyebrow}>// my journey</span>
-          <h2 style={S.heading}>Academic Journey</h2>
-          <p style={{...S.subheading, fontSize: isMobile ? '14px' : '15px'}}>
-            From foundational schooling to pursuing Computer Science & Engineering, each step has strengthened my analytical thinking, technical skills, and passion for learning.
-          </p>
+        <motion.div ref={headRef} style={S.header} initial={{ opacity: 0, y: 15 }} animate={headInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }}>
+          <span style={S.eyebrow}>// LEARNING_LOG</span>
+          <h2 style={S.heading}>Learning Trajectory</h2>
+          <p style={S.subheading}>A timeline of the systems, milestones, and foundations shaping my development journey.</p>
         </motion.div>
 
-        {/* timeline list */}
         <div style={S.list}>
-          {/* vertical line */}
-          <div style={S.line} aria-hidden="true" />
+          {/* Base dim line */}
+          <div style={S.lineBg} />
 
-          {TIMELINE_ITEMS.map((item, i) => (
-            <TimelineItem key={i} item={item} index={i} isMobile={isMobile} />
-          ))}
+          {/* Animated active line */}
+          {!isReduced && (
+            <motion.div style={{ ...S.lineActive, height: lineHeight, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              {/* Glowing tip */}
+              <div style={S.lineGlow} />
+            </motion.div>
+          )}
+
+          {TIMELINE_ITEMS.map((item, i) => <TimelineItem key={i} item={item} index={i} isMobile={isMobile} />)}
         </div>
-
-        {/* footer note */}
-        <motion.p
-          style={{...S.footNote, fontSize: isMobile ? '12px' : '14px'}}
-          initial={{ opacity: 0 }}
-          animate={headInView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.6, duration: 0.5 }}
-        >
-          <span style={{ fontFamily: "'Fira Code', monospace", color: '#818cf8' }}>const</span>
-          {' '}<span style={{ color: '#34d399' }}>story</span>
-          {' = '}<span style={{ color: '#f472b6' }}>"still being written..."</span>
-        </motion.p>
       </div>
     </section>
   )
 }
 
 const S = {
-  section: {
-    background: '#07070e',
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  inner: { maxWidth: '780px', margin: '0 auto' },
+  section: { background: 'transparent', padding: '120px 24px', position: 'relative', overflow: 'hidden' },
+  inner: { maxWidth: '800px', margin: '0 auto' },
+  header: { textAlign: 'center', marginBottom: '80px' },
+  eyebrow: { fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: 'var(--accent)', letterSpacing: '0.2em', display: 'block', marginBottom: '10px' },
+  heading: { fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: '800', color: '#f8fafc', letterSpacing: '-0.02em', marginBottom: '12px' },
+  subheading: { color: '#64748b', lineHeight: '1.7', maxWidth: '440px', margin: '0 auto', fontSize: '13.5px' },
 
-  header: { textAlign: 'center', marginBottom: '64px' },
-  eyebrow: {
-    fontFamily: "'Fira Code', monospace",
-    fontSize: '12px', color: '#818cf8',
-    letterSpacing: '0.1em', display: 'block', marginBottom: '10px',
-  },
-  heading: {
-    fontSize: 'clamp(1.7rem, 4vw, 2.4rem)',
-    fontWeight: '700', color: '#f1f5f9',
-    letterSpacing: '-0.02em', marginBottom: '12px',
-  },
-  subheading: {
-    color: '#64748b',
-    lineHeight: '1.7', maxWidth: '400px', margin: '0 auto',
-  },
+  list: { position: 'relative', paddingLeft: '32px' },
+  lineBg: { position: 'absolute', left: '6px', top: '10px', bottom: '0', width: '2px', background: 'rgba(255,255,255,0.04)' },
+  lineActive: { position: 'absolute', left: '6px', top: '10px', width: '2px', background: 'linear-gradient(to bottom, var(--accent), #ec4899)', transformOrigin: 'top', overflow: 'visible' },
+  lineGlow: { position: 'absolute', bottom: '-4px', left: '-2px', width: '6px', height: '12px', background: '#ec4899', borderRadius: '4px', filter: 'blur(3px)' },
 
-  list: {
-    position: 'relative',
-    paddingLeft: '36px',
-  },
-  line: {
-    position: 'absolute', left: '8px',
-    top: '8px', bottom: '8px', width: '1px',
-    background: 'linear-gradient(to bottom, #818cf8, rgba(129,140,248,0.15))',
-  },
+  item: { display: 'flex', marginBottom: '40px', position: 'relative' },
+  dotCol: { position: 'absolute', left: '-31px', top: '10px', width: '10px', display: 'flex', justifyContent: 'center' },
+  dot: { width: '8px', height: '8px', borderRadius: '50%', background: '#fff', border: '2px solid #030307', transition: 'all 0.3s' },
 
-  item: {
-    display: 'flex', gap: '0',
-    marginBottom: '44px', position: 'relative',
-  },
-  dotCol: {
-    position: 'absolute', left: '-32px',
-    top: '4px', width: '16px',
-    display: 'flex', justifyContent: 'center',
-  },
-  dot: {
-    width: '12px', height: '12px',
-    borderRadius: '50%',
-    border: '2.5px solid #07070e',
-    flexShrink: 0,
-  },
-
-  content: {
-    flex: 1,
-    background: 'rgba(255,255,255,0.02)',
-    border: '1px solid rgba(255,255,255,0.055)',
-    borderRadius: '12px',
-  },
-  metaRow: {
-    display: 'flex', alignItems: 'center',
-    gap: '10px', marginBottom: '8px',
-  },
-  yearTag: {
-    fontFamily: "'Fira Code', monospace",
-    fontWeight: '500',
-    padding: '2px 10px', borderRadius: '4px',
-    border: '1px solid',
-    letterSpacing: '0.04em',
-  },
-  typeTag: { },
-
-  title: {
-    fontWeight: '700',
-    color: '#f1f5f9', marginBottom: '3px',
-    letterSpacing: '-0.01em',
-  },
-  subtitle: {
-    color: '#64748b',
-    marginBottom: '10px',
-    fontFamily: "'Fira Code', monospace",
-  },
-  desc: {
-    color: '#94a3b8',
-    lineHeight: '1.75', marginBottom: '14px',
-  },
+  content: { flex: 1, background: 'rgba(6, 6, 12, 0.4)', border: '1px solid', borderRadius: '4px', backdropFilter: 'blur(8px)', transition: 'border-color 0.3s, background 0.3s' },
+  metaRow: { display: 'flex', alignItems: 'center', marginBottom: '14px' },
+  yearTag: { fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', fontWeight: '700', padding: '4px 10px', border: '1px solid', borderRadius: '30px', transition: 'all 0.3s' },
+  title: { fontWeight: '700', color: '#f8fafc', fontSize: '17px', marginBottom: '4px' },
+  subtitle: { color: '#94a3b8', marginBottom: '12px', fontFamily: "'JetBrains Mono', monospace", fontSize: '11.5px', textTransform: 'uppercase', letterSpacing: '0.05em' },
+  desc: { color: '#cbd5e1', lineHeight: '1.7', marginBottom: '18px', fontSize: '13.5px' },
   tagsRow: { display: 'flex', flexWrap: 'wrap', gap: '6px' },
-  tag: {
-    borderRadius: '5px', border: '1px solid',
-    fontWeight: '500',
-  },
-
-  footNote: {
-    textAlign: 'center',
-    color: '#475569',
-    marginTop: '16px',
-    fontFamily: "'Fira Code', monospace",
-  },
+  tag: { border: '1px solid', background: 'transparent', fontSize: '10.5px', padding: '3px 8px', fontFamily: "'JetBrains Mono', monospace", borderRadius: '2px', transition: 'all 0.3s' }
 }

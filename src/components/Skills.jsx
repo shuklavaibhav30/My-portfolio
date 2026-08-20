@@ -1,215 +1,176 @@
 import { useRef, useState, useEffect } from 'react'
 import { motion, useInView } from 'framer-motion'
+import useReducedMotion from '../hooks/useReducedMotion'
 
-const SKILL_GROUPS = [
-  {
-    category: 'Frontend',
-    color: '#818cf8',
-    bg: 'rgba(99,102,241,0.08)',
-    border: 'rgba(99,102,241,0.28)',
-    skills: ['React', 'JavaScript', 'HTML5', 'CSS3', 'Vite', 'Context API'],
-  },
-  {
-    category: 'Backend',
-    color: '#34d399',
-    bg: 'rgba(52,211,153,0.07)',
-    border: 'rgba(52,211,153,0.25)',
-    skills: ['Node.js', 'Express.js', 'REST APIs', 'JWT Auth', 'Mongoose'],
-  },
-  {
-    category: 'Database & Cloud',
-    color: '#f472b6',
-    bg: 'rgba(244,114,182,0.07)',
-    border: 'rgba(244,114,182,0.25)',
-    skills: ['MongoDB', 'MongoDB Atlas', 'Cloudinary', 'Render'],
-  },
-  {
-    category: 'CS Fundamentals',
-    color: '#fb923c',
-    bg: 'rgba(251,146,60,0.07)',
-    border: 'rgba(251,146,60,0.25)',
-    skills: ['C++', 'DSA', 'OOP', 'OS Concepts', 'DBMS'],
-  },
-  {
-    category: 'Tools & Workflow',
-    color: '#38bdf8',
-    bg: 'rgba(56,189,248,0.07)',
-    border: 'rgba(56,189,248,0.25)',
-    skills: ['Git', 'GitHub', 'Postman', 'VS Code', 'Linux'],
-  },
+const TERMINAL_LINES = [
+  { prompt: 'whoami', output: 'Vaibhav Kumar Shukla' },
+  { prompt: 'role', output: 'MERN Stack Developer & Problem Solver' },
+  { prompt: 'stack', output: 'MongoDB • Express • React • Node.js • C++' },
+  { prompt: 'currently_learning', output: 'TypeScript • DSA • Backend Development' },
+  { prompt: 'mindset', output: 'BUILD • SOLVE • LEARN' },
+  { prompt: 'status', output: 'OPEN_TO_OPPORTUNITIES', isStatus: true }
 ]
 
-function SkillGroup({ group, index, isMobile }) {
-  const ref  = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
+function TerminalLine({ line, index, startTyping, onComplete }) {
+  const [typedPrompt, setTypedPrompt] = useState('')
+  const [showOutput, setShowOutput] = useState(false)
+  const isReduced = useReducedMotion()
 
-  const containerVariant = {
-    hidden: {},
-    show: { transition: { staggerChildren: 0.06, delayChildren: index * 0.08 } },
-  }
-  const chipVariant = {
-    hidden: { opacity: 0, scale: 0.8, y: 10 },
-    show:   { opacity: 1, scale: 1,   y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
-  }
+  useEffect(() => {
+    if (!startTyping) return
+
+    if (isReduced) {
+      setTypedPrompt(line.prompt)
+      setShowOutput(true)
+      onComplete()
+      return
+    }
+
+    let i = 0
+    const interval = setInterval(() => {
+      setTypedPrompt(line.prompt.slice(0, i + 1))
+      i++
+      if (i === line.prompt.length) {
+        clearInterval(interval)
+        setTimeout(() => {
+          setShowOutput(true)
+          setTimeout(onComplete, 200)
+        }, 150)
+      }
+    }, 50)
+
+    return () => clearInterval(interval)
+  }, [startTyping, line.prompt, onComplete, isReduced])
+
+  if (!startTyping && !isReduced) return null
 
   return (
-    <motion.div
-      ref={ref}
-      style={{...S.group, padding: isMobile ? '16px 18px' : '22px 24px'}}
-      initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.55, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <div style={S.catRow}>
-        <span style={{ ...S.catDot, background: group.color }} aria-hidden="true" />
-        <span style={{ ...S.catLabel, color: group.color }}>{group.category}</span>
+    <div style={S.terminalLineWrap}>
+      <div style={S.promptRow}>
+        <span style={S.ps1}>vaibhav@dev:~$</span>
+        <span style={S.command}>{typedPrompt}</span>
       </div>
-
-      <motion.div
-        style={S.chipRow}
-        variants={containerVariant}
-        initial="hidden"
-        animate={inView ? 'show' : 'hidden'}
-      >
-        {group.skills.map(skill => (
-          <motion.span
-            key={skill}
-            style={{
-              ...S.chip,
-              color: group.color,
-              background: group.bg,
-              borderColor: group.border,
-              fontSize: isMobile ? '11px' : '12px',
-              padding: isMobile ? '3px 10px' : '4px 12px',
-            }}
-            variants={chipVariant}
-            whileHover={{ scale: 1.06, transition: { duration: 0.15 } }}
-          >
-            {skill}
-          </motion.span>
-        ))}
-      </motion.div>
-    </motion.div>
+      {showOutput && (
+        <div style={line.isStatus ? { ...S.outputRow, color: '#10b981' } : S.outputRow}>
+          {line.output}
+        </div>
+      )}
+    </div>
   )
 }
 
-export default function Skills() {
+export default function Skills({ isMobile }) {
   const headRef = useRef(null)
   const headInView = useInView(headRef, { once: true, margin: '-60px' })
-  const [isMobile, setIsMobile] = useState(false)
+  const termRef = useRef(null)
+  const termInView = useInView(termRef, { once: true, margin: '-100px' })
+  const isReduced = useReducedMotion()
+
+  const [currentLineIndex, setCurrentLineIndex] = useState(0)
+  const [typingComplete, setTypingComplete] = useState(false)
+
+  const handleLineComplete = () => {
+    if (currentLineIndex < TERMINAL_LINES.length - 1) {
+      setCurrentLineIndex(prev => prev + 1)
+    } else {
+      setTypingComplete(true)
+    }
+  }
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+    if (isReduced && termInView) {
+      setCurrentLineIndex(TERMINAL_LINES.length)
+      setTypingComplete(true)
+    }
+  }, [isReduced, termInView])
 
   return (
-    <section id="skills" style={{...S.section, padding: isMobile ? '80px 16px' : '100px 24px'}}>
+    <section id="skills" style={S.section}>
       <div style={S.inner}>
-
-        {/* section header */}
         <motion.div
           ref={headRef}
           style={S.header}
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={headInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.4 }}
         >
-          <span style={S.eyebrow}>// tech stack</span>
-          <h2 style={S.heading}>Skills &amp; Technologies</h2>
-          <p style={{...S.subheading, fontSize: isMobile ? '14px' : '15px'}}>
-            Tools I use to build things from scratch — frontend to deployment.
+          <span style={S.eyebrow}>// CURRENT_STACK</span>
+          <h2 style={S.heading}>What I Build With</h2>
+          <p style={S.subheading}>
+            A quick look at the technologies I use, what I'm learning, and how I approach building things.
           </p>
         </motion.div>
 
-        {/* skill groups */}
-        <div style={S.groups}>
-          {SKILL_GROUPS.map((group, i) => (
-            <SkillGroup key={group.category} group={group} index={i} isMobile={isMobile} />
-          ))}
-        </div>
-      </div>
+        <motion.div
+          ref={termRef}
+          style={S.terminalWindow}
+          initial={{ opacity: 0, y: 20, scale: 0.98 }}
+          animate={termInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+        >
+          <div style={S.terminalHeader}>
+            <div style={S.macBtns}>
+              <div style={{ ...S.macBtn, background: '#ef4444' }} />
+              <div style={{ ...S.macBtn, background: '#f59e0b' }} />
+              <div style={{ ...S.macBtn, background: '#10b981' }} />
+            </div>
+            <div style={S.terminalTitle}>bash - vaibhav@dev</div>
+            <div style={{ width: '42px' }}></div>
+          </div>
 
-      {/* subtle section divider glow */}
-      <div style={S.bottomGlow} aria-hidden="true" />
+          <div style={{ ...S.terminalBody, padding: isMobile ? '16px' : '24px' }}>
+            <div style={{ ...S.outputRow, color: '#64748b', marginBottom: '16px' }}>
+              Last login: {new Date().toDateString()} on ttys000<br />
+              Welcome to vaibhav.dev
+              <br /><br />
+              * Press <kbd style={S.kbd}>Ctrl + K</kbd> to open command palette.
+              <br /><br />
+            </div>
+
+            {TERMINAL_LINES.map((line, idx) => (
+              <TerminalLine
+                key={idx}
+                line={line}
+                index={idx}
+                startTyping={termInView && (isReduced || currentLineIndex >= idx)}
+                onComplete={handleLineComplete}
+              />
+            ))}
+
+            {(typingComplete || isReduced) && (
+              <div style={S.promptRow}>
+                <span style={S.ps1}>vaibhav@dev:~$</span>
+                <span style={S.cursor} />
+              </div>
+            )}
+          </div>
+        </motion.div>
+
+      </div>
     </section>
   )
 }
 
 const S = {
-  section: {
-    position: 'relative',
-    background: '#07070e',
-    overflow: 'hidden',
-  },
-  inner: {
-    maxWidth: '900px',
-    margin: '0 auto',
-    position: 'relative', zIndex: 1,
-  },
-  header: {
-    textAlign: 'center',
-    marginBottom: '60px',
-  },
-  eyebrow: {
-    fontFamily: "'Fira Code', monospace",
-    fontSize: '12px', color: '#818cf8',
-    letterSpacing: '0.1em', display: 'block',
-    marginBottom: '10px',
-  },
-  heading: {
-    fontSize: 'clamp(1.7rem, 4vw, 2.4rem)',
-    fontWeight: '700', color: '#f1f5f9',
-    letterSpacing: '-0.02em', marginBottom: '12px',
-  },
-  subheading: {
-    color: '#64748b',
-    lineHeight: '1.7', maxWidth: '440px',
-    margin: '0 auto',
-  },
+  section: { position: 'relative', background: 'transparent', padding: '120px 24px', overflow: 'hidden' },
+  inner: { maxWidth: '800px', margin: '0 auto', position: 'relative', zIndex: 1 },
+  header: { textAlign: 'center', marginBottom: '60px' },
+  eyebrow: { fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: 'var(--accent)', letterSpacing: '0.2em', display: 'block', marginBottom: '10px' },
+  heading: { fontSize: 'clamp(1.8rem, 4.5vw, 2.5rem)', fontWeight: '800', color: '#f8fafc', letterSpacing: '-0.02em', marginBottom: '12px' },
+  subheading: { color: '#64748b', lineHeight: '1.7', maxWidth: '460px', margin: '0 auto', fontSize: '13.5px' },
 
-  // group card
-  group: {
-    background: 'rgba(255,255,255,0.02)',
-    border: '1px solid rgba(255,255,255,0.055)',
-    borderRadius: '14px',
-  },
-  groups: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-    gap: '16px',
-  },
-  catRow: {
-    display: 'flex', alignItems: 'center',
-    gap: '8px', marginBottom: '14px',
-  },
-  catDot: {
-    width: '6px', height: '6px',
-    borderRadius: '50%', flexShrink: 0,
-  },
-  catLabel: {
-    fontFamily: "'Fira Code', monospace",
-    fontSize: '11px', fontWeight: '500',
-    letterSpacing: '0.08em', textTransform: 'uppercase',
-  },
-  chipRow: {
-    display: 'flex', flexWrap: 'wrap', gap: '7px',
-  },
-  chip: {
-    borderRadius: '6px',
-    border: '1px solid',
-    fontWeight: '500',
-    cursor: 'default',
-    letterSpacing: '0.02em',
-  },
+  terminalWindow: { background: 'rgba(6, 6, 12, 0.7)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', overflow: 'hidden', backdropFilter: 'blur(12px)', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)' },
+  terminalHeader: { background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' },
+  macBtns: { display: 'flex', gap: '8px' },
+  macBtn: { width: '12px', height: '12px', borderRadius: '50%' },
+  terminalTitle: { fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', color: '#94a3b8' },
+  terminalBody: { fontFamily: "'JetBrains Mono', monospace", fontSize: 'clamp(13px, 2vw, 15px)', minHeight: '300px' },
 
-  bottomGlow: {
-    position: 'absolute', bottom: 0, left: '50%',
-    transform: 'translateX(-50%)',
-    width: '60%', height: '1px',
-    background: 'linear-gradient(90deg, transparent, rgba(99,102,241,0.3), transparent)',
-    zIndex: 0,
-  },
+  terminalLineWrap: { marginBottom: '16px' },
+  promptRow: { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px', color: '#f8fafc' },
+  ps1: { color: 'var(--accent)', fontWeight: '600' },
+  command: { color: '#f8fafc' },
+  outputRow: { color: '#cbd5e1', marginTop: '6px', lineHeight: '1.5' },
+  cursor: { display: 'inline-block', width: '8px', height: '16px', background: 'var(--accent)', animation: 'blink 1s step-end infinite', verticalAlign: 'middle' },
+  kbd: { background: 'rgba(255,255,255,0.1)', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.05)', fontSize: '12px' }
 }

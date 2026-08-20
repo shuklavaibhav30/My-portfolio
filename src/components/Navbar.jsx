@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react'
 import resume from '../assets/resume.pdf'
 
 const NAV_LINKS = [
-  { label: 'About',    href: '#hero' },
-  { label: 'Skills',   href: '#skills' },
-  { label: 'Projects', href: '#projects' },
-  { label: 'Journey',  href: '#timeline' },
+  { label: 'Home',       href: '#hero' },
+  { label: 'Domains',    href: '#skills' },
+  { label: 'Projects',   href: '#projects' },
+  { label: 'Contact',    href: '#contact' },
 ]
+
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -35,33 +36,38 @@ export default function Navbar() {
   return (
     <nav style={{
       ...S.nav,
-      background: scrolled ? 'rgba(7,7,14,0.85)' : 'transparent',
-      borderBottom: scrolled ? '1px solid rgba(99,102,241,0.15)' : '1px solid transparent',
-      backdropFilter: scrolled ? 'blur(14px)' : 'none',
-      padding: isMobile ? '0 20px' : '0 48px',
+      background: scrolled ? 'rgba(3, 3, 7, 0.85)' : 'rgba(3, 3, 7, 0.4)',
+      borderBottom: scrolled ? '1px solid rgba(99, 102, 241, 0.15)' : '1px solid rgba(255, 255, 255, 0.03)',
+      backdropFilter: 'blur(16px)',
+      padding: isMobile ? '0 24px' : '0 60px',
     }}>
-      <a href="#hero" onClick={e => handleNav(e, '#hero')} style={{
-        ...S.logo,
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        maxWidth: isMobile ? '180px' : 'none',
-      }}>
-        &lt;vaibhav.dev /&gt;
-      </a>
+      <div style={S.leftCol}>
+        <a href="#hero" onClick={e => handleNav(e, '#hero')} style={S.logo}>
+          <span style={{ color: '#6366f1' }}>//</span> vaibhav.dev
+        </a>
+      </div>
 
       {/* desktop links */}
       {!isMobile && (
-        <div style={S.links}>
+        <div style={S.centerCol}>
           {NAV_LINKS.map(({ label, href }) => (
-            <a key={label} href={href} onClick={e => handleNav(e, href)} style={S.link}>
-              {label}
+            <a 
+              key={label} 
+              href={href} 
+              onClick={e => handleNav(e, href)} 
+              style={S.link}
+              onMouseEnter={e => { e.target.style.color = '#f8fafc'; e.target.style.textShadow = '0 0 12px rgba(99,102,241,0.3)' }}
+              onMouseLeave={e => { e.target.style.color = '#94a3b8'; e.target.style.textShadow = 'none' }}
+            >
+              <span style={S.navDot}>•</span> {label}
             </a>
           ))}
-          <a href={resume} target="_blank" rel="noreferrer" style={S.resumeBtn}>
-            Resume ↗
-          </a>
         </div>
+      )}
+
+      {/* desktop right col */}
+      {!isMobile && (
+        <div style={S.rightCol}></div>
       )}
 
       {/* mobile hamburger */}
@@ -71,9 +77,9 @@ export default function Navbar() {
           onClick={() => setMenuOpen(o => !o)}
           aria-label="Toggle menu"
         >
-          <span style={{ ...S.burgerLine, transform: menuOpen ? 'rotate(45deg) translate(5px,5px)' : 'none' }} />
+          <span style={{ ...S.burgerLine, transform: menuOpen ? 'rotate(45deg) translate(5px,5px)' : 'none', background: menuOpen ? '#6366f1' : '#94a3b8' }} />
           <span style={{ ...S.burgerLine, opacity: menuOpen ? 0 : 1 }} />
-          <span style={{ ...S.burgerLine, transform: menuOpen ? 'rotate(-45deg) translate(5px,-5px)' : 'none' }} />
+          <span style={{ ...S.burgerLine, transform: menuOpen ? 'rotate(-45deg) translate(5px,-5px)' : 'none', background: menuOpen ? '#6366f1' : '#94a3b8' }} />
         </button>
       )}
 
@@ -82,12 +88,9 @@ export default function Navbar() {
         <div style={S.mobileMenu}>
           {NAV_LINKS.map(({ label, href }) => (
             <a key={label} href={href} onClick={e => handleNav(e, href)} style={S.mobileLink}>
-              {label}
+              <span style={{ color: '#6366f1', marginRight: '8px' }}>•</span> {label}
             </a>
           ))}
-          <a href={resume} target="_blank" rel="noreferrer" style={{ ...S.mobileLink, color: '#818cf8' }}>
-            Resume ↗
-          </a>
         </div>
       )}
     </nav>
@@ -102,74 +105,80 @@ const S = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    height: '64px',
-    transition: 'background 0.3s, border-color 0.3s',
+    height: '60px',
+    transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
   },
   logo: {
-    fontFamily: "'Fira Code', monospace",
-    fontSize: '14px',
-    color: '#818cf8',
-    fontWeight: 500,
-    letterSpacing: '0.02em',
+    fontFamily: "'JetBrains Mono', monospace",
+    fontSize: '13px',
+    color: '#f8fafc',
+    fontWeight: 600,
+    letterSpacing: '0.05em',
     textDecoration: 'none',
   },
-  links: {
+  leftCol: {
+    flex: 1,
     display: 'flex',
-    alignItems: 'center',
+    justifyContent: 'flex-start'
+  },
+  centerCol: {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
     gap: '32px',
   },
+  rightCol: {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  navDot: {
+    color: '#6366f1',
+    marginRight: '4px',
+    fontSize: '14px',
+  },
   link: {
-    fontSize: '13px',
+    fontFamily: "'JetBrains Mono', monospace",
+    fontSize: '11.5px',
     color: '#94a3b8',
     textDecoration: 'none',
     letterSpacing: '0.04em',
-    transition: 'color 0.2s',
-    cursor: 'pointer',
-  },
-  resumeBtn: {
-    fontSize: '12px',
-    color: '#818cf8',
-    border: '1px solid rgba(129,140,248,0.4)',
-    padding: '6px 16px',
-    borderRadius: '6px',
-    textDecoration: 'none',
-    fontFamily: "'Fira Code', monospace",
-    transition: 'background 0.2s',
+    transition: 'color 0.2s ease, text-shadow 0.2s ease',
+    cursor: 'none',
   },
   burger: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '5px',
+    gap: '6px',
     background: 'none',
     border: 'none',
     cursor: 'pointer',
-    padding: '4px',
+    padding: '6px',
   },
   burgerLine: {
     display: 'block',
-    width: '22px',
-    height: '2px',
+    width: '20px',
+    height: '1px',
     background: '#94a3b8',
-    borderRadius: '2px',
-    transition: 'transform 0.25s, opacity 0.25s',
+    transition: 'all 0.25s ease',
   },
   mobileMenu: {
     position: 'absolute',
-    top: '64px',
-    left: 0,
-    right: 0,
-    background: 'rgba(7,7,14,0.97)',
-    borderBottom: '1px solid rgba(99,102,241,0.15)',
-    padding: '16px 0',
+    top: '60px', left: 0, right: 0,
+    background: 'rgba(3, 3, 7, 0.98)',
+    borderBottom: '1px solid rgba(99, 102, 241, 0.15)',
+    padding: '24px 0',
     display: 'flex',
     flexDirection: 'column',
-    backdropFilter: 'blur(14px)',
+    backdropFilter: 'blur(20px)',
   },
   mobileLink: {
-    fontSize: '14px',
+    fontFamily: "'JetBrains Mono', monospace",
+    fontSize: '13px',
     color: '#94a3b8',
-    padding: '12px 32px',
+    padding: '14px 40px',
     textDecoration: 'none',
     transition: 'color 0.2s',
-  },
+  }
 }
