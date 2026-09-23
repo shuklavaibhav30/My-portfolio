@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react'
-import resume from '../assets/resume.pdf'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const NAV_LINKS = [
-  { label: 'Home',       href: '#hero' },
-  { label: 'Domains',    href: '#skills' },
-  { label: 'Projects',   href: '#projects' },
-  { label: 'Contact',    href: '#contact' },
+  { label: 'Home',     href: '#hero' },
+  { label: 'Domains',  href: '#skills' },
+  { label: 'Projects', href: '#projects' },
+  { label: 'Contact',  href: '#contact' },
 ]
-
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [activeSection, setActiveSection] = useState('hero')
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768)
@@ -22,7 +22,21 @@ export default function Navbar() {
   }, [])
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
+    const onScroll = () => {
+      setScrolled(window.scrollY > 30)
+
+      // Section scrollSpy
+      const sections = NAV_LINKS.map(l => l.href.substring(1))
+      const scrollPos = window.scrollY + 200
+
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const el = document.getElementById(sections[i])
+        if (el && el.offsetTop <= scrollPos) {
+          setActiveSection(sections[i])
+          break
+        }
+      }
+    }
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
@@ -30,155 +44,354 @@ export default function Navbar() {
   const handleNav = (e, href) => {
     e.preventDefault()
     setMenuOpen(false)
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
+    const target = document.querySelector(href)
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' })
+    }
   }
 
   return (
-    <nav style={{
-      ...S.nav,
-      background: scrolled ? 'rgba(3, 3, 7, 0.85)' : 'rgba(3, 3, 7, 0.4)',
-      borderBottom: scrolled ? '1px solid rgba(99, 102, 241, 0.15)' : '1px solid rgba(255, 255, 255, 0.03)',
-      backdropFilter: 'blur(16px)',
-      padding: isMobile ? '0 24px' : '0 60px',
-    }}>
-      <div style={S.leftCol}>
-        <a href="#hero" onClick={e => handleNav(e, '#hero')} style={S.logo}>
-          <span style={{ color: '#6366f1' }}>//</span> vaibhav.dev
+    <header className={`navbar-wrapper ${scrolled ? 'scrolled' : ''}`}>
+      <nav className="navbar-container glass-panel">
+        {/* Logo */}
+        <a href="#hero" onClick={e => handleNav(e, '#hero')} className="navbar-logo">
+          <span className="logo-accent">&lt;</span>
+          <span className="logo-text">vaibhav.dev</span>
+          <span className="logo-accent"> /&gt;</span>
+          <span className="online-dot" title="Available for work" />
         </a>
-      </div>
 
-      {/* desktop links */}
-      {!isMobile && (
-        <div style={S.centerCol}>
-          {NAV_LINKS.map(({ label, href }) => (
-            <a 
-              key={label} 
-              href={href} 
-              onClick={e => handleNav(e, href)} 
-              style={S.link}
-              onMouseEnter={e => { e.target.style.color = '#f8fafc'; e.target.style.textShadow = '0 0 12px rgba(99,102,241,0.3)' }}
-              onMouseLeave={e => { e.target.style.color = '#94a3b8'; e.target.style.textShadow = 'none' }}
+        {/* Desktop Links */}
+        {!isMobile && (
+          <div className="navbar-links">
+            {NAV_LINKS.map(({ label, href }) => {
+              const secId = href.substring(1)
+              const isActive = activeSection === secId
+              return (
+                <a
+                  key={label}
+                  href={href}
+                  onClick={e => handleNav(e, href)}
+                  className={`nav-item ${isActive ? 'active' : ''}`}
+                >
+                  <span className="nav-item-text">{label}</span>
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeNavIndicator"
+                      className="nav-active-pill"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                </a>
+              )
+            })}
+          </div>
+        )}
+
+        {/* Desktop CTA */}
+        {!isMobile && (
+          <a
+            href="#contact"
+            onClick={e => handleNav(e, '#contact')}
+            className="navbar-cta-btn"
+          >
+            CONTACT ME
+          </a>
+        )}
+
+        {/* Mobile Hamburger */}
+        {isMobile && (
+          <button
+            className="mobile-burger-btn"
+            onClick={() => setMenuOpen(o => !o)}
+            aria-label="Toggle Navigation Menu"
+          >
+            <span className={`burger-line ${menuOpen ? 'open-top' : ''}`} />
+            <span className={`burger-line ${menuOpen ? 'open-mid' : ''}`} />
+            <span className={`burger-line ${menuOpen ? 'open-bot' : ''}`} />
+          </button>
+        )}
+      </nav>
+
+      {/* Mobile Menu Dropdown */}
+      <AnimatePresence>
+        {isMobile && menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.98 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="mobile-dropdown glass-panel"
+          >
+            {NAV_LINKS.map(({ label, href }) => {
+              const secId = href.substring(1)
+              const isActive = activeSection === secId
+              return (
+                <a
+                  key={label}
+                  href={href}
+                  onClick={e => handleNav(e, href)}
+                  className={`mobile-nav-link ${isActive ? 'active' : ''}`}
+                >
+                  <span className="mobile-link-dot">•</span> {label}
+                </a>
+              )
+            })}
+            <a
+              href="#contact"
+              onClick={e => handleNav(e, '#contact')}
+              className="mobile-cta-btn"
             >
-              <span style={S.navDot}>•</span> {label}
+              CONTACT ME
             </a>
-          ))}
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* desktop right col */}
-      {!isMobile && (
-        <div style={S.rightCol}></div>
-      )}
+      <style>{`
+        .navbar-wrapper {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 1000;
+          padding: 16px 24px;
+          display: flex;
+          justify-content: center;
+          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+          pointer-events: none;
+        }
 
-      {/* mobile hamburger */}
-      {isMobile && (
-        <button
-          style={S.burger}
-          onClick={() => setMenuOpen(o => !o)}
-          aria-label="Toggle menu"
-        >
-          <span style={{ ...S.burgerLine, transform: menuOpen ? 'rotate(45deg) translate(5px,5px)' : 'none', background: menuOpen ? '#6366f1' : '#94a3b8' }} />
-          <span style={{ ...S.burgerLine, opacity: menuOpen ? 0 : 1 }} />
-          <span style={{ ...S.burgerLine, transform: menuOpen ? 'rotate(-45deg) translate(5px,-5px)' : 'none', background: menuOpen ? '#6366f1' : '#94a3b8' }} />
-        </button>
-      )}
+        .navbar-wrapper.scrolled {
+          padding: 10px 24px;
+        }
 
-      {/* mobile menu */}
-      {isMobile && menuOpen && (
-        <div style={S.mobileMenu}>
-          {NAV_LINKS.map(({ label, href }) => (
-            <a key={label} href={href} onClick={e => handleNav(e, href)} style={S.mobileLink}>
-              <span style={{ color: '#6366f1', marginRight: '8px' }}>•</span> {label}
-            </a>
-          ))}
-        </div>
-      )}
-    </nav>
+        .navbar-container {
+          pointer-events: auto;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          max-width: 920px;
+          height: 50px;
+          padding: 0 20px;
+          border-radius: 28px;
+          background: rgba(8, 8, 22, 0.85) !important;
+          backdrop-filter: blur(24px) saturate(180%) !important;
+          -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+          border: 1px solid rgba(99, 102, 241, 0.25) !important;
+          box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 20px rgba(99, 102, 241, 0.12) !important;
+          transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .navbar-wrapper.scrolled .navbar-container {
+          border-color: rgba(99, 102, 241, 0.45) !important;
+          box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.9), 0 0 25px rgba(99, 102, 241, 0.22) !important;
+        }
+
+        /* Logo */
+        .navbar-logo {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 13px;
+          font-weight: 700;
+          color: #f8fafc;
+          text-decoration: none;
+          letter-spacing: 0.04em;
+        }
+
+        .logo-accent {
+          color: #6366f1;
+        }
+
+        .logo-text {
+          color: #ffffff;
+        }
+
+        .online-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #10b981;
+          box-shadow: 0 0 10px #10b981;
+          margin-left: 6px;
+          animation: pulse-glow 2s infinite;
+        }
+
+        /* Nav Links */
+        .navbar-links {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          position: relative;
+        }
+
+        .nav-item {
+          position: relative;
+          font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+          font-size: 13px;
+          font-weight: 500;
+          color: #94a3b8;
+          text-decoration: none;
+          padding: 6px 18px;
+          border-radius: 20px;
+          letter-spacing: 0.01em;
+          transition: color 0.25s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .nav-item:hover {
+          color: #ffffff;
+        }
+
+        .nav-item.active {
+          color: #ffffff;
+          font-weight: 600;
+        }
+
+        .nav-item-text {
+          position: relative;
+          z-index: 2;
+        }
+
+        .nav-active-pill {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(99, 102, 241, 0.22) 0%, rgba(139, 92, 246, 0.18) 100%);
+          border: 1px solid rgba(99, 102, 241, 0.35);
+          border-radius: 20px;
+          z-index: 1;
+          box-shadow: 0 4px 14px rgba(99, 102, 241, 0.15);
+        }
+
+        /* CTA */
+        .navbar-cta-btn {
+          font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+          font-size: 12px;
+          font-weight: 600;
+          color: #ffffff;
+          background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+          padding: 7px 18px;
+          border-radius: 20px;
+          text-decoration: none;
+          letter-spacing: 0.04em;
+          box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          transition: all 0.25s ease;
+        }
+
+        .navbar-cta-btn:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+          background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        }
+
+        /* Burger */
+        .mobile-burger-btn {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 6px;
+        }
+
+        .burger-line {
+          width: 18px;
+          height: 2px;
+          background: #cbd5e1;
+          border-radius: 2px;
+          transition: all 0.3s ease;
+        }
+
+        .burger-line.open-top {
+          transform: rotate(45deg) translate(4px, 4px);
+          background: #6366f1;
+        }
+
+        .burger-line.open-mid {
+          opacity: 0;
+        }
+
+        .burger-line.open-bot {
+          transform: rotate(-45deg) translate(4px, -4px);
+          background: #6366f1;
+        }
+
+        /* Mobile Dropdown */
+        .mobile-dropdown {
+          pointer-events: auto;
+          position: absolute;
+          top: 68px;
+          left: 20px;
+          right: 20px;
+          background: rgba(8, 8, 22, 0.94) !important;
+          border: 1px solid rgba(99, 102, 241, 0.3) !important;
+          border-radius: 20px;
+          padding: 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.85);
+          backdrop-filter: blur(24px) !important;
+        }
+
+        .mobile-nav-link {
+          font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+          font-size: 13.5px;
+          font-weight: 500;
+          color: #94a3b8;
+          text-decoration: none;
+          padding: 10px 16px;
+          border-radius: 12px;
+          transition: all 0.2s ease;
+        }
+
+        .mobile-nav-link.active,
+        .mobile-nav-link:hover {
+          color: #ffffff;
+          background: rgba(99, 102, 241, 0.15);
+        }
+
+        .mobile-link-dot {
+          color: #6366f1;
+          margin-right: 6px;
+        }
+
+        .mobile-cta-btn {
+          font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+          font-size: 12px;
+          font-weight: 600;
+          color: #ffffff;
+          background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+          padding: 12px;
+          border-radius: 14px;
+          text-align: center;
+          text-decoration: none;
+          letter-spacing: 0.04em;
+          margin-top: 8px;
+        }
+
+        @media (max-width: 768px) {
+          .navbar-wrapper { padding: 12px 16px; }
+          .navbar-container {
+            height: 48px;
+            padding: 0 16px;
+            position: relative;
+            justify-content: flex-end;
+          }
+          .navbar-logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+          }
+        }
+      `}</style>
+    </header>
   )
-}
-
-const S = {
-  nav: {
-    position: 'fixed',
-    top: 0, left: 0, right: 0,
-    zIndex: 100,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    height: '60px',
-    transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-  },
-  logo: {
-    fontFamily: "'JetBrains Mono', monospace",
-    fontSize: '13px',
-    color: '#f8fafc',
-    fontWeight: 600,
-    letterSpacing: '0.05em',
-    textDecoration: 'none',
-  },
-  leftCol: {
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'flex-start'
-  },
-  centerCol: {
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '32px',
-  },
-  rightCol: {
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  navDot: {
-    color: '#6366f1',
-    marginRight: '4px',
-    fontSize: '14px',
-  },
-  link: {
-    fontFamily: "'JetBrains Mono', monospace",
-    fontSize: '11.5px',
-    color: '#94a3b8',
-    textDecoration: 'none',
-    letterSpacing: '0.04em',
-    transition: 'color 0.2s ease, text-shadow 0.2s ease',
-    cursor: 'none',
-  },
-  burger: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '6px',
-    background: 'none',
-    border: 'none',
-    cursor: 'pointer',
-    padding: '6px',
-  },
-  burgerLine: {
-    display: 'block',
-    width: '20px',
-    height: '1px',
-    background: '#94a3b8',
-    transition: 'all 0.25s ease',
-  },
-  mobileMenu: {
-    position: 'absolute',
-    top: '60px', left: 0, right: 0,
-    background: 'rgba(3, 3, 7, 0.98)',
-    borderBottom: '1px solid rgba(99, 102, 241, 0.15)',
-    padding: '24px 0',
-    display: 'flex',
-    flexDirection: 'column',
-    backdropFilter: 'blur(20px)',
-  },
-  mobileLink: {
-    fontFamily: "'JetBrains Mono', monospace",
-    fontSize: '13px',
-    color: '#94a3b8',
-    padding: '14px 40px',
-    textDecoration: 'none',
-    transition: 'color 0.2s',
-  }
 }

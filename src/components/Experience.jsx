@@ -55,17 +55,20 @@ export default function Experience({ isMobile }) {
           >
             // CURRENTLY_BUILDING
           </motion.span>
+          <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '36px' }}>
+            Current <span className="highlight-gradient">Role</span>
+          </h2>
 
           {/* Interactive Professional Card */}
           <motion.div
             style={{
               ...S.card,
-              padding: isMobile ? '24px 20px' : '36px 40px',
+              padding: isMobile ? '28px 20px' : '38px 44px',
               transform: isHovered && !isMobile && !isReduced ? 'translateY(-4px)' : 'translateY(0px)',
               boxShadow: isHovered
-                ? '0 12px 35px -10px rgba(99, 102, 241, 0.25), 0 0 15px rgba(99, 102, 241, 0.15)'
-                : '0 0 30px rgba(99, 102, 241, 0.08)',
-              borderColor: isHovered ? 'rgba(99, 102, 241, 0.45)' : 'rgba(99, 102, 241, 0.2)',
+                ? '0 20px 50px -15px rgba(99, 102, 241, 0.35), inset 0 0 30px rgba(99, 102, 241, 0.12)'
+                : '0 10px 30px rgba(0, 0, 0, 0.5)',
+              borderColor: isHovered ? 'rgba(99, 102, 241, 0.45)' : 'rgba(255, 255, 255, 0.08)',
             }}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
@@ -73,7 +76,7 @@ export default function Experience({ isMobile }) {
             {/* Ambient Background Glow Effect inside Card */}
             <div style={{
               ...S.cardBgOrb,
-              opacity: isHovered ? 0.08 : 0.04,
+              opacity: isHovered ? 0.12 : 0.05,
               transform: isHovered ? 'scale(1.1)' : 'scale(1)'
             }} />
 
@@ -82,7 +85,7 @@ export default function Experience({ isMobile }) {
               ...S.accentLine,
               background: isHovered
                 ? 'linear-gradient(90deg, #ec4899, #6366f1, #3b82f6, #10b981)'
-                : 'linear-gradient(90deg, #6366f1, #3b82f6, #ec4899)',
+                : 'linear-gradient(90deg, #6366f1, #8b5cf6, transparent)',
             }} />
 
             <div style={S.headerRow}>
@@ -96,7 +99,7 @@ export default function Experience({ isMobile }) {
             </div>
 
             <p style={S.quote}>
-              "Building modern web applications while collaborating on hackathons, team projects, and real-world development initiatives."
+              Building modern web applications while collaborating on hackathons, team projects, and real-world development initiatives.
             </p>
 
             {/* Staggered Metadata Badges */}
@@ -107,8 +110,9 @@ export default function Experience({ isMobile }) {
                   variants={tagVariants}
                   style={{
                     ...S.metaTag,
-                    borderColor: isHovered ? 'rgba(99, 102, 241, 0.3)' : 'rgba(255, 255, 255, 0.06)',
-                    color: isHovered ? '#e2e8f0' : '#94a3b8',
+                    borderColor: isHovered ? 'rgba(99, 102, 241, 0.4)' : 'rgba(255, 255, 255, 0.08)',
+                    color: isHovered ? '#ffffff' : '#94a3b8',
+                    background: isHovered ? 'rgba(99, 102, 241, 0.12)' : 'rgba(255, 255, 255, 0.03)',
                   }}
                 >
                   {tag}
@@ -125,7 +129,7 @@ export default function Experience({ isMobile }) {
 const S = {
   section: {
     background: 'transparent',
-    padding: '60px 24px',
+    padding: '80px 24px',
     position: 'relative',
     overflow: 'hidden',
   },
@@ -139,16 +143,16 @@ const S = {
     color: 'var(--accent, #6366f1)',
     letterSpacing: '0.2em',
     display: 'block',
-    marginBottom: '16px',
+    marginBottom: '12px',
     textAlign: 'center',
-    fontWeight: '600',
+    fontWeight: '700',
   },
   card: {
     position: 'relative',
-    background: 'rgba(6, 6, 18, 0.75)',
-    border: '1px solid rgba(99, 102, 241, 0.2)',
-    borderRadius: '12px',
-    backdropFilter: 'blur(12px)',
+    background: 'rgba(8, 8, 22, 0.85)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    borderRadius: '18px',
+    backdropFilter: 'blur(20px) saturate(180%)',
     overflow: 'hidden',
     transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
   },
@@ -164,7 +168,7 @@ const S = {
     top: 0,
     left: 0,
     right: 0,
-    height: '2px',
+    height: '3px',
     transition: 'background 0.5s ease',
   },
   headerRow: {
@@ -178,8 +182,8 @@ const S = {
     zIndex: 1,
   },
   orgName: {
-    fontFamily: "'Inter', sans-serif",
-    fontSize: 'clamp(1.25rem, 3vw, 1.6rem)',
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontSize: 'clamp(1.3rem, 3vw, 1.65rem)',
     fontWeight: '800',
     color: '#f8fafc',
     letterSpacing: '-0.015em',
@@ -187,10 +191,10 @@ const S = {
   },
   roleTitle: {
     fontFamily: "'JetBrains Mono', monospace",
-    fontSize: '12px',
+    fontSize: '11.5px',
     fontWeight: '700',
     color: 'var(--accent, #6366f1)',
-    letterSpacing: '0.12em',
+    letterSpacing: '0.14em',
   },
   statusBadge: {
     display: 'inline-flex',
@@ -200,11 +204,11 @@ const S = {
     fontSize: '10px',
     fontWeight: '700',
     color: '#10b981',
-    background: 'rgba(16, 185, 129, 0.08)',
-    border: '1px solid rgba(16, 185, 129, 0.25)',
+    background: 'rgba(16, 185, 129, 0.1)',
+    border: '1px solid rgba(16, 185, 129, 0.3)',
     padding: '5px 12px',
     borderRadius: '20px',
-    letterSpacing: '0.06em',
+    letterSpacing: '0.08em',
   },
   statusDot: {
     width: '6px',
@@ -215,14 +219,13 @@ const S = {
     animation: 'pulseGlowDot 2s ease-in-out infinite',
   },
   quote: {
-    fontFamily: "Georgia, 'Times New Roman', serif",
-    fontStyle: 'italic',
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
     color: '#cbd5e1',
-    fontSize: 'clamp(0.95rem, 2vw, 1.12rem)',
-    lineHeight: '1.65',
+    fontSize: 'clamp(0.95rem, 2vw, 1.05rem)',
+    lineHeight: '1.7',
     marginBottom: '26px',
-    borderLeft: '2px solid rgba(99, 102, 241, 0.4)',
-    paddingLeft: '16px',
+    borderLeft: '3px solid #6366f1',
+    paddingLeft: '18px',
     position: 'relative',
     zIndex: 1,
   },
@@ -235,11 +238,10 @@ const S = {
   },
   metaTag: {
     fontFamily: "'JetBrains Mono', monospace",
-    fontSize: '10.5px',
-    background: 'rgba(255, 255, 255, 0.03)',
+    fontSize: '11px',
     border: '1px solid',
     padding: '5px 12px',
-    borderRadius: '4px',
+    borderRadius: '12px',
     letterSpacing: '0.05em',
     fontWeight: '600',
     transition: 'all 0.3s ease',

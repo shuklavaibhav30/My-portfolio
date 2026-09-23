@@ -334,7 +334,7 @@ export default function Stats({ isMobile }) {
         <div className="section-header-centered">
           <span className="stats-eyebrow">// COMPUTING_NODES</span>
           <h2 className="section-title">
-            LIVE DEVELOPMENT METRICS
+            Development <span className="highlight-gradient">Metrics</span>
             <span className="live-badge"><span className="live-badge-dot" /> LIVE</span>
           </h2>
         </div>
@@ -699,7 +699,7 @@ export default function Stats({ isMobile }) {
           margin-bottom: 10px;
         }
 
-        .section-title {
+        .section-header-centered .section-title {
           font-size: clamp(1.8rem, 4.5vw, 2.5rem);
           font-weight: 800;
           color: #f8fafc;

@@ -11,6 +11,7 @@ import Contact         from './components/Contact'
 import BootSequence    from './components/BootSequence'
 import CustomCursor    from './components/CustomCursor'
 import CommandPalette  from './components/CommandPalette'
+import Background3D    from './components/Background3D'
 
 const KONAMI_CODE = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight'];
 
@@ -46,6 +47,7 @@ export default function App() {
 
   return (
     <>
+      <Background3D isMobile={isMobile} />
       <BootSequence onComplete={() => {}} />
       <CustomCursor isMobile={isMobile} />
       <CommandPalette />
@@ -68,7 +70,7 @@ export default function App() {
         </div>
       )}
 
-      <main style={{ background: 'var(--bg, #030307)', transition: 'background 0.3s' }}>
+      <main style={{ background: 'transparent', position: 'relative', zIndex: 1 }}>
         <Navbar />
         <Hero isMobile={isMobile} />
         <Stats isMobile={isMobile} />

@@ -99,7 +99,7 @@ export default function Timeline({ isMobile }) {
       <div style={S.inner}>
         <motion.div ref={headRef} style={S.header} initial={{ opacity: 0, y: 15 }} animate={headInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }}>
           <span style={S.eyebrow}>// LEARNING_LOG</span>
-          <h2 style={S.heading}>Learning Trajectory</h2>
+          <h2 className="section-title">Learning <span className="highlight-gradient">Trajectory</span></h2>
           <p style={S.subheading}>A timeline of the systems, milestones, and foundations shaping my development journey.</p>
         </motion.div>
 

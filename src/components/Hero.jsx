@@ -1,15 +1,18 @@
 import { useEffect, useState, useRef } from 'react'
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import useMousePosition from '../hooks/useMousePosition'
 import useReducedMotion from '../hooks/useReducedMotion'
-import profile from '../assets/profile.jpg'
+import profile from '../assets/vaibhavshukla.png'
 import resume from '../assets/resume.pdf'
+
 const SOCIALS = [
   { id: 'github', label: 'GitHub', href: 'https://github.com/shuklavaibhav30', path: 'M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z' },
   { id: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/in/vaibhav-kumar-shukla-445b3a300/', path: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z' },
   { id: 'insta', label: 'Instagram', href: 'https://www.instagram.com/vaiibhavvshukla/', path: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z' },
   { id: 'x', label: 'X', href: 'https://x.com/shuklagvk', path: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' }
 ]
+
+const QUICK_TAGS = ['React.js', 'Node.js', 'Express', 'MongoDB', 'TypeScript', 'Tailwind CSS', 'C++']
 
 function MagneticButton({ children, href, style, isPrimary, onClick }) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -51,49 +54,118 @@ function MagneticButton({ children, href, style, isPrimary, onClick }) {
 
 export default function Hero({ isMobile }) {
   const [resumeTerminal, setResumeTerminal] = useState(false)
+  const [resumeProgress, setResumeProgress] = useState(0)
   const [resumeLines, setResumeLines] = useState([])
   const [isHoveringPortrait, setIsHoveringPortrait] = useState(false)
 
   const mousePosition = useMousePosition();
   const isReduced = useReducedMotion();
-  const { scrollY } = useScroll();
-  const opacity = useTransform(scrollY, [0, 500], [1, 0]);
 
-  const txImg = isReduced || isMobile ? 0 : (mousePosition.x - window.innerWidth / 2) * 0.012;
-  const tyImg = isReduced || isMobile ? 0 : (mousePosition.y - window.innerHeight / 2) * 0.012;
-  const txHud = isReduced || isMobile ? 0 : (mousePosition.x - window.innerWidth / 2) * -0.008;
-  const tyHud = isReduced || isMobile ? 0 : (mousePosition.y - window.innerHeight / 2) * -0.008;
+  const txImg = isReduced || isMobile ? 0 : (mousePosition.x - window.innerWidth / 2) * 0.015;
+  const tyImg = isReduced || isMobile ? 0 : (mousePosition.y - window.innerHeight / 2) * 0.015;
+
+  const RESUME_STEPS = [
+    { code: '01', text: 'Locating resume.pdf payload...', status: 'FOUND' },
+    { code: '02', text: 'Verifying SHA-256 integrity signature...', status: 'VERIFIED' },
+    { code: '03', text: 'Decrypting document stream...', status: 'OK' },
+    { code: '04', text: 'Launching viewer in new window...', status: 'READY' },
+  ];
 
   const handleResumeInit = (e) => {
     e.preventDefault();
     setResumeTerminal(true);
     setResumeLines([]);
-    const lines = ['> locating resume.pdf...', '> verifying document...', '> initializing viewer...', '> READY'];
+    setResumeProgress(0);
+
     let step = 0;
     const interval = setInterval(() => {
-      setResumeLines(prev => [...prev, lines[step]]);
-      step++;
-      if (step === lines.length) {
+      if (step < RESUME_STEPS.length) {
+        setResumeLines(prev => [...prev, RESUME_STEPS[step]]);
+        setResumeProgress(Math.round(((step + 1) / RESUME_STEPS.length) * 100));
+        step++;
+      } else {
         clearInterval(interval);
-        setTimeout(() => { window.open(resume, '_blank'); setResumeTerminal(false); }, 600);
+        setTimeout(() => {
+          window.open(resume, '_blank');
+          setResumeTerminal(false);
+        }, 500);
       }
-    }, 200);
+    }, 220);
+  };
+
+  const scrollToProjects = (e) => {
+    e.preventDefault();
+    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const container = { hidden: {}, show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } } }
   const item = {
-    hidden: { opacity: 0, y: 12, filter: 'blur(4px)' },
+    hidden: { opacity: 0, y: 14, filter: 'blur(4px)' },
     show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
   }
 
   return (
     <section id="hero" className="hero-section">
+      {/* Dynamic Background Glowing Orbs */}
+      <div className="hero-ambient-glow glow-1" />
+      <div className="hero-ambient-glow glow-2" />
+      <div className="hero-ambient-glow glow-3" />
+
       <AnimatePresence>
         {resumeTerminal && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="resume-overlay">
-            <div className="resume-box">
-              {resumeLines.map((l, i) => <div key={i} className="resume-line">{l}</div>)}
-            </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="resume-overlay"
+            onClick={() => setResumeTerminal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.88, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.92, y: 10 }}
+              transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+              className="resume-modal-card"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header Bar */}
+              <div className="resume-modal-header">
+                <div className="mac-buttons">
+                  <span className="mac-dot red" />
+                  <span className="mac-dot yellow" />
+                  <span className="mac-dot green" />
+                </div>
+                <div className="resume-modal-title">
+                  <span className="lock-icon">🔒</span> RESUME_TRANSFER.PDF
+                </div>
+                <div className="progress-perc">{resumeProgress}%</div>
+              </div>
+
+              {/* Progress Bar Track */}
+              <div className="resume-progress-track">
+                <motion.div
+                  className="resume-progress-bar"
+                  animate={{ width: `${resumeProgress}%` }}
+                  transition={{ ease: 'easeOut', duration: 0.25 }}
+                />
+              </div>
+
+              {/* Terminal Lines */}
+              <div className="resume-modal-body">
+                {resumeLines.map((l, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="resume-log-line"
+                  >
+                    <span className="line-prefix">[{l.code}]</span>
+                    <span className="line-text">{l.text}</span>
+                    <span className="line-status">{l.status}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -101,8 +173,8 @@ export default function Hero({ isMobile }) {
       <div className={`hero-grid ${isMobile ? 'mobile' : ''}`}>
         {/* LEFT COLUMN */}
         <motion.div className="hero-left" variants={container} initial="hidden" animate="show">
-          <motion.div variants={item} className="section-label">
-            // FULL-STACK DEVELOPER
+          <motion.div variants={item} className="label-row">
+            <span className="section-label">// MERN STACK DEVELOPER</span>
           </motion.div>
 
           <motion.h1 variants={item} className="hero-name">
@@ -111,49 +183,60 @@ export default function Hero({ isMobile }) {
             <span className="name-gradient">SHUKLA</span>
           </motion.h1>
 
-          <motion.div variants={item} className="hero-socials">
-            {SOCIALS.map(s => (
-              <a key={s.id} href={s.href} target="_blank" rel="noreferrer" className="hero-social-icon">
-                <svg viewBox="0 0 24 24" width={18} height={18} fill="currentColor"><path d={s.path} /></svg>
-              </a>
+          <motion.p variants={item} className="hero-bio">
+            Architecting scalable MERN applications, AI-powered systems, and high-performance full-stack web platforms with modern developer experiences.
+          </motion.p>
+
+          <motion.div variants={item} className="quick-tags-container">
+            {QUICK_TAGS.map((tag) => (
+              <span key={tag} className="hero-quick-tag">
+                {tag}
+              </span>
             ))}
           </motion.div>
 
           <motion.div variants={item} className="cta-row">
             <MagneticButton onClick={handleResumeInit} isPrimary={true}>
-              <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <svg viewBox="0 0 24 24" width={15} height={15} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
               DOWNLOAD RESUME
             </MagneticButton>
+
+            <MagneticButton onClick={scrollToProjects} isPrimary={false}>
+              EXPLORE PROJECTS ↓
+            </MagneticButton>
+          </motion.div>
+
+          <motion.div variants={item} className="hero-socials">
+            {SOCIALS.map(s => (
+              <a key={s.id} href={s.href} target="_blank" rel="noreferrer" className="hero-social-icon" title={s.label}>
+                <svg viewBox="0 0 24 24" width={18} height={18} fill="currentColor"><path d={s.path} /></svg>
+              </a>
+            ))}
           </motion.div>
         </motion.div>
 
-        {/* RIGHT COLUMN - PORTRAIT */}
+        {/* RIGHT COLUMN - CLEAN EMBEDDED TRANSPARENT PORTRAIT */}
         <motion.div
           className="hero-right"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
         >
           <motion.div
-            className={`portrait-container ${isHoveringPortrait ? 'hovered' : ''}`}
+            className={`portrait-wrapper ${isHoveringPortrait ? 'hovered' : ''}`}
             style={{ x: txImg, y: tyImg }}
             onMouseEnter={() => !isMobile && setIsHoveringPortrait(true)}
             onMouseLeave={() => !isMobile && setIsHoveringPortrait(false)}
           >
-            <div className="portrait-glow" />
+            {/* Soft Ambient Radial Aura Light behind portrait cut-out */}
+            <div className="hero-portrait-aura" />
 
-            <div className="circular-frame">
-              {/* Orbiting ring 1 (clockwise 14s) */}
-              <div className="orbit-ring orbit-ring-1">
-                <div className="accent-dot orbit-dot-1" />
-              </div>
-              {/* Orbiting ring 2 (counter-clockwise 20s) */}
-              <div className="orbit-ring orbit-ring-2">
-                <div className="accent-dot orbit-dot-2" />
-              </div>
-
-              <img src={profile} alt="Vaibhav Shukla" className="circular-photo" />
-            </div>
+            {/* Clean Embedded Portrait Cut-out Image */}
+            <img
+              src={profile}
+              alt="Vaibhav Kumar Shukla"
+              className="transparent-hero-cutout"
+            />
           </motion.div>
         </motion.div>
       </div>
@@ -166,28 +249,75 @@ export default function Hero({ isMobile }) {
           overflow: hidden;
           display: flex;
           align-items: center;
-          padding: 100px 60px 60px;
+          padding: 120px 60px 80px;
         }
+
+        /* Ambient Glow Background Orbs */
+        .hero-ambient-glow {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(90px);
+          pointer-events: none;
+          z-index: 0;
+        }
+        .glow-1 {
+          width: 450px;
+          height: 450px;
+          top: 10%;
+          left: -5%;
+          background: rgba(99, 102, 241, 0.12);
+          animation: glowFloat1 10s ease-in-out infinite alternate;
+        }
+        .glow-2 {
+          width: 400px;
+          height: 400px;
+          bottom: 15%;
+          right: 5%;
+          background: rgba(139, 92, 246, 0.12);
+          animation: glowFloat2 12s ease-in-out infinite alternate;
+        }
+        .glow-3 {
+          width: 350px;
+          height: 350px;
+          top: 40%;
+          left: 45%;
+          background: rgba(236, 72, 153, 0.07);
+          animation: glowFloat3 9s ease-in-out infinite alternate;
+        }
+
+        @keyframes glowFloat1 {
+          0% { transform: translate(0, 0) scale(1); }
+          100% { transform: translate(40px, 30px) scale(1.1); }
+        }
+        @keyframes glowFloat2 {
+          0% { transform: translate(0, 0) scale(1); }
+          100% { transform: translate(-30px, -40px) scale(1.15); }
+        }
+        @keyframes glowFloat3 {
+          0% { transform: translate(0, 0) scale(0.9); }
+          100% { transform: translate(25px, -25px) scale(1.1); }
+        }
+
         @media (max-width: 900px) {
-          .hero-section { padding: 100px 20px 40px; }
+          .hero-section { padding: 110px 20px 50px; }
         }
 
         .hero-grid {
           display: grid;
-          grid-template-columns: 1fr 42%;
-          gap: 40px;
+          grid-template-columns: 1fr 44%;
+          gap: 48px;
           align-items: center;
           width: 100%;
-          max-width: 1200px;
+          max-width: 1240px;
           margin: 0 auto;
           position: relative;
-          z-index: 1;
+          z-index: 2;
         }
         .hero-grid.mobile {
           grid-template-columns: 1fr;
         }
 
-        /* LEFT */
+        /* LEFT COLUMN */
         .hero-left {
           display: flex;
           flex-direction: column;
@@ -200,44 +330,28 @@ export default function Hero({ isMobile }) {
           width: 100%;
         }
 
-        .boot-line {
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 12px;
-          color: #64748b;
-          margin-bottom: 16px;
-        }
-
-        .status-row {
+        .label-row {
           display: flex;
-          gap: 20px;
+          align-items: center;
+          gap: 14px;
           flex-wrap: wrap;
-          margin-bottom: 32px;
-        }
-        .status-item {
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 10px;
-          color: #64748b;
-          letter-spacing: 0.05em;
-        }
-        .status-ok {
-          color: #10b981;
-          font-weight: 700;
+          margin-bottom: 12px;
         }
 
         .section-label {
           font-family: 'JetBrains Mono', monospace;
           color: var(--accent);
-          font-size: 11px;
-          letter-spacing: 0.2em;
-          margin-bottom: 10px;
+          font-size: 11.5px;
+          letter-spacing: 0.18em;
+          font-weight: 700;
         }
 
         .hero-name {
-          font-size: clamp(2.8rem, 6vw, 4.2rem);
+          font-size: clamp(2.8rem, 5.5vw, 4.2rem);
           font-weight: 800;
           line-height: 1.05;
           letter-spacing: -0.02em;
-          margin-bottom: 24px;
+          margin-bottom: 18px;
         }
         .hero-grid.mobile .hero-name {
           text-align: center;
@@ -248,38 +362,49 @@ export default function Hero({ isMobile }) {
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
+          text-shadow: 0 0 35px rgba(139, 92, 246, 0.25);
         }
 
-        .hero-sub {
-          font-family: 'JetBrains Mono', monospace;
+        .hero-bio {
+          color: #94a3b8;
+          font-size: 14.5px;
+          line-height: 1.65;
+          max-width: 520px;
+          margin-bottom: 20px;
+        }
+        .hero-grid.mobile .hero-bio {
+          text-align: center;
+        }
+
+        .quick-tags-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 7px;
+          margin-bottom: 28px;
+        }
+        .hero-grid.mobile .quick-tags-container {
+          justify-content: center;
+        }
+
+        .hero-quick-tag {
+          background: rgba(255,255,255,0.035);
+          border: 1px solid rgba(255,255,255,0.08);
           color: #cbd5e1;
-          font-size: 13px;
-          margin-bottom: 16px;
-          font-weight: 500;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 11px;
+          padding: 4px 11px;
+          border-radius: 5px;
+          backdrop-filter: blur(8px);
+          transition: all 0.25s ease;
         }
-
-        .hero-socials {
-          display: flex;
-          gap: 16px;
-          margin-bottom: 24px;
-        }
-        .hero-grid.mobile .hero-socials {
-          justify-content: center;
-          width: 100%;
-        }
-        .hero-social-icon {
-          color: rgba(255, 255, 255, 0.4);
-          transition: all 0.2s ease;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .hero-social-icon:hover {
-          color: var(--accent);
+        .hero-quick-tag:hover {
+          background: rgba(99, 102, 241, 0.15);
+          border-color: rgba(99, 102, 241, 0.35);
+          color: #ffffff;
           transform: translateY(-2px);
         }
 
-        .cta-row { display: flex; gap: 14px; margin-bottom: 36px; flex-wrap: wrap; }
+        .cta-row { display: flex; gap: 14px; margin-bottom: 28px; flex-wrap: wrap; }
         .hero-grid.mobile .cta-row {
           justify-content: center;
           width: 100%;
@@ -291,24 +416,27 @@ export default function Hero({ isMobile }) {
           font-weight: 700;
           padding: 13px 26px;
           letter-spacing: 0.05em;
-          border-radius: 2px;
+          border-radius: 6px;
           background: transparent;
           border: none;
-          cursor: none;
+          cursor: pointer;
+          backdrop-filter: blur(10px);
           transition: all 0.3s ease;
         }
         .hero-btn.primary {
           color: #fff;
-          background: linear-gradient(135deg, rgba(99,102,241,0.25) 0%, rgba(147,51,234,0.2) 100%);
-          border: 1px solid rgba(99,102,241,0.5);
+          background: linear-gradient(135deg, rgba(99,102,241,0.35) 0%, rgba(147,51,234,0.3) 100%);
+          border: 1px solid rgba(99,102,241,0.55);
+          box-shadow: 0 4px 20px rgba(99,102,241,0.18);
         }
         .hero-btn.primary:hover {
-          box-shadow: 0 0 25px rgba(99,102,241,0.35);
-          background: linear-gradient(135deg, rgba(99,102,241,0.45) 0%, rgba(147,51,234,0.35) 100%);
+          box-shadow: 0 0 30px rgba(99,102,241,0.45);
+          border-color: rgba(99,102,241,0.8);
+          transform: translateY(-2px);
         }
         .hero-btn.primary .hero-btn-bg {
           position: absolute; inset: 0;
-          background: linear-gradient(135deg, rgba(99,102,241,0.4) 0%, rgba(147,51,234,0.3) 100%);
+          background: linear-gradient(135deg, rgba(99,102,241,0.45) 0%, rgba(147,51,234,0.35) 100%);
           transform: scaleX(0); transform-origin: left;
           transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
           z-index: 1;
@@ -316,59 +444,56 @@ export default function Hero({ isMobile }) {
         .hero-btn.primary:hover .hero-btn-bg { transform: scaleX(1); }
 
         .hero-btn.ghost {
-          color: #94a3b8;
-          border: 1px solid rgba(255,255,255,0.08);
+          color: #cbd5e1;
+          border: 1px solid rgba(255,255,255,0.12);
+          background: rgba(255,255,255,0.025);
         }
         .hero-btn.ghost .hero-btn-bg {
           position: absolute; inset: 0;
-          background: rgba(255,255,255,0.04);
+          background: rgba(255,255,255,0.06);
           transform: scaleX(0); transform-origin: right;
           transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
           z-index: 1;
         }
         .hero-btn.ghost:hover {
           color: #f8fafc;
-          border-color: rgba(255,255,255,0.15);
-          box-shadow: 0 0 12px rgba(255,255,255,0.05);
+          border-color: rgba(255,255,255,0.25);
+          box-shadow: 0 4px 15px rgba(255,255,255,0.06);
+          transform: translateY(-2px);
         }
         .hero-btn.ghost:hover .hero-btn-bg { transform: scaleX(1); }
 
-        /* Social */
-        .social-area { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
-        .social-icons { display: flex; gap: 10px; }
-        .social-icon {
-          width: 40px; height: 40px;
-          display: flex; align-items: center; justify-content: center;
-          background: rgba(255,255,255,0.02);
-          border: 1px solid rgba(255,255,255,0.06);
+        /* Social Icons */
+        .hero-socials {
+          display: flex;
+          gap: 12px;
+        }
+        .hero-grid.mobile .hero-socials {
+          justify-content: center;
+          width: 100%;
+        }
+        .hero-social-icon {
+          width: 40px;
+          height: 40px;
+          border-radius: 8px;
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.08);
+          backdrop-filter: blur(8px);
           color: #94a3b8;
-          border-radius: 2px;
-          transition: all 0.3s ease;
-          cursor: none;
+          transition: all 0.25s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
-        .social-icon:hover {
+        .hero-social-icon:hover {
+          color: #ffffff;
+          background: rgba(99,102,241,0.18);
+          border-color: rgba(99,102,241,0.45);
           transform: translateY(-3px);
-          color: var(--accent-col);
-          border-color: rgba(255,255,255,0.12);
-          box-shadow: 0 6px 15px rgba(0,0,0,0.5);
+          box-shadow: 0 6px 16px rgba(99,102,241,0.25);
         }
 
-        .online-status {
-          display: flex; align-items: center; gap: 8px;
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 10px;
-          color: #10b981;
-          font-weight: 700;
-          letter-spacing: 0.1em;
-        }
-        .pulse-dot {
-          width: 6px; height: 6px;
-          border-radius: 50%;
-          background: #10b981;
-          animation: pulse-glow 2s infinite;
-        }
-
-        /* RIGHT - PORTRAIT & ORBIT ANIMATIONS */
+        /* RIGHT COLUMN - CLEAN EMBEDDED TRANSPARENT PORTRAIT */
         .hero-right {
           display: flex;
           justify-content: center;
@@ -377,161 +502,160 @@ export default function Hero({ isMobile }) {
         }
         .hero-grid.mobile .hero-right {
           order: -1;
-          margin-bottom: 20px;
+          margin-bottom: 24px;
         }
 
-        .portrait-container {
+        .portrait-wrapper {
           position: relative;
           width: 100%;
-          max-width: 400px;
+          max-width: 420px;
+          height: 440px;
           display: flex;
-          align-items: center;
+          align-items: flex-end;
           justify-content: center;
         }
 
-        .portrait-glow {
+        .hero-portrait-aura {
           position: absolute;
-          inset: -20%;
-          background: radial-gradient(circle at center, rgba(99,102,241,0.15) 0%, transparent 60%);
-          filter: blur(40px);
+          top: 15%;
+          left: 15%;
+          right: 15%;
+          bottom: 15%;
+          background: radial-gradient(circle, rgba(99,102,241,0.22) 0%, rgba(139,92,246,0.08) 50%, transparent 75%);
+          filter: blur(50px);
           pointer-events: none;
-          animation: glowBreathe 5s ease-in-out infinite;
+          z-index: 1;
           transition: all 0.5s ease;
         }
-        .portrait-container.hovered .portrait-glow {
-          background: radial-gradient(circle at center, rgba(99,102,241,0.3) 0%, transparent 60%);
+
+        .portrait-wrapper.hovered .hero-portrait-aura {
+          background: radial-gradient(circle, rgba(99,102,241,0.38) 0%, rgba(236,72,153,0.18) 55%, transparent 75%);
+          filter: blur(60px);
         }
 
-        @keyframes glowBreathe {
-          0%, 100% { opacity: 0.7; transform: scale(0.98); }
-          50% { opacity: 1; transform: scale(1.03); }
-        }
-
-        .circular-frame {
+        .transparent-hero-cutout {
           position: relative;
-          width: 320px;
-          height: 320px;
-          border-radius: 50%;
-          border: 2px solid var(--accent, #6366f1);
-          padding: 8px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 0 40px rgba(99,102,241,0.15);
-          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease;
-        }
-        .portrait-container.hovered .circular-frame {
-          transform: scale(1.01);
-          box-shadow: 0 0 60px rgba(99,102,241,0.35);
-          border-color: #818cf8;
+          z-index: 2;
+          height: 440px;
+          max-height: 100%;
+          width: auto;
+          max-width: 100%;
+          object-fit: contain;
+          object-position: bottom center;
+          image-rendering: -webkit-optimize-contrast;
+          -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 78%, rgba(0,0,0,0) 100%);
+          mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 78%, rgba(0,0,0,0) 100%);
+          filter: brightness(1.05) contrast(1.08) saturate(1.06) drop-shadow(0 0 16px rgba(99,102,241,0.4));
+          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
         }
 
-        .circular-photo {
-          width: 100%;
-          height: 100%;
-          border-radius: 50%;
-          object-fit: cover;
-          filter: brightness(0.95) contrast(1.05);
-          transition: filter 0.4s ease;
-        }
-        .portrait-container.hovered .circular-photo {
-          filter: brightness(1.05) contrast(1.1);
-        }
-
-        /* Orbit Rings */
-        .orbit-ring {
-          position: absolute;
-          inset: -12px;
-          border-radius: 50%;
-          pointer-events: none;
-        }
-        .orbit-ring-1 {
-          animation: orbitClockwise 14s linear infinite;
-        }
-        .orbit-ring-2 {
-          animation: orbitCounterClockwise 20s linear infinite;
-        }
-        .portrait-container.hovered .orbit-ring-1 {
-          animation-play-state: paused;
-        }
-        .portrait-container.hovered .orbit-ring-2 {
-          animation-play-state: paused;
-        }
-
-        @keyframes orbitClockwise {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-
-        @keyframes orbitCounterClockwise {
-          0% { transform: rotate(360deg); }
-          100% { transform: rotate(0deg); }
-        }
-
-        .accent-dot {
-          position: absolute;
-          border-radius: 50%;
-          background: var(--accent, #6366f1);
-          box-shadow: 0 0 12px var(--accent, #6366f1);
-          animation: dotPulse 3s ease-in-out infinite alternate;
-        }
-        .orbit-dot-1 {
-          width: 14px;
-          height: 14px;
-          top: 10px;
-          right: 30px;
-          border: 2px solid #030307;
-        }
-        .orbit-dot-2 {
-          width: 10px;
-          height: 10px;
-          bottom: 20px;
-          left: 40px;
-          border: 2px solid #030307;
-          animation-delay: 1.5s;
-        }
-
-        .portrait-container.hovered .accent-dot {
-          box-shadow: 0 0 20px #818cf8;
-          background: #818cf8;
-        }
-
-        @keyframes dotPulse {
-          0% { transform: scale(0.9); opacity: 0.7; }
-          100% { transform: scale(1.15); opacity: 1; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .orbit-ring-1, .orbit-ring-2, .portrait-glow, .accent-dot {
-            animation: none !important;
-          }
+        .portrait-wrapper.hovered .transparent-hero-cutout {
+          transform: scale(1.03) translateY(-4px);
+          filter: brightness(1.07) contrast(1.1) saturate(1.08) drop-shadow(0 0 25px rgba(139,92,246,0.6));
         }
 
         @media (max-width: 900px) {
-          .circular-frame { width: 280px; height: 280px; }
-          .portrait-container { max-width: 340px; }
+          .portrait-wrapper { height: 350px; max-width: 320px; }
+          .transparent-hero-cutout { height: 350px; }
         }
 
         /* Resume overlay */
         .resume-overlay {
           position: fixed; inset: 0; z-index: 999999;
-          background: rgba(3,3,7,0.92);
-          backdrop-filter: blur(12px);
+          background: rgba(3, 3, 7, 0.85);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
           display: flex; align-items: center; justify-content: center;
+          padding: 24px;
         }
-        .resume-box {
-          background: #080814;
-          border: 1px solid rgba(99,102,241,0.25);
-          padding: 28px;
-          border-radius: 2px;
-          min-width: 340px;
-          box-shadow: 0 0 60px rgba(99,102,241,0.08);
-        }
-        .resume-line {
-          color: #10b981;
+
+        .resume-modal-card {
+          width: 100%;
+          max-width: 480px;
+          background: rgba(8, 8, 22, 0.92);
+          border: 1px solid rgba(99, 102, 241, 0.35);
+          border-radius: 18px;
+          box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.95), 0 0 40px rgba(99, 102, 241, 0.2);
+          overflow: hidden;
           font-family: 'JetBrains Mono', monospace;
-          font-size: 13px;
-          margin-bottom: 10px;
+        }
+
+        .resume-modal-header {
+          background: rgba(6, 6, 14, 0.9);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          padding: 14px 20px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .resume-modal-title {
+          font-size: 11.5px;
+          color: #94a3b8;
+          font-weight: 700;
+          letter-spacing: 0.05em;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .lock-icon {
+          font-size: 12px;
+        }
+
+        .progress-perc {
+          font-size: 11px;
+          color: #6366f1;
+          font-weight: 700;
+        }
+
+        .resume-progress-track {
+          height: 3px;
+          width: 100%;
+          background: rgba(255, 255, 255, 0.06);
+          position: relative;
+        }
+
+        .resume-progress-bar {
+          height: 100%;
+          background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+          box-shadow: 0 0 10px #6366f1;
+        }
+
+        .resume-modal-body {
+          padding: 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          min-height: 160px;
+          background: #030307;
+        }
+
+        .resume-log-line {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          font-size: 12.5px;
+        }
+
+        .line-prefix {
+          color: #6366f1;
+          font-weight: 700;
+        }
+
+        .line-text {
+          color: #cbd5e1;
+          flex: 1;
+        }
+
+        .line-status {
+          color: #10b981;
+          font-size: 10.5px;
+          font-weight: 700;
+          background: rgba(16, 185, 129, 0.1);
+          border: 1px solid rgba(16, 185, 129, 0.25);
+          padding: 2px 8px;
+          border-radius: 10px;
         }
       `}</style>
     </section>

@@ -104,7 +104,7 @@ export default function Contact({ isMobile }) {
           {/* LEFT COLUMN */}
           <div className="contact-left">
             <div className="section-label">// GET_IN_TOUCH</div>
-            <h2 className="contact-title">Get in Touch</h2>
+            <h2 className="section-title">Get in <span className="highlight-gradient">Touch</span></h2>
             <p className="contact-desc">
               Have a project in mind, a question, or just want to say hello? I'd love to hear from you.
             </p>
@@ -134,7 +134,7 @@ export default function Contact({ isMobile }) {
                   id="contact-name"
                   type="text"
                   required
-                  placeholder="John Doe"
+                  placeholder="e.g. Vaibhav Kumar Shukla"
                   value={formData.name}
                   disabled={status.loading}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -148,7 +148,7 @@ export default function Contact({ isMobile }) {
                   id="contact-email"
                   type="email"
                   required
-                  placeholder="john@example.com"
+                  placeholder="e.g. shuklavaibhav30@gmail.com"
                   value={formData.email}
                   disabled={status.loading}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -284,6 +284,21 @@ export default function Contact({ isMobile }) {
         }
 
         /* LEFT COLUMN */
+        .contact-left {
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: flex-start !important;
+          text-align: left !important;
+        }
+        .contact-left .section-label,
+        .contact-left .section-title,
+        .contact-left .contact-desc {
+          display: block !important;
+          text-align: left !important;
+          align-self: flex-start !important;
+          margin-left: 0 !important;
+          margin-right: auto !important;
+        }
         .section-label {
           font-family: 'JetBrains Mono', monospace;
           color: var(--accent, #6366f1);
