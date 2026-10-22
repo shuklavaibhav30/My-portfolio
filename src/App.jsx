@@ -21,6 +21,14 @@ export default function App() {
   const [isMobile, setIsMobile] = useState(false);
   const [konamiIdx, setKonamiIdx] = useState(0);
   const [isEasterEggActive, setIsEasterEggActive] = useState(false);
+  const [booting, setBooting] = useState(() => !sessionStorage.getItem('hasBooted'));
+
+  // Force light theme during the loader so it always shows in light
+  useEffect(() => {
+    if (booting) {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  }, [booting]);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -50,10 +58,10 @@ export default function App() {
   return (
     <>
       <Background3D isMobile={isMobile} />
-      <BootSequence onComplete={() => {}} />
+      <BootSequence onComplete={() => setBooting(false)} />
       <CustomCursor isMobile={isMobile} />
       <CommandPalette />
-      <ThemeToggle />
+      <ThemeToggle hidden={booting} />
       
       {isEasterEggActive && (
         <div style={{

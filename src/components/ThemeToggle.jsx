@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-export default function ThemeToggle() {
-  const [theme, setTheme] = useState('dark')
+export default function ThemeToggle({ hidden = false }) {
+  const [theme, setTheme] = useState('light')
   const [isRotating, setIsRotating] = useState(false)
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function ThemeToggle() {
         setTheme(currentDocTheme)
       } else {
         const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-        const defaultTheme = isDark ? 'dark' : 'light'
+        const defaultTheme = 'light'   // always default to light
         setTheme(defaultTheme)
         document.documentElement.setAttribute('data-theme', defaultTheme)
       }
@@ -49,7 +49,11 @@ export default function ThemeToggle() {
   const isDark = theme === 'dark'
 
   return (
-    <aside className="floating-theme-wrapper" aria-label="Theme Switcher">
+    <aside
+      className="floating-theme-wrapper"
+      aria-label="Theme Switcher"
+      style={hidden ? { visibility: 'hidden', pointerEvents: 'none' } : undefined}
+    >
       <motion.button
         id="floating-theme-toggle"
         onClick={toggleTheme}
