@@ -3,9 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const BOOT_STEPS = [
   { label: 'CORE_ENGINE', detail: 'Initializing React 18 & Vite Runtime...', status: 'OK' },
-  { label: 'UI_COMPONENTS', detail: 'Loading Cyber-Glass Design System...', status: 'OK' },
+  { label: 'UI_COMPONENTS', detail: 'Loading Neo-Brutalist Light Theme...', status: 'OK' },
   { label: 'PORTFOLIO_DATA', detail: 'Fetching Projects & Interactive Terminal...', status: 'OK' },
-  { label: 'NETWORKING', detail: 'Establishing Secure Socket Pipeline...', status: 'ONLINE' },
+  { label: 'NETWORKING', detail: 'Establishing Secure Telemetry Pipeline...', status: 'ONLINE' },
 ];
 
 export default function BootSequence({ onComplete }) {
@@ -24,7 +24,10 @@ export default function BootSequence({ onComplete }) {
     let currentIndex = 0;
     const interval = setInterval(() => {
       if (currentIndex < BOOT_STEPS.length) {
-        setLines(prev => [...prev, BOOT_STEPS[currentIndex]]);
+        const step = BOOT_STEPS[currentIndex];
+        if (step) {
+          setLines(prev => [...prev, step]);
+        }
         setProgress(Math.round(((currentIndex + 1) / BOOT_STEPS.length) * 100));
         currentIndex++;
       } else {
@@ -32,10 +35,10 @@ export default function BootSequence({ onComplete }) {
         setTimeout(() => {
           setIsVisible(false);
           sessionStorage.setItem('hasBooted', 'true');
-          setTimeout(onComplete, 500);
-        }, 600);
+          setTimeout(onComplete, 400);
+        }, 500);
       }
-    }, 220);
+    }, 200);
 
     return () => clearInterval(interval);
   }, [onComplete]);
@@ -45,12 +48,13 @@ export default function BootSequence({ onComplete }) {
       {isVisible && (
         <motion.div
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, scale: 1.04, filter: 'blur(12px)' }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          exit={{ opacity: 0, scale: 1.02 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           style={{
             position: 'fixed',
             inset: 0,
-            background: '#030307',
+            background: 'rgba(244, 245, 248, 0.95)',
+            backdropFilter: 'blur(10px)',
             zIndex: 99999,
             display: 'flex',
             alignItems: 'center',
@@ -59,30 +63,18 @@ export default function BootSequence({ onComplete }) {
             fontFamily: "'JetBrains Mono', monospace",
           }}
         >
-          {/* Ambient Background Glow Orb */}
-          <div style={{
-            position: 'absolute',
-            width: '500px',
-            height: '500px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(99,102,241,0.2) 0%, rgba(236,72,153,0.08) 50%, transparent 70%)',
-            filter: 'blur(80px)',
-            pointerEvents: 'none',
-          }} />
-
-          {/* Central Cyber Glass Card */}
+          {/* Central Neo-Brutalist Card */}
           <motion.div
             initial={{ scale: 0.9, opacity: 0, y: 15 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             style={{
               width: '100%',
               maxWidth: '520px',
-              background: 'rgba(8, 8, 22, 0.9)',
-              border: '1px solid rgba(99, 102, 241, 0.35)',
+              background: '#ffffff',
+              border: '2.5px solid #000000',
               borderRadius: '20px',
-              boxShadow: '0 30px 80px -20px rgba(0, 0, 0, 0.95), 0 0 40px rgba(99, 102, 241, 0.2)',
-              backdropFilter: 'blur(24px)',
+              boxShadow: '8px 8px 0px #000000',
               overflow: 'hidden',
               position: 'relative',
               zIndex: 2,
@@ -90,74 +82,81 @@ export default function BootSequence({ onComplete }) {
           >
             {/* Header */}
             <div style={{
-              background: 'rgba(6, 6, 14, 0.95)',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+              background: '#f8fafc',
+              borderBottom: '2px solid #000000',
               padding: '16px 24px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ color: '#6366f1', fontWeight: 700, fontSize: '13px' }}>&lt;</span>
-                <span style={{ color: '#ffffff', fontWeight: 700, fontSize: '13px' }}>vaibhav.dev</span>
-                <span style={{ color: '#6366f1', fontWeight: 700, fontSize: '13px' }}>/&gt;</span>
+                <span style={{ color: '#4ade80', fontWeight: 900, fontSize: '14px' }}>&lt;</span>
+                <span style={{ color: '#000000', fontWeight: 900, fontSize: '14px' }}>vaibhav.dev</span>
+                <span style={{ color: '#4ade80', fontWeight: 900, fontSize: '14px' }}>/&gt;</span>
                 <span style={{
-                  width: '6px',
-                  height: '6px',
+                  width: '8px',
+                  height: '8px',
                   borderRadius: '50%',
-                  background: '#10b981',
-                  boxShadow: '0 0 8px #10b981',
+                  background: '#4ade80',
+                  border: '1.5px solid #000',
                   marginLeft: '4px',
-                  animation: 'pulse-glow 2s infinite'
                 }} />
               </div>
-              <span style={{ color: '#6366f1', fontSize: '12px', fontWeight: '700' }}>
+              <span style={{
+                color: '#1c1c1c',
+                background: 'var(--accent, #e86c60)',
+                border: '1.5px solid #000',
+                boxShadow: '2px 2px 0px #000',
+                borderRadius: '6px',
+                padding: '2px 8px',
+                fontSize: '11px',
+                fontWeight: '900'
+              }}>
                 {progress}%
               </span>
             </div>
 
             {/* Progress Bar Track */}
-            <div style={{ height: '3px', width: '100%', background: 'rgba(255, 255, 255, 0.06)', position: 'relative' }}>
+            <div style={{ height: '6px', width: '100%', background: '#e2e8f0', borderBottom: '2px solid #000000', position: 'relative' }}>
               <motion.div
                 animate={{ width: `${progress}%` }}
-                transition={{ ease: 'easeOut', duration: 0.25 }}
+                transition={{ ease: 'easeOut', duration: 0.2 }}
                 style={{
                   height: '100%',
-                  background: 'linear-gradient(90deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%)',
-                  boxShadow: '0 0 12px #6366f1'
+                  background: 'var(--accent, #e86c60)',
                 }}
               />
             </div>
 
             {/* Body Lines */}
             <div style={{
-              padding: '28px 24px',
+              padding: '26px 24px',
               display: 'flex',
               flexDirection: 'column',
-              gap: '14px',
-              minHeight: '190px',
-              background: '#030307',
+              gap: '12px',
+              minHeight: '180px',
+              background: '#ffffff',
             }}>
-              {lines.map((step, i) => (
+              {lines.map((step, i) => step && (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, x: -10 }}
+                  initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', fontSize: '12.5px' }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ color: '#6366f1', fontWeight: 700 }}>&gt;</span>
-                    <span style={{ color: '#cbd5e1' }}>{step.detail}</span>
+                    <span style={{ color: '#4ade80', fontWeight: 900 }}>&gt;</span>
+                    <span style={{ color: '#1e293b', fontWeight: 600 }}>{step.detail}</span>
                   </div>
                   <span style={{
-                    color: '#10b981',
-                    fontSize: '10px',
-                    fontWeight: 700,
-                    background: 'rgba(16, 185, 129, 0.1)',
-                    border: '1px solid rgba(16, 185, 129, 0.25)',
+                    color: '#15803d',
+                    fontSize: '10.5px',
+                    fontWeight: 800,
+                    background: '#dcfce7',
+                    border: '1.5px solid #000000',
                     padding: '2px 8px',
-                    borderRadius: '10px',
-                    letterSpacing: '0.05em'
+                    borderRadius: '6px',
+                    boxShadow: '1.5px 1.5px 0px #000',
                   }}>
                     {step.status}
                   </span>

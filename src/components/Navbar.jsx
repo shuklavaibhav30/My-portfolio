@@ -52,7 +52,7 @@ export default function Navbar() {
 
   return (
     <header className={`navbar-wrapper ${scrolled ? 'scrolled' : ''}`}>
-      <nav className="navbar-container glass-panel">
+      <nav className="navbar-container">
         {/* Logo */}
         <a href="#hero" onClick={e => handleNav(e, '#hero')} className="navbar-logo">
           <span className="logo-accent">&lt;</span>
@@ -90,26 +90,30 @@ export default function Navbar() {
 
         {/* Desktop CTA */}
         {!isMobile && (
-          <a
-            href="#contact"
-            onClick={e => handleNav(e, '#contact')}
-            className="navbar-cta-btn"
-          >
-            CONTACT ME
-          </a>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <a
+              href="#contact"
+              onClick={e => handleNav(e, '#contact')}
+              className="navbar-cta-btn"
+            >
+              CONTACT ME
+            </a>
+          </div>
         )}
 
         {/* Mobile Hamburger */}
         {isMobile && (
-          <button
-            className="mobile-burger-btn"
-            onClick={() => setMenuOpen(o => !o)}
-            aria-label="Toggle Navigation Menu"
-          >
-            <span className={`burger-line ${menuOpen ? 'open-top' : ''}`} />
-            <span className={`burger-line ${menuOpen ? 'open-mid' : ''}`} />
-            <span className={`burger-line ${menuOpen ? 'open-bot' : ''}`} />
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <button
+              className="mobile-burger-btn"
+              onClick={() => setMenuOpen(o => !o)}
+              aria-label="Toggle Navigation Menu"
+            >
+              <span className={`burger-line ${menuOpen ? 'open-top' : ''}`} />
+              <span className={`burger-line ${menuOpen ? 'open-mid' : ''}`} />
+              <span className={`burger-line ${menuOpen ? 'open-bot' : ''}`} />
+            </button>
+          </div>
         )}
       </nav>
 
@@ -121,7 +125,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.98 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="mobile-dropdown glass-panel"
+            className="mobile-dropdown"
           >
             {NAV_LINKS.map(({ label, href }) => {
               const secId = href.substring(1)
@@ -158,7 +162,7 @@ export default function Navbar() {
           padding: 16px 24px;
           display: flex;
           justify-content: center;
-          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
           pointer-events: none;
         }
 
@@ -173,20 +177,18 @@ export default function Navbar() {
           justify-content: space-between;
           width: 100%;
           max-width: 920px;
-          height: 50px;
+          height: 54px;
           padding: 0 20px;
-          border-radius: 28px;
-          background: rgba(8, 8, 22, 0.85) !important;
-          backdrop-filter: blur(24px) saturate(180%) !important;
-          -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
-          border: 1px solid rgba(99, 102, 241, 0.25) !important;
-          box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 20px rgba(99, 102, 241, 0.12) !important;
-          transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+          border-radius: 9999px;
+          background: var(--nav-bg, #3e6356) !important;
+          border: 2.5px solid var(--border, #1c1c1c) !important;
+          box-shadow: 4px 4px 0px var(--border, #1c1c1c) !important;
+          transition: all 0.25s ease;
         }
 
         .navbar-wrapper.scrolled .navbar-container {
-          border-color: rgba(99, 102, 241, 0.45) !important;
-          box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.9), 0 0 25px rgba(99, 102, 241, 0.22) !important;
+          box-shadow: 5px 5px 0px var(--border, #1c1c1c) !important;
+          transform: translateY(2px);
         }
 
         /* Logo */
@@ -195,27 +197,28 @@ export default function Navbar() {
           align-items: center;
           gap: 4px;
           font-family: 'JetBrains Mono', monospace;
-          font-size: 13px;
-          font-weight: 700;
-          color: #f8fafc;
+          font-size: 14px;
+          font-weight: 800;
+          color: var(--nav-text, #f6f4ee);
           text-decoration: none;
-          letter-spacing: 0.04em;
+          letter-spacing: 0.02em;
         }
 
         .logo-accent {
-          color: #6366f1;
+          color: #4ade80;
+          font-weight: 900;
         }
 
         .logo-text {
-          color: #ffffff;
+          color: var(--nav-text, #f6f4ee);
         }
 
         .online-dot {
-          width: 6px;
-          height: 6px;
+          width: 8px;
+          height: 8px;
           border-radius: 50%;
-          background: #10b981;
-          box-shadow: 0 0 10px #10b981;
+          background: #4ade80;
+          border: 1.5px solid #1c1c1c;
           margin-left: 6px;
           animation: pulse-glow 2s infinite;
         }
@@ -224,21 +227,21 @@ export default function Navbar() {
         .navbar-links {
           display: flex;
           align-items: center;
-          gap: 4px;
+          gap: 6px;
           position: relative;
         }
 
         .nav-item {
           position: relative;
-          font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
-          font-size: 13px;
-          font-weight: 500;
-          color: #94a3b8;
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 13.5px;
+          font-weight: 600;
+          color: rgba(246, 244, 238, 0.85);
           text-decoration: none;
           padding: 6px 18px;
-          border-radius: 20px;
+          border-radius: 9999px;
           letter-spacing: 0.01em;
-          transition: color 0.25s ease;
+          transition: color 0.2s ease;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -249,8 +252,8 @@ export default function Navbar() {
         }
 
         .nav-item.active {
-          color: #ffffff;
-          font-weight: 600;
+          color: #1c1c1c;
+          font-weight: 700;
         }
 
         .nav-item-text {
@@ -261,33 +264,38 @@ export default function Navbar() {
         .nav-active-pill {
           position: absolute;
           inset: 0;
-          background: linear-gradient(135deg, rgba(99, 102, 241, 0.22) 0%, rgba(139, 92, 246, 0.18) 100%);
-          border: 1px solid rgba(99, 102, 241, 0.35);
-          border-radius: 20px;
+          background: var(--accent, #e86c60);
+          border: 2px solid var(--border, #1c1c1c);
+          border-radius: 9999px;
+          box-shadow: 2px 2px 0px var(--border, #1c1c1c);
           z-index: 1;
-          box-shadow: 0 4px 14px rgba(99, 102, 241, 0.15);
         }
 
         /* CTA */
         .navbar-cta-btn {
-          font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+          font-family: 'Space Grotesk', sans-serif;
           font-size: 12px;
-          font-weight: 600;
-          color: #ffffff;
-          background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-          padding: 7px 18px;
-          border-radius: 20px;
+          font-weight: 800;
+          color: #1c1c1c;
+          background: var(--accent, #e86c60);
+          padding: 8px 18px;
+          border-radius: 9999px;
           text-decoration: none;
-          letter-spacing: 0.04em;
-          box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-          border: 1px solid rgba(255, 255, 255, 0.15);
-          transition: all 0.25s ease;
+          letter-spacing: 0.05em;
+          border: 2px solid var(--border, #1c1c1c);
+          box-shadow: 3px 3px 0px var(--border, #1c1c1c);
+          transition: all 0.15s ease;
         }
 
         .navbar-cta-btn:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
-          background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+          background: var(--accent-hover, #d75a4e);
+          transform: translate(-1px, -1px);
+          box-shadow: 4px 4px 0px var(--border, #1c1c1c);
+        }
+
+        .navbar-cta-btn:active {
+          transform: translate(1px, 1px);
+          box-shadow: 1px 1px 0px var(--border, #1c1c1c);
         }
 
         /* Burger */
@@ -302,16 +310,15 @@ export default function Navbar() {
         }
 
         .burger-line {
-          width: 18px;
-          height: 2px;
-          background: #cbd5e1;
+          width: 20px;
+          height: 2.5px;
+          background: var(--nav-text, #f6f4ee);
           border-radius: 2px;
           transition: all 0.3s ease;
         }
 
         .burger-line.open-top {
           transform: rotate(45deg) translate(4px, 4px);
-          background: #6366f1;
         }
 
         .burger-line.open-mid {
@@ -320,76 +327,60 @@ export default function Navbar() {
 
         .burger-line.open-bot {
           transform: rotate(-45deg) translate(4px, -4px);
-          background: #6366f1;
         }
 
         /* Mobile Dropdown */
         .mobile-dropdown {
-          pointer-events: auto;
           position: absolute;
-          top: 68px;
+          top: 75px;
           left: 20px;
           right: 20px;
-          background: rgba(8, 8, 22, 0.94) !important;
-          border: 1px solid rgba(99, 102, 241, 0.3) !important;
+          background: var(--bg-card, #ffffff);
+          border: 2.5px solid var(--border, #1c1c1c);
           border-radius: 20px;
-          padding: 16px;
+          box-shadow: 5px 5px 0px var(--border, #1c1c1c);
+          padding: 20px;
           display: flex;
           flex-direction: column;
-          gap: 8px;
-          box-shadow: 0 20px 40px rgba(0,0,0,0.85);
-          backdrop-filter: blur(24px) !important;
+          gap: 12px;
+          pointer-events: auto;
         }
 
         .mobile-nav-link {
-          font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
-          font-size: 13.5px;
-          font-weight: 500;
-          color: #94a3b8;
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 15px;
+          font-weight: 700;
+          color: var(--text-main, #1c1c1c);
           text-decoration: none;
-          padding: 10px 16px;
-          border-radius: 12px;
+          padding: 8px 12px;
+          border-radius: 10px;
           transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          gap: 8px;
         }
-
-        .mobile-nav-link.active,
-        .mobile-nav-link:hover {
-          color: #ffffff;
-          background: rgba(99, 102, 241, 0.15);
+        .mobile-nav-link:hover, .mobile-nav-link.active {
+          background: var(--accent, #e86c60);
+          color: #1c1c1c;
+          border: 1.5px solid var(--border, #1c1c1c);
         }
-
         .mobile-link-dot {
-          color: #6366f1;
-          margin-right: 6px;
+          color: var(--accent, #e86c60);
         }
 
         .mobile-cta-btn {
-          font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
-          font-size: 12px;
-          font-weight: 600;
-          color: #ffffff;
-          background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-          padding: 12px;
-          border-radius: 14px;
+          background: var(--accent, #e86c60);
+          color: #1c1c1c;
+          font-family: 'Space Grotesk', sans-serif;
+          font-weight: 800;
+          font-size: 13px;
           text-align: center;
+          padding: 12px;
+          border-radius: 12px;
+          border: 2px solid var(--border, #1c1c1c);
+          box-shadow: 3px 3px 0px var(--border, #1c1c1c);
           text-decoration: none;
-          letter-spacing: 0.04em;
-          margin-top: 8px;
-        }
-
-        @media (max-width: 768px) {
-          .navbar-wrapper { padding: 12px 16px; }
-          .navbar-container {
-            height: 48px;
-            padding: 0 16px;
-            position: relative;
-            justify-content: flex-end;
-          }
-          .navbar-logo {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-          }
+          margin-top: 6px;
         }
       `}</style>
     </header>

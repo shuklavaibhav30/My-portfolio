@@ -31,7 +31,6 @@ export default function Contact({ isMobile }) {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    // Required validation
     if (!formData.name.trim()) {
       setStatus({ loading: false, success: false, errorMsg: 'Please enter your name.' })
       return
@@ -55,7 +54,6 @@ export default function Contact({ isMobile }) {
     const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
     const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
 
-    // Exact variable names expected by EmailJS template
     const templateParams = {
       name: formData.name.trim(),
       email: formData.email.trim(),
@@ -64,17 +62,10 @@ export default function Contact({ isMobile }) {
     }
 
     try {
-      console.log('EmailJS Service:', serviceId)
-      console.log('EmailJS Template:', templateId)
-      console.log('EmailJS Public Key exists:', Boolean(publicKey))
-
       if (serviceId && templateId && publicKey && serviceId !== 'service_default') {
-        // Pass publicKey directly as the 4th positional argument
-        const response = await emailjs.send(serviceId, templateId, templateParams, publicKey)
-        console.log('EmailJS success:', response)
+        await emailjs.send(serviceId, templateId, templateParams, publicKey)
       } else {
-        console.warn('EmailJS environment variables not configured. Simulating email send.')
-        await new Promise(resolve => setTimeout(resolve, 1200))
+        await new Promise(resolve => setTimeout(resolve, 1000))
       }
 
       setStatus({ loading: false, success: true, errorMsg: '' })
@@ -83,10 +74,7 @@ export default function Contact({ isMobile }) {
         setStatus(prev => ({ ...prev, success: null }))
       }, 5000)
     } catch (err) {
-      console.error('EmailJS error:', err)
-      console.error('EmailJS error text:', err?.text)
-      console.error('EmailJS status:', err?.status)
-      const detail = err?.text || err?.message || 'Failed to send message. Please check Template ID in .env.'
+      const detail = err?.text || err?.message || 'Failed to send message.'
       setStatus({ loading: false, success: false, errorMsg: detail })
     }
   }
@@ -103,21 +91,23 @@ export default function Contact({ isMobile }) {
         <div className={`contact-grid ${isMobile ? 'mobile' : ''}`}>
           {/* LEFT COLUMN */}
           <div className="contact-left">
-            <div className="section-label">// GET_IN_TOUCH</div>
-            <h2 className="section-title">Get in <span className="highlight-gradient">Touch</span></h2>
+            <div className="section-label-pill">// GET_IN_TOUCH</div>
+            <h2 className="contact-title">
+              Get in <span className="neo-highlight">Touch</span>
+            </h2>
             <p className="contact-desc">
-              Have a project in mind, a question, or just want to say hello? I'd love to hear from you.
+              Have a project in mind, an engineering role, or want to discuss full-stack & AI architectures? Let's connect.
             </p>
 
             <div className="contact-details">
-              <div className="detail-item">
-                <div className="detail-label">E-mail</div>
+              <div className="detail-card">
+                <div className="detail-label">EMAIL ADDRESS</div>
                 <a href="mailto:imvksofficial@gmail.com" className="detail-value">
                   imvksofficial@gmail.com
                 </a>
               </div>
-              <div className="detail-item">
-                <div className="detail-label">Contact</div>
+              <div className="detail-card">
+                <div className="detail-label">DIRECT PHONE / WHATSAPP</div>
                 <a href="tel:+918400777282" className="detail-value">
                   +91 8400777282
                 </a>
@@ -125,81 +115,92 @@ export default function Contact({ isMobile }) {
             </div>
           </div>
 
-          {/* RIGHT COLUMN */}
+          {/* RIGHT COLUMN (FORM - Matching Registration Card in Reference Image) */}
           <div className="contact-right">
-            <form onSubmit={handleSubmit} className="contact-form" noValidate>
-              <div className="form-group">
-                <label className="form-label" htmlFor="contact-name">Your Name</label>
-                <input
-                  id="contact-name"
-                  type="text"
-                  required
-                  placeholder="e.g. Vaibhav Kumar Shukla"
-                  value={formData.name}
-                  disabled={status.loading}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="form-input"
-                />
+            <div className="form-card-container">
+              {/* Top Badge (Matching 'FREE REGISTRATION' in image) */}
+              <div className="form-top-header">
+                <span className="free-inquiry-pill">DIRECT INQUIRY</span>
+                <span className="open-role-text">• Open to opportunities</span>
               </div>
 
-              <div className="form-group">
-                <label className="form-label" htmlFor="contact-email">Your Email</label>
-                <input
-                  id="contact-email"
-                  type="email"
-                  required
-                  placeholder="e.g. shuklavaibhav30@gmail.com"
-                  value={formData.email}
-                  disabled={status.loading}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="form-input"
-                />
-              </div>
+              <h3 className="form-headline">Send Message to Vaibhav</h3>
+              <p className="form-subheadline">Fill in your details below to start a conversation.</p>
 
-              <div className="form-group">
-                <label className="form-label" htmlFor="contact-subject">Subject</label>
-                <input
-                  id="contact-subject"
-                  type="text"
-                  required
-                  placeholder="Project Inquiry / Hello"
-                  value={formData.subject}
-                  disabled={status.loading}
-                  onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                  className="form-input"
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label" htmlFor="contact-message">Your Message</label>
-                <textarea
-                  id="contact-message"
-                  required
-                  rows={4}
-                  placeholder="Write your message here..."
-                  value={formData.message}
-                  disabled={status.loading}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  className="form-input form-textarea"
-                />
-              </div>
-
-              {status.success === true && (
-                <div className="form-alert success-alert">
-                  Message sent successfully.
+              <form onSubmit={handleSubmit} className="contact-form" noValidate>
+                <div className="form-group">
+                  <label className="form-label" htmlFor="contact-name">FULL NAME *</label>
+                  <input
+                    id="contact-name"
+                    type="text"
+                    required
+                    placeholder="Your full name"
+                    value={formData.name}
+                    disabled={status.loading}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="form-input"
+                  />
                 </div>
-              )}
 
-              {status.success === false && (
-                <div className="form-alert error-alert">
-                  {status.errorMsg || 'Failed to send message. Please try again.'}
+                <div className="form-group">
+                  <label className="form-label" htmlFor="contact-email">EMAIL ADDRESS *</label>
+                  <input
+                    id="contact-email"
+                    type="email"
+                    required
+                    placeholder="your.email@example.com"
+                    value={formData.email}
+                    disabled={status.loading}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="form-input"
+                  />
                 </div>
-              )}
 
-              <button type="submit" className="submit-btn" disabled={status.loading}>
-                {status.loading ? 'SENDING...' : status.success ? 'MESSAGE SENT ✓' : 'SEND MESSAGE'}
-              </button>
-            </form>
+                <div className="form-group">
+                  <label className="form-label" htmlFor="contact-subject">SUBJECT *</label>
+                  <input
+                    id="contact-subject"
+                    type="text"
+                    required
+                    placeholder="Project Inquiry / Job Opportunity / Hello"
+                    value={formData.subject}
+                    disabled={status.loading}
+                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                    className="form-input"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label" htmlFor="contact-message">YOUR MESSAGE *</label>
+                  <textarea
+                    id="contact-message"
+                    required
+                    rows={4}
+                    placeholder="Type your message here..."
+                    value={formData.message}
+                    disabled={status.loading}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    className="form-input form-textarea"
+                  />
+                </div>
+
+                {status.success === true && (
+                  <div className="form-alert success-alert">
+                    Message sent successfully! I'll get back to you shortly.
+                  </div>
+                )}
+
+                {status.success === false && (
+                  <div className="form-alert error-alert">
+                    {status.errorMsg || 'Failed to send message. Please try again.'}
+                  </div>
+                )}
+
+                <button type="submit" className="submit-btn" disabled={status.loading}>
+                  {status.loading ? 'SENDING...' : status.success ? 'MESSAGE SENT ✓' : 'SEND MESSAGE'}
+                </button>
+              </form>
+            </div>
           </div>
         </div>
 
@@ -207,9 +208,9 @@ export default function Contact({ isMobile }) {
         <footer className={`footer-grid ${isMobile ? 'mobile' : ''}`}>
           {/* LEFT */}
           <div className="footer-left">
-            <h3 className="footer-name">VAIBHAV SHUKLA</h3>
+            <h3 className="footer-name">VAIBHAV KUMAR SHUKLA</h3>
             <p className="footer-tagline">
-              Full-Stack Developer | MERN Stack Developer | Problem Solver
+              Frontend & Full-Stack Developer • Blockchain Research Lab, AKGEC
             </p>
             <div className="footer-socials">
               {SOCIALS.map(s => (
@@ -249,10 +250,11 @@ export default function Contact({ isMobile }) {
 
           {/* RIGHT */}
           <div className="footer-right">
-            <div className="footer-col-heading">CONTACT</div>
+            <div className="footer-col-heading">GET IN TOUCH</div>
             <div className="footer-contact-details">
               <div>+91 8400777282</div>
               <div>imvksofficial@gmail.com</div>
+              <div>Ghaziabad / Lucknow (UP), India</div>
             </div>
           </div>
         </footer>
@@ -260,10 +262,9 @@ export default function Contact({ isMobile }) {
 
       <style>{`
         .contact-section {
-          padding: 100px 24px 40px;
+          padding: 90px 24px 40px;
           background: transparent;
           position: relative;
-          border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
         .contact-container {
           max-width: 1200px;
@@ -272,122 +273,179 @@ export default function Contact({ isMobile }) {
 
         .contact-grid {
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 60px;
+          grid-template-columns: 1fr 1.15fr;
+          gap: 48px;
           align-items: start;
-          margin-bottom: 100px;
+          margin-bottom: 90px;
         }
         .contact-grid.mobile {
           grid-template-columns: 1fr;
-          gap: 40px;
-          margin-bottom: 60px;
+          gap: 36px;
+          margin-bottom: 50px;
         }
 
         /* LEFT COLUMN */
         .contact-left {
-          display: flex !important;
-          flex-direction: column !important;
-          align-items: flex-start !important;
-          text-align: left !important;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          text-align: left;
         }
-        .contact-left .section-label,
-        .contact-left .section-title,
-        .contact-left .contact-desc {
-          display: block !important;
-          text-align: left !important;
-          align-self: flex-start !important;
-          margin-left: 0 !important;
-          margin-right: auto !important;
-        }
-        .section-label {
+
+        .section-label-pill {
+          display: inline-flex;
+          align-items: center;
+          background: var(--bg-card);
+          border: 2px solid var(--border);
+          box-shadow: 2px 2px 0px var(--border);
+          padding: 4px 12px;
+          border-radius: 9999px;
           font-family: 'JetBrains Mono', monospace;
-          color: var(--accent, #6366f1);
+          color: var(--text-main);
           font-size: 11px;
-          letter-spacing: 0.2em;
+          font-weight: 800;
+          letter-spacing: 0.15em;
           margin-bottom: 12px;
         }
         .contact-title {
-          font-size: clamp(2rem, 4vw, 3rem);
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: clamp(2rem, 4.2vw, 3.2rem);
           font-weight: 800;
-          color: #f8fafc;
+          color: var(--text-main);
           letter-spacing: -0.02em;
           margin-bottom: 16px;
         }
         .contact-desc {
-          color: #94a3b8;
-          line-height: 1.7;
-          font-size: 14.5px;
-          margin-bottom: 36px;
+          color: var(--text-muted);
+          line-height: 1.65;
+          font-size: 15px;
+          margin-bottom: 32px;
           max-width: 460px;
         }
         .contact-details {
           display: flex;
           flex-direction: column;
-          gap: 24px;
+          gap: 16px;
+          width: 100%;
+          max-width: 460px;
         }
-        .detail-item {
+        .detail-card {
+          background: var(--bg-card);
+          border: 2.5px solid var(--border);
+          box-shadow: var(--shadow);
+          border-radius: 12px;
+          padding: 14px 18px;
           display: flex;
           flex-direction: column;
           gap: 4px;
+          transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .detail-card:hover {
+          transform: translate(-2px, -2px);
+          box-shadow: var(--shadow-lg);
         }
         .detail-label {
           font-family: 'JetBrains Mono', monospace;
-          font-size: 11px;
-          color: #64748b;
+          font-size: 10px;
+          font-weight: 800;
+          color: var(--text-faint);
           letter-spacing: 0.1em;
-          text-transform: uppercase;
         }
         .detail-value {
           font-family: 'JetBrains Mono', monospace;
-          font-size: 15px;
-          color: #f8fafc;
-          transition: color 0.2s ease;
+          font-size: 14px;
+          font-weight: 800;
+          color: var(--text-main);
         }
         .detail-value:hover {
-          color: var(--accent, #6366f1);
+          color: var(--accent);
         }
 
-        /* RIGHT COLUMN (FORM) */
+        /* RIGHT COLUMN (FORM CARD) */
+        .form-card-container {
+          background: var(--bg-card);
+          border: 2.5px solid var(--border);
+          border-radius: 20px;
+          box-shadow: var(--shadow-lg);
+          padding: 32px;
+        }
+
+        .form-top-header {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 12px;
+          flex-wrap: wrap;
+        }
+        .free-inquiry-pill {
+          background: var(--accent-peach, #ffd6ce);
+          color: var(--hf-peach-text, #8c2d24);
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 10px;
+          font-weight: 800;
+          border: 1.5px solid var(--border);
+          box-shadow: 2px 2px 0px var(--border);
+          padding: 3px 10px;
+          border-radius: 9999px;
+        }
+        .open-role-text {
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 10.5px;
+          font-weight: 700;
+          color: var(--text-muted);
+        }
+
+        .form-headline {
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 20px;
+          font-weight: 800;
+          color: var(--text-main);
+          margin-bottom: 4px;
+        }
+        .form-subheadline {
+          font-size: 13px;
+          color: var(--text-muted);
+          margin-bottom: 22px;
+        }
+
         .contact-form {
           display: flex;
           flex-direction: column;
-          gap: 20px;
-          background: rgba(6, 6, 18, 0.6);
-          border: 1px solid rgba(255, 255, 255, 0.06);
-          padding: 32px;
-          border-radius: 8px;
-          backdrop-filter: blur(12px);
+          gap: 16px;
         }
         .form-group {
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 6px;
         }
         .form-label {
           font-family: 'JetBrains Mono', monospace;
-          font-size: 11px;
-          color: #cbd5e1;
+          font-size: 10.5px;
+          font-weight: 800;
+          color: var(--text-main);
           letter-spacing: 0.05em;
         }
         .form-input {
-          background: rgba(3, 3, 7, 0.8);
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          border-radius: 4px;
-          padding: 12px 16px;
-          color: #f8fafc;
-          font-family: inherit;
-          font-size: 13.5px;
+          background: var(--bg-subtle);
+          border: 2px solid var(--border);
+          border-radius: 8px;
+          box-shadow: 2px 2px 0px var(--border);
+          padding: 12px 14px;
+          color: var(--text-main);
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 13px;
+          font-weight: 600;
           outline: none;
-          transition: all 0.2s ease;
+          transition: all 0.15s ease;
         }
         .form-input:focus {
-          border-color: var(--accent, #6366f1);
-          box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
-          background: rgba(10, 10, 25, 0.9);
+          border-color: var(--accent);
+          box-shadow: 3px 3px 0px var(--accent);
+          transform: translate(-1px, -1px);
         }
-        .form-input:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
+        .form-input::placeholder {
+          color: var(--text-faint);
+          font-weight: 500;
         }
         .form-textarea {
           resize: vertical;
@@ -397,38 +455,50 @@ export default function Contact({ isMobile }) {
         .form-alert {
           font-family: 'JetBrains Mono', monospace;
           font-size: 12px;
+          font-weight: 800;
           padding: 10px 14px;
-          border-radius: 4px;
+          border-radius: 8px;
+          border: 2px solid var(--border);
+          box-shadow: 3px 3px 0px var(--border);
         }
         .success-alert {
-          background: rgba(16, 185, 129, 0.1);
-          border: 1px solid rgba(16, 185, 129, 0.3);
-          color: #10b981;
+          background: #e6f6ee;
+          color: #1b5e3b;
+          border-color: var(--border);
+        }
+        :root[data-theme="dark"] .success-alert {
+          background: rgba(74, 222, 128, 0.12);
+          color: #6ee7b7;
+          border-color: rgba(110, 231, 183, 0.35);
         }
         .error-alert {
-          background: rgba(239, 68, 68, 0.1);
-          border: 1px solid rgba(239, 68, 68, 0.3);
-          color: #ef4444;
+          background: #fee2e2;
+          color: #b91c1c;
         }
 
         .submit-btn {
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 11px;
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 13px;
           font-weight: 700;
           padding: 14px 28px;
-          letter-spacing: 0.1em;
-          border-radius: 4px;
-          color: #fff;
-          background: linear-gradient(135deg, rgba(99,102,241,0.3) 0%, rgba(147,51,234,0.25) 100%);
-          border: 1px solid rgba(99,102,241,0.5);
+          letter-spacing: 0.05em;
+          border-radius: 10px;
+          color: #1c1c1c;
+          background: var(--accent, #e86c60);
+          border: 2.5px solid var(--border);
+          box-shadow: 4px 4px 0px var(--border);
           cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-          margin-top: 8px;
+          transition: all 0.15s ease;
+          margin-top: 6px;
         }
         .submit-btn:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: 0 0 25px rgba(99,102,241,0.4);
-          background: linear-gradient(135deg, rgba(99,102,241,0.55) 0%, rgba(147,51,234,0.45) 100%);
+          background: var(--accent-hover, #d75a4e);
+          transform: translate(-2px, -2px);
+          box-shadow: 6px 6px 0px var(--border);
+        }
+        .submit-btn:active:not(:disabled) {
+          transform: translate(2px, 2px);
+          box-shadow: 2px 2px 0px var(--border);
         }
         .submit-btn:disabled {
           opacity: 0.6;
@@ -440,8 +510,8 @@ export default function Contact({ isMobile }) {
           display: grid;
           grid-template-columns: 2fr 1fr 1fr;
           gap: 40px;
-          padding-top: 40px;
-          border-top: 1px solid rgba(255, 255, 255, 0.06);
+          padding-top: 50px;
+          border-top: 2.5px solid var(--border);
           align-items: start;
         }
         .footer-grid.mobile {
@@ -450,65 +520,76 @@ export default function Contact({ isMobile }) {
         }
 
         .footer-name {
-          font-size: 16px;
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 18px;
           font-weight: 800;
-          letter-spacing: 0.05em;
-          color: #f8fafc;
-          margin-bottom: 8px;
+          letter-spacing: 0.02em;
+          color: var(--text-main);
+          margin-bottom: 6px;
         }
         .footer-tagline {
-          font-size: 12.5px;
-          color: #64748b;
-          margin-bottom: 20px;
+          font-size: 13px;
+          color: var(--text-muted);
+          margin-bottom: 18px;
           line-height: 1.5;
         }
         .footer-socials {
           display: flex;
-          gap: 14px;
+          gap: 10px;
         }
         .footer-social-icon {
-          color: rgba(255, 255, 255, 0.4);
-          transition: all 0.2s ease;
+          width: 38px;
+          height: 38px;
+          background: var(--bg-card);
+          border: 2px solid var(--border);
+          box-shadow: 2.5px 2.5px 0px var(--border);
+          border-radius: 8px;
+          color: var(--text-main);
+          transition: all 0.15s ease;
           display: flex;
           align-items: center;
           justify-content: center;
         }
         .footer-social-icon:hover {
-          color: var(--accent, #6366f1);
-          transform: translateY(-2px);
+          background: var(--accent-peach, #ffd6ce);
+          color: var(--hf-peach-text, #8c2d24);
+          transform: translate(-2px, -2px);
+          box-shadow: 4px 4px 0px var(--border);
         }
 
         .footer-col-heading {
           font-family: 'JetBrains Mono', monospace;
           font-size: 11px;
-          font-weight: 700;
-          color: #f8fafc;
+          font-weight: 900;
+          color: var(--text-main);
           letter-spacing: 0.15em;
-          margin-bottom: 16px;
+          margin-bottom: 14px;
         }
         .footer-nav-list {
           list-style: none;
           display: flex;
           flex-direction: column;
-          gap: 10px;
+          gap: 8px;
         }
         .footer-nav-link {
           font-family: 'JetBrains Mono', monospace;
           font-size: 12px;
-          color: #94a3b8;
-          transition: color 0.2s ease;
+          font-weight: 700;
+          color: var(--text-muted);
+          transition: color 0.15s ease;
         }
         .footer-nav-link:hover {
-          color: var(--accent, #6366f1);
+          color: var(--accent);
         }
 
         .footer-contact-details {
           font-family: 'JetBrains Mono', monospace;
           font-size: 12px;
-          color: #94a3b8;
+          font-weight: 700;
+          color: var(--text-muted);
           display: flex;
           flex-direction: column;
-          gap: 10px;
+          gap: 8px;
         }
       `}</style>
     </section>

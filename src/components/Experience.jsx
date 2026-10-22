@@ -47,51 +47,34 @@ export default function Experience({ isMobile }) {
           animate={inView ? 'visible' : 'hidden'}
         >
           {/* Eyebrow Label with entrance animation */}
-          <motion.span
-            style={S.eyebrow}
-            initial={{ opacity: 0, letterSpacing: '0.1em' }}
-            animate={inView ? { opacity: 1, letterSpacing: '0.2em' } : {}}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-          >
-            // CURRENTLY_BUILDING
-          </motion.span>
-          <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '36px' }}>
-            Current <span className="highlight-gradient">Role</span>
+          <div style={{ textAlign: 'center', marginBottom: '14px' }}>
+            <span style={S.eyebrow}>
+              // CURRENTLY_BUILDING
+            </span>
+          </div>
+
+          <h2 className="section-title" style={{ textAlign: 'center', marginBottom: '36px', color: 'var(--text-main)' }}>
+            Current <span className="neo-highlight">Role</span>
           </h2>
 
           {/* Interactive Professional Card */}
           <motion.div
             style={{
               ...S.card,
-              padding: isMobile ? '28px 20px' : '38px 44px',
-              transform: isHovered && !isMobile && !isReduced ? 'translateY(-4px)' : 'translateY(0px)',
-              boxShadow: isHovered
-                ? '0 20px 50px -15px rgba(99, 102, 241, 0.35), inset 0 0 30px rgba(99, 102, 241, 0.12)'
-                : '0 10px 30px rgba(0, 0, 0, 0.5)',
-              borderColor: isHovered ? 'rgba(99, 102, 241, 0.45)' : 'rgba(255, 255, 255, 0.08)',
+              padding: isMobile ? '24px 20px' : '36px 40px',
+              transform: isHovered && !isMobile && !isReduced ? 'translate(-3px, -3px)' : 'translate(0px, 0px)',
+              boxShadow: isHovered ? '9px 9px 0px var(--border)' : 'var(--shadow-lg)',
             }}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
-            {/* Ambient Background Glow Effect inside Card */}
-            <div style={{
-              ...S.cardBgOrb,
-              opacity: isHovered ? 0.12 : 0.05,
-              transform: isHovered ? 'scale(1.1)' : 'scale(1)'
-            }} />
-
-            {/* Top Gradient Border */}
-            <div style={{
-              ...S.accentLine,
-              background: isHovered
-                ? 'linear-gradient(90deg, #ec4899, #6366f1, #3b82f6, #10b981)'
-                : 'linear-gradient(90deg, #6366f1, #8b5cf6, transparent)',
-            }} />
+            {/* Top Yellow Accent Bar */}
+            <div style={S.accentLine} />
 
             <div style={S.headerRow}>
               <div>
                 <h3 style={S.orgName}>Blockchain Research Lab — AKGEC</h3>
-                <div style={S.roleTitle}>WEB DEVELOPER</div>
+                <div style={S.roleBadge}>WEB DEVELOPER</div>
               </div>
               <span style={S.statusBadge}>
                 <span style={S.statusDot} /> ACTIVE ROLE
@@ -99,7 +82,7 @@ export default function Experience({ isMobile }) {
             </div>
 
             <p style={S.quote}>
-              Building modern web applications while collaborating on hackathons, team projects, and real-world development initiatives.
+              Building modern web applications while collaborating on hackathons, team projects, and real-world development initiatives at the <strong>Centre of Excellence, AKGEC</strong>.
             </p>
 
             {/* Staggered Metadata Badges */}
@@ -108,12 +91,7 @@ export default function Experience({ isMobile }) {
                 <motion.span
                   key={tag}
                   variants={tagVariants}
-                  style={{
-                    ...S.metaTag,
-                    borderColor: isHovered ? 'rgba(99, 102, 241, 0.4)' : 'rgba(255, 255, 255, 0.08)',
-                    color: isHovered ? '#ffffff' : '#94a3b8',
-                    background: isHovered ? 'rgba(99, 102, 241, 0.12)' : 'rgba(255, 255, 255, 0.03)',
-                  }}
+                  style={S.metaTag}
                 >
                   {tag}
                 </motion.span>
@@ -138,38 +116,37 @@ const S = {
     margin: '0 auto',
   },
   eyebrow: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '6px',
+    background: 'var(--bg-card)',
+    border: '2px solid var(--border)',
+    boxShadow: 'var(--shadow-sm)',
+    padding: '4px 12px',
+    borderRadius: '9999px',
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: '11px',
-    color: 'var(--accent, #6366f1)',
-    letterSpacing: '0.2em',
-    display: 'block',
-    marginBottom: '12px',
-    textAlign: 'center',
-    fontWeight: '700',
+    fontWeight: '800',
+    color: 'var(--text-main)',
+    letterSpacing: '0.15em',
   },
   card: {
     position: 'relative',
-    background: 'rgba(8, 8, 22, 0.85)',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
-    borderRadius: '18px',
-    backdropFilter: 'blur(20px) saturate(180%)',
+    background: 'var(--bg-card)',
+    border: 'var(--border-width) solid var(--border)',
+    borderRadius: '20px',
+    boxShadow: 'var(--shadow-lg)',
     overflow: 'hidden',
-    transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
-  },
-  cardBgOrb: {
-    position: 'absolute',
-    inset: '-30%',
-    background: 'radial-gradient(circle at 50% 50%, rgba(99,102,241,0.5) 0%, transparent 60%)',
-    pointerEvents: 'none',
-    transition: 'transform 0.6s ease, opacity 0.6s ease',
+    transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
   },
   accentLine: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    height: '3px',
-    transition: 'background 0.5s ease',
+    height: '6px',
+    background: 'var(--accent, #e86c60)',
+    borderBottom: '2px solid var(--border)',
   },
   headerRow: {
     display: 'flex',
@@ -178,23 +155,30 @@ const S = {
     flexWrap: 'wrap',
     gap: '14px',
     marginBottom: '20px',
+    marginTop: '6px',
     position: 'relative',
     zIndex: 1,
   },
   orgName: {
-    fontFamily: "'Plus Jakarta Sans', sans-serif",
-    fontSize: 'clamp(1.3rem, 3vw, 1.65rem)',
+    fontFamily: "'Space Grotesk', sans-serif",
+    fontSize: 'clamp(1.3rem, 3vw, 1.7rem)',
     fontWeight: '800',
-    color: '#f8fafc',
-    letterSpacing: '-0.015em',
-    marginBottom: '6px',
+    color: 'var(--text-main)',
+    letterSpacing: '-0.02em',
+    marginBottom: '8px',
   },
-  roleTitle: {
+  roleBadge: {
+    display: 'inline-block',
     fontFamily: "'JetBrains Mono', monospace",
-    fontSize: '11.5px',
-    fontWeight: '700',
-    color: 'var(--accent, #6366f1)',
-    letterSpacing: '0.14em',
+    fontSize: '11px',
+    fontWeight: '800',
+    color: '#1c1c1c',
+    background: 'var(--accent, #e86c60)',
+    border: '2px solid var(--border)',
+    boxShadow: '2px 2px 0px var(--border)',
+    padding: '3px 10px',
+    borderRadius: '6px',
+    letterSpacing: '0.08em',
   },
   statusBadge: {
     display: 'inline-flex',
@@ -202,29 +186,29 @@ const S = {
     gap: '7px',
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: '10px',
-    fontWeight: '700',
-    color: '#10b981',
-    background: 'rgba(16, 185, 129, 0.1)',
-    border: '1px solid rgba(16, 185, 129, 0.3)',
+    fontWeight: '800',
+    color: '#15803d',
+    background: '#dcfce7',
+    border: '2px solid var(--border)',
+    boxShadow: '2px 2px 0px var(--border)',
     padding: '5px 12px',
-    borderRadius: '20px',
-    letterSpacing: '0.08em',
+    borderRadius: '9999px',
+    letterSpacing: '0.05em',
   },
   statusDot: {
-    width: '6px',
-    height: '6px',
+    width: '7px',
+    height: '7px',
     borderRadius: '50%',
-    background: '#10b981',
-    boxShadow: '0 0 8px #10b981',
-    animation: 'pulseGlowDot 2s ease-in-out infinite',
+    background: '#4ade80',
+    border: '1px solid #000',
   },
   quote: {
-    fontFamily: "'Plus Jakarta Sans', sans-serif",
-    color: '#cbd5e1',
+    fontFamily: "'Space Grotesk', sans-serif",
+    color: 'var(--text-body)',
     fontSize: 'clamp(0.95rem, 2vw, 1.05rem)',
     lineHeight: '1.7',
     marginBottom: '26px',
-    borderLeft: '3px solid #6366f1',
+    borderLeft: '4px solid var(--accent, #e86c60)',
     paddingLeft: '18px',
     position: 'relative',
     zIndex: 1,
@@ -239,11 +223,14 @@ const S = {
   metaTag: {
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: '11px',
-    border: '1px solid',
+    background: 'var(--bg-subtle)',
+    color: 'var(--text-main)',
+    border: '1.5px solid var(--border)',
+    boxShadow: '2px 2px 0px var(--border)',
     padding: '5px 12px',
-    borderRadius: '12px',
-    letterSpacing: '0.05em',
-    fontWeight: '600',
-    transition: 'all 0.3s ease',
+    borderRadius: '8px',
+    letterSpacing: '0.04em',
+    fontWeight: '700',
   },
 }
+

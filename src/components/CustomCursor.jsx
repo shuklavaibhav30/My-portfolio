@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, useSpring, AnimatePresence } from 'framer-motion';
 import useMousePosition from '../hooks/useMousePosition';
 import useReducedMotion from '../hooks/useReducedMotion';
@@ -7,50 +7,63 @@ export default function CustomCursor({ isMobile }) {
   const mousePosition = useMousePosition();
   const prefersReducedMotion = useReducedMotion();
   const [isHovering, setIsHovering] = useState(false);
-  const [hoverText, setHoverText] = useState('');
   const [isClicking, setIsClicking] = useState(false);
   const [ripples, setRipples] = useState([]);
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof document !== 'undefined') {
+      return document.documentElement.getAttribute('data-theme') === 'dark';
+    }
+    return false;
+  });
 
-  // Smooth springs for outer ring with enhanced trailing physics
-  const springConfig = { damping: 22, stiffness: 250, mass: 0.4 };
+  // Track theme changes dynamically
+  useEffect(() => {
+    const checkTheme = () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      setIsDark(current === 'dark');
+    };
+    checkTheme();
+
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+    window.addEventListener('themechange', checkTheme);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('themechange', checkTheme);
+    };
+  }, []);
+
+  // Smooth springs for outer ring with enhanced trailing physics (zero lag, 16px radius offset)
+  const springConfig = { damping: 26, stiffness: 320, mass: 0.28 };
   const cursorX = useSpring(0, springConfig);
   const cursorY = useSpring(0, springConfig);
 
   useEffect(() => {
     if (prefersReducedMotion || isMobile) return;
-    cursorX.set(mousePosition.x - 20);
-    cursorY.set(mousePosition.y - 20);
+    cursorX.set(mousePosition.x - 16);
+    cursorY.set(mousePosition.y - 16);
   }, [mousePosition, cursorX, cursorY, prefersReducedMotion, isMobile]);
 
   useEffect(() => {
     if (prefersReducedMotion || isMobile) return;
 
     const handleMouseOver = (e) => {
-      const target = e.target.closest('a, button, input, [data-cursor]');
+      const target = e.target.closest('a, button, input, textarea, select, [role="button"]');
       if (target) {
         setIsHovering(true);
-        const text = target.getAttribute('data-cursor');
-        if (text) {
-          setHoverText(text);
-        } else if (target.tagName.toLowerCase() === 'a' && target.href.includes('github')) {
-          setHoverText('GITHUB ↗');
-        } else if (target.tagName.toLowerCase() === 'a' && target.closest('.project-card, .flip-card-container')) {
-          setHoverText('VIEW ↗');
-        } else if (target.tagName.toLowerCase() === 'button') {
-          setHoverText('SELECT');
-        } else {
-          setHoverText('');
-        }
       } else {
         setIsHovering(false);
-        setHoverText('');
       }
     };
 
     const handleMouseDown = (e) => {
       setIsClicking(true);
       const newRipple = { id: Date.now(), x: e.clientX, y: e.clientY };
-      setRipples((prev) => [...prev.slice(-3), newRipple]);
+      setRipples((prev) => [...prev.slice(-2), newRipple]);
     };
 
     const handleMouseUp = () => setIsClicking(false);
@@ -68,117 +81,102 @@ export default function CustomCursor({ isMobile }) {
 
   if (prefersReducedMotion || isMobile) return null;
 
+  const accentColor = isDark ? '#ff7e72' : '#e86c60';
+
   return (
     <>
-      {/* Click Ripples */}
+      {/* Click Ripples - clean expanding ring, zero blur */}
       <AnimatePresence>
         {ripples.map((r) => (
           <motion.div
             key={r.id}
-            initial={{ opacity: 0.8, scale: 0.3 }}
-            animate={{ opacity: 0, scale: 2.2 }}
+            initial={{ opacity: 0.75, scale: 0.3 }}
+            animate={{ opacity: 0, scale: 2.1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
+            transition={{ duration: 0.38, ease: 'easeOut' }}
             style={{
               position: 'fixed',
-              left: r.x - 20,
-              top: r.y - 20,
-              width: '40px',
-              height: '40px',
+              left: r.x - 18,
+              top: r.y - 18,
+              width: '36px',
+              height: '36px',
               borderRadius: '50%',
-              border: '1.5px solid #6366f1',
-              boxShadow: '0 0 15px rgba(99, 102, 241, 0.6)',
+              border: `2px solid ${accentColor}`,
+              background: 'transparent',
               pointerEvents: 'none',
-              zIndex: 99999,
+              zIndex: 999998,
             }}
             onAnimationComplete={() => setRipples((prev) => prev.filter((item) => item.id !== r.id))}
           />
         ))}
       </AnimatePresence>
 
-      {/* Core Precision Dot */}
+      {/* Trailing Theme-Aware Neo-Brutalist Cursor Ring - COMPLETELY TRANSPARENT, ZERO BLUR */}
       <motion.div
-        className="cursor-dot"
         style={{
-          left: mousePosition.x - 4,
-          top: mousePosition.y - 4,
           position: 'fixed',
-          width: '8px',
-          height: '8px',
-          backgroundColor: isHovering ? '#ec4899' : '#6366f1',
-          borderRadius: '50%',
-          pointerEvents: 'none',
-          zIndex: 999999,
-          boxShadow: isHovering ? '0 0 14px #ec4899' : '0 0 12px #6366f1',
-        }}
-        animate={{
-          scale: isClicking ? 0.4 : isHovering ? 0.5 : 1,
-          opacity: 1,
-        }}
-        transition={{ duration: 0.15 }}
-      />
-
-      {/* Animated Cyber Target Outer Ring */}
-      <motion.div
-        className="cursor-ring"
-        style={{
+          left: 0,
+          top: 0,
           x: cursorX,
           y: cursorY,
-          position: 'fixed',
-          width: '40px',
-          height: '40px',
-          border: '1px solid rgba(99, 102, 241, 0.45)',
-          borderRadius: '50%',
           pointerEvents: 'none',
-          zIndex: 99998,
+          zIndex: 999999,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          boxShadow: isHovering ? '0 0 20px rgba(99, 102, 241, 0.3)' : 'none',
         }}
         animate={{
-          scale: isHovering && hoverText ? 2.5 : isHovering ? 1.6 : isClicking ? 0.75 : 1,
-          backgroundColor: isHovering ? 'rgba(10, 10, 24, 0.85)' : 'rgba(99, 102, 241, 0.03)',
-          borderColor: isHovering ? 'rgba(236, 72, 153, 0.7)' : 'rgba(99, 102, 241, 0.45)',
-          rotate: isHovering ? 90 : 0,
+          scale: isClicking ? 0.75 : isHovering ? 1.35 : 1,
         }}
-        transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+        transition={{ type: 'spring', damping: 22, stiffness: 360 }}
       >
-        {/* Reticle corner ticks */}
-        <div className="cursor-crosshair top-tick" />
-        <div className="cursor-crosshair bottom-tick" />
-        <div className="cursor-crosshair left-tick" />
-        <div className="cursor-crosshair right-tick" />
-
-        <span
+        <div
           style={{
-            fontSize: '5px',
-            fontFamily: "'JetBrains Mono', monospace",
-            fontWeight: '700',
-            color: '#f8fafc',
-            letterSpacing: '0.08em',
-            opacity: isHovering && hoverText ? 1 : 0,
-            transition: 'opacity 0.2s',
-            whiteSpace: 'nowrap',
-            textShadow: '0 0 6px rgba(0,0,0,0.8)',
+            width: '32px',
+            height: '32px',
+            borderRadius: '50%',
+            background: 'transparent', // 100% transparent - no cloudy or blurry lens
+            backdropFilter: 'none',      // Removed blurry effect completely
+            WebkitBackdropFilter: 'none',
+            border: isDark
+              ? isHovering
+                ? `2px solid ${accentColor}`
+                : '1.5px solid rgba(255, 255, 255, 0.45)'
+              : isHovering
+                ? `2px solid ${accentColor}`
+                : '1.5px solid rgba(28, 28, 28, 0.55)',
+            boxShadow: isDark
+              ? isHovering
+                ? '2px 2px 0px #020503, 0 0 10px rgba(255, 126, 114, 0.35)'
+                : 'none'
+              : isHovering
+                ? '2.5px 2.5px 0px #1c1c1c'
+                : 'none',
+            transition: 'border 0.15s ease, box-shadow 0.15s ease',
           }}
-        >
-          {hoverText}
-        </span>
+        />
       </motion.div>
 
-      <style>{`
-        .cursor-crosshair {
-          position: absolute;
-          background: rgba(99, 102, 241, 0.6);
-          pointer-events: none;
-          transition: background 0.2s ease;
-        }
-        .top-tick { top: -4px; width: 1px; height: 5px; }
-        .bottom-tick { bottom: -4px; width: 1px; height: 5px; }
-        .left-tick { left: -4px; width: 5px; height: 1px; }
-        .right-tick { right: -4px; width: 5px; height: 1px; }
-      `}</style>
+      {/* Center Precise Dot - crisp 5px pixel-perfect theme focal point */}
+      <motion.div
+        style={{
+          position: 'fixed',
+          left: mousePosition.x - 2.5,
+          top: mousePosition.y - 2.5,
+          width: '5px',
+          height: '5px',
+          borderRadius: '50%',
+          background: accentColor,
+          border: isDark ? '1px solid #000000' : '1px solid #1c1c1c',
+          boxShadow: isDark ? '0 0 5px rgba(255, 126, 114, 0.7)' : 'none',
+          pointerEvents: 'none',
+          zIndex: 1000000,
+        }}
+        animate={{
+          scale: isClicking ? 1.4 : isHovering ? 0.6 : 1,
+        }}
+        transition={{ duration: 0.12 }}
+      />
     </>
   );
 }

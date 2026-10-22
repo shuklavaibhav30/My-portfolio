@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
+import { BrandLogo } from './TechLogos'
 
 const PROJECTS = [
   {
@@ -10,8 +11,8 @@ const PROJECTS = [
     description:
       'A full-stack hostel grievance management platform built for AKGEC with two independent portals (Student and Admin). Features OTP-verified registration, 4-role RBAC (Student, Warden, Chief Warden, Dean) with hostel-scoped authorization, complaint lifecycle tracking, photo evidence uploads, complete audit trails, hostel analytics, and email escalations.',
     tags: ['React', 'Node.js', 'Express', 'MongoDB', 'JWT', 'Brevo', 'Cloudinary'],
-    stats: ['4-Role RBAC', 'OTP Authentication', 'Complaint Lifecycle', 'Hostel Analytics', 'Email Escalation'],
-    color: '#10b981',
+    stats: ['4-Role RBAC', 'OTP Auth', 'Complaint Lifecycle', 'Hostel Analytics', 'Email Escalation'],
+    accent: '#e86c60',
     github: 'https://github.com/shuklavaibhav30/Hostel-Greviance-Backend',
     live: 'https://hostelsaathi-v1.vercel.app/',
     liveLabel: 'STUDENT PORTAL',
@@ -28,12 +29,12 @@ const PROJECTS = [
     id: 2,
     title: 'VibeTube',
     category: 'FULL-STACK',
-    tagline: 'Full-stack video sharing platform.',
+    tagline: 'Full-stack video sharing and streaming platform.',
     description:
       'A YouTube-inspired MERN platform for uploading, watching, liking, commenting, subscribing, managing playlists, and tracking watch history. Built with MVC architecture, RESTful APIs, secure access/refresh token JWT authentication, MongoDB Atlas, and Cloudinary for media storage and delivery.',
     tags: ['React', 'Node.js', 'Express', 'MongoDB', 'JWT', 'Cloudinary', 'Render'],
     stats: ['REST APIs', 'Video Uploads', 'JWT Authentication', 'Cloud Media Storage'],
-    color: '#6366f1',
+    accent: '#38bdf8',
     github: 'https://github.com/shuklavaibhav30/Vibe-Tube-Frontend',
     live: 'https://vibe-tube-frontend-ashen.vercel.app/',
     liveLabel: 'LIVE DEMO',
@@ -49,12 +50,12 @@ const PROJECTS = [
     id: 3,
     title: 'VendorSaathi',
     category: 'AI / BACKEND',
-    tagline: 'AI-powered platform for street vendors and micro-entrepreneurs.',
+    tagline: 'AI-powered platform for street vendors & micro-entrepreneurs.',
     description:
       'An AI-powered backend platform for street vendors and micro-entrepreneurs to track daily sales and expenses, discover government schemes, and receive AI financial insights. Features role-aware REST APIs, LLM integration for demand prediction, an AI chatbot for scheme eligibility, Zod request validation, rate limiting, and optimized MongoDB indexing.',
     tags: ['Node.js', 'Express', 'MongoDB', 'AI API', 'JWT', 'Zod'],
-    stats: ['AI-Powered Insights', 'Sales & Expense Tracking', 'Government Schemes', 'AI Chatbot', 'REST APIs'],
-    color: '#f59e0b',
+    stats: ['AI Insights', 'Sales & Expense Tracking', 'Govt Schemes', 'AI Chatbot', 'REST APIs'],
+    accent: '#f97316',
     github: 'https://github.com/shuklavaibhav30/VendorSaathi',
     live: 'https://vendor-saathi-opal.vercel.app/',
     liveLabel: 'LIVE DEMO',
@@ -70,12 +71,12 @@ const PROJECTS = [
     id: 4,
     title: 'BRL Society Website',
     category: 'FRONTEND',
-    tagline: 'Official website for the Blockchain Research Lab at AKGEC.',
+    tagline: 'Official portal for Blockchain Research Lab at AKGEC.',
     description:
       'A modern responsive website for the Blockchain Research Lab at AKGEC, showcasing research, events, projects, team members, and alumni through a futuristic blockchain-themed interface. Built with React, TypeScript, Vite, and Tailwind CSS with smooth animations and interactive alumni network visualizations.',
     tags: ['React', 'TypeScript', 'Tailwind CSS', 'Vite'],
     stats: ['Interactive UI', 'Alumni Visualization', 'Event Showcases', 'Smooth Animations', 'Blockchain Theme'],
-    color: '#3b82f6',
+    accent: '#22c55e',
     github: 'https://github.com/shuklavaibhav30/BRL-AKGEC',
     live: 'https://brl.akgec.ac.in/',
     liveLabel: 'LIVE DEMO',
@@ -91,12 +92,12 @@ const PROJECTS = [
     id: 5,
     title: 'My Portfolio',
     category: 'FRONTEND',
-    tagline: 'Personal developer portfolio.',
+    tagline: 'Personal developer portfolio & interactive terminal.',
     description:
-      'A personal developer portfolio designed to showcase my full-stack development work, technical skills, achievements, experience, and projects through a modern dark futuristic interface. Features responsive design, interactive micro-animations, and direct access to live project demos and source code repositories.',
-    tags: ['React', 'JavaScript', 'CSS', 'Vercel'],
-    stats: ['Responsive Design', 'Modern UI', 'Interactive Animations', 'Project Showcase'],
-    color: '#8b5cf6',
+      'A personal developer portfolio designed to showcase my full-stack development work, technical skills, achievements, experience, and projects through a modern neo-brutalist interface. Features responsive design, interactive micro-animations, and direct access to live project demos and source code repositories.',
+    tags: ['React', 'JavaScript', 'CSS', 'Framer Motion', 'Vercel'],
+    stats: ['Neo-Brutalism', 'Interactive Terminal', 'Live Telemetry', 'Bento Architecture'],
+    accent: '#a855f7',
     github: 'https://github.com/shuklavaibhav30/My-portfolio',
     live: 'https://vaibhav-shukla.vercel.app/',
     liveLabel: 'LIVE DEMO',
@@ -112,323 +113,122 @@ const PROJECTS = [
 
 function ProjectCard({ project, index, isMobile }) {
   const ref = useRef(null)
-  const cardRef = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
-  const [flipped, setFlipped] = useState(false)
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-  const [isHovered, setIsHovered] = useState(false)
-
-  const handleMouseMove = (e) => {
-    if (isMobile || !cardRef.current) return
-    const rect = cardRef.current.getBoundingClientRect()
-    setMousePos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    })
-  }
-
-  const handleMouseEnter = () => {
-    setIsHovered(true)
-    if (!isMobile) setFlipped(true)
-  }
-
-  const handleMouseLeave = () => {
-    setIsHovered(false)
-    if (!isMobile) setFlipped(false)
-  }
-
-  const handleCardClick = () => {
-    if (isMobile) {
-      setFlipped(!flipped)
-    }
-  }
-
-  const handleLinkClick = (e) => {
-    e.stopPropagation()
-  }
-
-  const isFifthCard = index === 4
+  const [showSpec, setShowSpec] = useState(false)
 
   return (
     <motion.article
       ref={ref}
       initial={{ opacity: 0, y: 30 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: index * 0.1, cubicBezier: [0.16, 1, 0.3, 1] }}
-      className={`flip-card-container ${isFifthCard ? 'fifth-card-wrapper' : ''}`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onMouseMove={handleMouseMove}
-      onClick={handleCardClick}
+      transition={{ duration: 0.5, delay: index * 0.1, cubicBezier: [0.16, 1, 0.3, 1] }}
+      className="project-card"
     >
-      <div className={`flip-card-inner ${flipped ? 'is-flipped' : ''}`}>
-        {/* FRONT SIDE */}
-        <div
-          ref={cardRef}
-          className="flip-card-front"
-          style={{
-            borderColor: flipped
-              ? `${project.color}60`
-              : isHovered
-              ? `${project.color}45`
-              : 'rgba(255,255,255,0.08)',
-            boxShadow: isHovered
-              ? `0 20px 50px -12px ${project.color}35, inset 0 0 30px ${project.color}15`
-              : '0 8px 30px rgba(0,0,0,0.4)',
-          }}
-        >
-          {/* Spotlight Follow Effect */}
-          {isHovered && !isMobile && (
-            <div
-              className="card-spotlight"
+      {/* Top Banner Accent */}
+      <div className="card-top-accent" style={{ background: project.accent }} />
+
+      <div className="card-content">
+        {/* Header Row */}
+        <div className="card-header-row">
+          <div className="category-and-status">
+            <span
+              className="category-badge"
               style={{
-                background: `radial-gradient(500px circle at ${mousePos.x}px ${mousePos.y}px, ${project.color}18, transparent 70%)`,
+                background: project.category.includes('FULL-STACK') ? '#fef08a' : project.category.includes('AI') ? '#ffedd5' : '#e0f2fe'
               }}
-            />
-          )}
-
-          {/* Top Shimmer Accent Line */}
-          <div
-            className="top-accent-line"
-            style={{
-              background: `linear-gradient(90deg, ${project.color}, ${project.color}aa, transparent)`,
-            }}
-          />
-
-          <div className="card-head">
-            <div className="title-row">
-              <h3 className="card-title" style={{ color: isHovered ? '#ffffff' : '#f8fafc' }}>
-                {project.title}
-              </h3>
-              <div className="badge-group">
-                <span
-                  className="role-tag"
-                  style={{
-                    color: project.color,
-                    borderColor: `${project.color}50`,
-                    background: `${project.color}15`,
-                  }}
-                >
-                  {project.category}
-                </span>
-                <span className="flip-hint" style={{ color: project.color }}>
-                  <span className="flip-icon">⟲</span>
-                </span>
-              </div>
-            </div>
-            <p className="tagline">{project.tagline}</p>
-          </div>
-
-          <p className="desc">{project.description}</p>
-
-          <div className="stats-row">
-            {project.stats.map((stat, i) => (
-              <span key={stat} className="stat-item" style={{ color: project.color }}>
-                <span
-                  className="stat-dot"
-                  style={{
-                    background: project.color,
-                    boxShadow: `0 0 10px ${project.color}`,
-                    animationDelay: `${i * 0.4}s`,
-                  }}
-                />
-                {stat}
-              </span>
-            ))}
-          </div>
-
-          <div className="tags-row">
-            {project.tags.map((tag) => (
-              <span key={tag} className="tag-pill">
-                {tag}
-              </span>
-            ))}
-          </div>
-
-          <div className="links-row">
-            <a
-              href={project.github}
-              target="_blank"
-              rel="noreferrer"
-              onClick={handleLinkClick}
-              className="proj-btn secondary"
             >
-              SOURCE CODE ↗
-            </a>
-            {project.admin ? (
-              <>
-                <a
-                  href={project.live}
-                  target="_blank"
-                  rel="noreferrer"
-                  onClick={handleLinkClick}
-                  className="proj-btn primary"
-                  style={{
-                    background: `linear-gradient(135deg, ${project.color}25 0%, ${project.color}15 100%)`,
-                    borderColor: `${project.color}60`,
-                    color: '#ffffff',
-                  }}
-                >
-                  {project.liveLabel} ↗
-                </a>
-                <a
-                  href={project.admin}
-                  target="_blank"
-                  rel="noreferrer"
-                  onClick={handleLinkClick}
-                  className="proj-btn primary"
-                  style={{
-                    background: `linear-gradient(135deg, ${project.color}35 0%, ${project.color}20 100%)`,
-                    borderColor: `${project.color}70`,
-                    color: '#ffffff',
-                  }}
-                >
-                  ADMIN PANEL ↗
-                </a>
-              </>
-            ) : (
-              <a
-                href={project.live}
-                target="_blank"
-                rel="noreferrer"
-                onClick={handleLinkClick}
-                className="proj-btn primary"
-                style={{
-                  background: `linear-gradient(135deg, ${project.color}30 0%, ${project.color}15 100%)`,
-                  borderColor: `${project.color}60`,
-                  color: '#ffffff',
-                }}
-              >
-                {project.liveLabel} ↗
-              </a>
-            )}
+              {project.category}
+            </span>
+            <span className="live-status-pill">
+              <span className="pulse-dot" />
+              {project.details.status}
+            </span>
           </div>
+
+          <button
+            onClick={() => setShowSpec(!showSpec)}
+            className="spec-toggle-btn"
+            title="Toggle Technical Architecture Spec"
+          >
+            {showSpec ? '← OVERVIEW' : 'ARCH SPEC ⚙'}
+          </button>
         </div>
 
-        {/* BACK SIDE */}
-        <div
-          className="flip-card-back"
-          style={{
-            borderColor: `${project.color}60`,
-            boxShadow: `0 20px 50px -12px ${project.color}40, inset 0 0 35px ${project.color}18`,
-          }}
-        >
-          {/* Top Shimmer Accent Line */}
-          <div
-            className="top-accent-line"
-            style={{
-              background: `linear-gradient(90deg, ${project.color}, ${project.color}aa, transparent)`,
-            }}
-          />
+        {/* Title & Tagline */}
+        <h3 className="project-title">{project.title}</h3>
+        <p className="project-tagline">{project.tagline}</p>
 
-          <div className="back-header">
-            <div className="title-row">
-              <h3 className="card-title" style={{ color: '#ffffff' }}>
-                {project.title}
-              </h3>
-              <span
-                className="status-badge"
-                style={{
-                  color: project.color,
-                  borderColor: `${project.color}50`,
-                  background: `${project.color}18`,
-                }}
-              >
-                <span
-                  className="status-dot-pulse"
-                  style={{
-                    background: project.color,
-                    boxShadow: `0 0 10px ${project.color}`,
-                  }}
-                />
-                {project.details.status}
-              </span>
-            </div>
-            <p className="back-subtitle">// TECHNICAL ARCHITECTURE SPEC</p>
-          </div>
+        {/* Dynamic Body: Overview vs Architecture Spec */}
+        {!showSpec ? (
+          <>
+            <p className="project-desc">{project.description}</p>
 
-          <div className="specs-grid">
-            <div className="spec-item">
-              <span className="spec-label">PROJECT TYPE</span>
-              <span className="spec-value" style={{ color: project.color }}>
-                {project.details.type}
-              </span>
+            {/* Highlights Stats */}
+            <div className="stats-pills-row">
+              {project.stats.map((s) => (
+                <span key={s} className="stat-pill">
+                  <span className="pill-dot" style={{ background: project.accent }} />
+                  {s}
+                </span>
+              ))}
             </div>
 
-            <div className="spec-item">
-              <span className="spec-label">TECH STACK</span>
-              <span className="spec-value">{project.details.stack}</span>
+            {/* Tags with Real Brand Logos */}
+            <div className="tags-row">
+              {project.tags.map((t) => (
+                <span key={t} className="tech-tag">
+                  <BrandLogo id={t} size={13} />
+                  <span>{t}</span>
+                </span>
+              ))}
             </div>
-
-            <div className="spec-item">
-              <span className="spec-label">ARCHITECTURE</span>
-              <span className="spec-value">{project.details.architecture}</span>
+          </>
+        ) : (
+          <div className="arch-specs-box">
+            <div className="spec-heading">// TECHNICAL ARCHITECTURE SPEC</div>
+            <div className="spec-field">
+              <span className="spec-key">STACK:</span>
+              <span className="spec-val">{project.details.stack}</span>
             </div>
-
-            <div className="spec-item">
-              <span className="spec-label">DEPLOYMENT & INFRA</span>
-              <span className="spec-value">{project.details.deployment}</span>
+            <div className="spec-field">
+              <span className="spec-key">ARCHITECTURE:</span>
+              <span className="spec-val">{project.details.architecture}</span>
+            </div>
+            <div className="spec-field">
+              <span className="spec-key">INFRA & DEPLOY:</span>
+              <span className="spec-val">{project.details.deployment}</span>
             </div>
           </div>
+        )}
 
-          <div className="links-row back-links">
+        {/* Action Buttons */}
+        <div className="project-actions">
+          <a
+            href={project.github}
+            target="_blank"
+            rel="noreferrer"
+            className="proj-btn code-btn"
+          >
+            CODE ↗
+          </a>
+          <a
+            href={project.live}
+            target="_blank"
+            rel="noreferrer"
+            className="proj-btn live-btn"
+          >
+            {project.liveLabel} ↗
+          </a>
+          {project.admin && (
             <a
-              href={project.github}
+              href={project.admin}
               target="_blank"
               rel="noreferrer"
-              onClick={handleLinkClick}
-              className="proj-btn secondary"
+              className="proj-btn admin-btn"
             >
-              REPOSITORY ↗
+              ADMIN PANEL ↗
             </a>
-            {project.admin ? (
-              <>
-                <a
-                  href={project.live}
-                  target="_blank"
-                  rel="noreferrer"
-                  onClick={handleLinkClick}
-                  className="proj-btn primary"
-                  style={{
-                    background: `linear-gradient(135deg, ${project.color}35 0%, ${project.color}20 100%)`,
-                    borderColor: `${project.color}70`,
-                    color: '#ffffff',
-                  }}
-                >
-                  STUDENT PORTAL ↗
-                </a>
-                <a
-                  href={project.admin}
-                  target="_blank"
-                  rel="noreferrer"
-                  onClick={handleLinkClick}
-                  className="proj-btn primary"
-                  style={{
-                    background: `linear-gradient(135deg, ${project.color}45 0%, ${project.color}25 100%)`,
-                    borderColor: `${project.color}80`,
-                    color: '#ffffff',
-                  }}
-                >
-                  ADMIN PANEL ↗
-                </a>
-              </>
-            ) : (
-              <a
-                href={project.live}
-                target="_blank"
-                rel="noreferrer"
-                onClick={handleLinkClick}
-                className="proj-btn primary"
-                style={{
-                  background: `linear-gradient(135deg, ${project.color}35 0%, ${project.color}20 100%)`,
-                  borderColor: `${project.color}70`,
-                  color: '#ffffff',
-                }}
-              >
-                VISIT DEMO ↗
-              </a>
-            )}
-          </div>
+          )}
         </div>
       </div>
     </motion.article>
@@ -450,9 +250,15 @@ export default function Projects({ isMobile }) {
           transition={{ duration: 0.6, cubicBezier: [0.16, 1, 0.3, 1] }}
           className="section-header"
         >
-          <div className="section-label">// FEATURED_WORK</div>
-          <h2 className="section-title">Featured <span className="highlight-gradient">Projects</span></h2>
-          <p className="section-subtitle">Real projects, real problems, real code.</p>
+          <div className="eyebrow-pill">
+            // FEATURED_WORK • PRODUCTION READY
+          </div>
+          <h2 className="section-title">
+            Featured <span className="title-highlight">Projects</span>
+          </h2>
+          <p className="section-subtitle">
+            Real projects, real problems, real production code.
+          </p>
         </motion.div>
 
         {/* PROJECTS GRID */}
@@ -470,9 +276,9 @@ export default function Projects({ isMobile }) {
 
       <style>{`
         .projects-section {
-          padding: 100px 24px;
-          position: relative;
+          padding: 90px 24px;
           background: transparent;
+          position: relative;
         }
 
         .projects-container {
@@ -482,333 +288,356 @@ export default function Projects({ isMobile }) {
 
         .section-header {
           text-align: center;
-          margin-bottom: 60px;
+          margin-bottom: 50px;
         }
 
-        .section-label {
+        .eyebrow-pill {
+          display: inline-flex;
+          align-items: center;
+          background: #ffffff;
+          border: 2px solid #000000;
+          box-shadow: 2px 2px 0px #000000;
+          padding: 4px 14px;
+          border-radius: 9999px;
           font-family: 'JetBrains Mono', monospace;
-          color: var(--accent, #6366f1);
           font-size: 11px;
-          letter-spacing: 0.2em;
-          margin-bottom: 12px;
+          font-weight: 800;
+          color: var(--text-main);
+          letter-spacing: 0.12em;
+          margin-bottom: 14px;
         }
 
         .section-title {
-          font-size: clamp(2rem, 4vw, 3rem);
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: clamp(2.2rem, 5vw, 3.2rem);
           font-weight: 800;
-          color: #f8fafc;
+          color: var(--text-main);
           letter-spacing: -0.02em;
           margin-bottom: 12px;
         }
 
+        .title-highlight {
+          background: var(--bg-card, #ffffff);
+          color: var(--text-main, #1c1c1c);
+          padding: 2px 14px;
+          border-radius: 10px;
+          border: 2.5px solid var(--border, #1c1c1c);
+          box-shadow: 4px 4px 0px var(--accent, #e86c60);
+          display: inline-block;
+          transition: all 0.15s ease;
+        }
+        .title-highlight:hover {
+          transform: translate(-1px, -1px);
+          box-shadow: 5px 5px 0px var(--accent, #e86c60);
+        }
+
         .section-subtitle {
-          color: #94a3b8;
-          font-size: 14.5px;
+          color: var(--text-muted);
+          font-size: 15px;
           max-width: 500px;
           margin: 0 auto;
           line-height: 1.6;
         }
 
-        /* GRID LAYOUT: 2-column + 1 centered 5th card */
         .projects-grid {
           display: grid;
-          grid-template-columns: repeat(2, 1fr);
+          grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
           gap: 32px;
-          align-items: stretch;
         }
 
-        .fifth-card-wrapper {
-          grid-column: 1 / -1;
-          max-width: 640px;
-          margin: 0 auto;
-          width: 100%;
+        .projects-grid.mobile {
+          grid-template-columns: 1fr;
+          gap: 24px;
         }
 
-        @media (max-width: 900px) {
-          .projects-grid {
-            grid-template-columns: 1fr;
-          }
-          .fifth-card-wrapper {
-            max-width: 100%;
-          }
-        }
-
-        /* 3D FLIP CONTAINER */
-        .flip-card-container {
-          perspective: 1200px;
-          min-height: 480px;
-          cursor: pointer;
-        }
-
-        .flip-card-inner {
-          position: relative;
-          width: 100%;
-          height: 100%;
-          transition: transform 0.65s cubic-bezier(0.4, 0.2, 0.2, 1);
-          transform-style: preserve-3d;
-        }
-
-        .flip-card-inner.is-flipped {
-          transform: rotateY(180deg);
-        }
-
-        /* COMMON CARD STYLES */
-        .flip-card-front,
-        .flip-card-back {
-          position: absolute;
-          inset: 0;
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
-          border-radius: 18px;
-          background: rgba(8, 8, 22, 0.85) !important;
-          backdrop-filter: blur(20px) saturate(180%) !important;
-          -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          padding: 32px;
+        /* PROJECT CARD */
+        .project-card {
+          background: var(--bg-card);
+          border: var(--border-width) solid var(--border);
+          border-radius: 20px;
+          box-shadow: var(--shadow-lg);
+          overflow: hidden;
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
-          overflow: hidden;
-          transition: border-color 0.3s ease, box-shadow 0.3s ease;
+          transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .flip-card-back {
-          transform: rotateY(180deg);
-          background: rgba(6, 6, 18, 0.95) !important;
+        .project-card:hover {
+          transform: translate(-3px, -3px);
+          box-shadow: var(--shadow-xl);
         }
 
-        /* SPOTLIGHT & ACCENT LINE */
-        .card-spotlight {
-          position: absolute;
-          inset: 0;
-          pointer-events: none;
-          z-index: 0;
+        .card-top-accent {
+          height: 6px;
+          width: 100%;
+          border-bottom: 2px solid var(--border);
         }
 
-        .top-accent-line {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 3px;
-          z-index: 1;
+        .card-content {
+          padding: 26px 26px 22px;
+          display: flex;
+          flex-direction: column;
+          flex: 1;
         }
 
-        /* FRONT CONTENT */
-        .card-head {
-          position: relative;
-          z-index: 1;
-        }
-
-        .title-row {
+        .card-header-row {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: 12px;
-          margin-bottom: 8px;
-        }
-
-        .card-title {
-          font-size: 22px;
-          font-weight: 800;
-          letter-spacing: -0.01em;
-          transition: color 0.25s ease;
-        }
-
-        .badge-group {
-          display: flex;
-          align-items: center;
+          margin-bottom: 16px;
           gap: 10px;
         }
 
-        .role-tag {
+        .category-and-status {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+
+        .category-badge {
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 10.5px;
+          font-weight: 900;
+          color: var(--text-main);
+          background: var(--bg-card-alt);
+          padding: 3px 10px;
+          border-radius: 9999px;
+          border: 1.5px solid var(--border);
+          box-shadow: 2px 2px 0px var(--border);
+          letter-spacing: 0.05em;
+        }
+
+        .live-status-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
           font-family: 'JetBrains Mono', monospace;
           font-size: 10px;
-          font-weight: 700;
-          letter-spacing: 0.12em;
+          font-weight: 800;
+          color: #1b5e3b;
+          background: #e6f6ee;
+          border: 1.5px solid var(--border);
+          padding: 3px 8px;
+          border-radius: 9999px;
+          box-shadow: 1.5px 1.5px 0px var(--border);
+        }
+
+        .pulse-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #4ade80;
+          border: 1px solid #000;
+        }
+
+        .spec-toggle-btn {
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 10.5px;
+          font-weight: 800;
+          color: var(--text-main);
+          background: var(--bg-subtle);
+          border: 1.5px solid var(--border);
+          box-shadow: 2px 2px 0px var(--border);
           padding: 4px 10px;
-          border-radius: 20px;
-          border: 1px solid;
-          white-space: nowrap;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: all 0.15s ease;
         }
 
-        .flip-hint {
-          font-size: 14px;
-          opacity: 0.7;
-          transition: opacity 0.25s ease;
+        .spec-toggle-btn:hover {
+          background: var(--accent-peach, #ffd6ce);
+          color: var(--hf-peach-text, #8c2d24);
+          transform: translate(-1px, -1px);
+          box-shadow: 3px 3px 0px var(--border);
         }
 
-        .flip-card-container:hover .flip-hint {
-          opacity: 1;
+        .project-title {
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 22px;
+          font-weight: 800;
+          color: var(--text-main);
+          margin-bottom: 4px;
         }
 
-        .tagline {
-          font-size: 13px;
-          color: #94a3b8;
-          font-style: italic;
+        .project-tagline {
+          font-size: 13.5px;
+          font-weight: 600;
+          color: var(--text-muted);
+          margin-bottom: 14px;
+        }
+
+        .project-desc {
+          font-size: 13.5px;
+          color: var(--text-body);
+          line-height: 1.65;
+          margin-bottom: 18px;
+          flex: 1;
+        }
+
+        .stats-pills-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
           margin-bottom: 16px;
         }
 
-        .desc {
-          color: #cbd5e1;
-          font-size: 13.5px;
-          line-height: 1.65;
-          margin-bottom: 20px;
-          position: relative;
-          z-index: 1;
-        }
-
-        /* STATS */
-        .stats-row {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 14px;
-          margin-bottom: 20px;
-          position: relative;
-          z-index: 1;
-        }
-
-        .stat-item {
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 11px;
-          font-weight: 600;
-          display: flex;
+        .stat-pill {
+          display: inline-flex;
           align-items: center;
           gap: 6px;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 10.5px;
+          font-weight: 700;
+          color: var(--text-body);
+          background: var(--bg-card-alt);
+          border: 1.5px solid var(--border);
+          padding: 2px 8px;
+          border-radius: 6px;
+          box-shadow: 1.5px 1.5px 0px var(--border);
         }
 
-        .stat-dot {
+        .pill-dot {
           width: 5px;
           height: 5px;
           border-radius: 50%;
-          display: inline-block;
+          border: 1px solid #000;
         }
 
-        /* TAGS */
         .tags-row {
           display: flex;
           flex-wrap: wrap;
           gap: 6px;
-          margin-bottom: 24px;
-          position: relative;
-          z-index: 1;
+          margin-bottom: 22px;
         }
 
-        .tag-pill {
+        .tech-tag {
           font-family: 'JetBrains Mono', monospace;
           font-size: 11px;
-          color: #94a3b8;
-          background: rgba(255, 255, 255, 0.04);
-          border: 1px solid rgba(255, 255, 255, 0.07);
-          padding: 4px 12px;
-          border-radius: 12px;
+          font-weight: 700;
+          color: var(--text-main);
+          background: var(--bg-subtle);
+          border: 1.5px solid var(--border);
+          box-shadow: 1.5px 1.5px 0px var(--border);
+          padding: 3px 8px;
+          border-radius: 6px;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          transition: all 0.15s ease;
+        }
+        .tech-tag:hover {
+          background: var(--accent-peach, #ffd6ce);
+          color: var(--hf-peach-text, #8c2d24);
+          transform: translateY(-1px);
         }
 
-        /* LINKS */
-        .links-row {
+        /* Specs Box */
+        .arch-specs-box {
+          background: var(--bg-subtle);
+          border: 2px solid var(--border);
+          border-radius: 12px;
+          padding: 16px;
+          margin-bottom: 20px;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .spec-heading {
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 10.5px;
+          font-weight: 900;
+          color: #d97706;
+          letter-spacing: 0.1em;
+          margin-bottom: 4px;
+        }
+
+        .spec-field {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+
+        .spec-key {
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 9.5px;
+          font-weight: 800;
+          color: var(--text-faint);
+        }
+
+        .spec-val {
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 12.5px;
+          font-weight: 700;
+          color: var(--text-body);
+        }
+
+        /* Actions */
+        .project-actions {
           display: flex;
           align-items: center;
           gap: 10px;
-          position: relative;
-          z-index: 2;
+          flex-wrap: wrap;
+          margin-top: auto;
+          padding-top: 14px;
+          border-top: 2px dashed #cbd5e1;
         }
 
         .proj-btn {
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 11px;
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 11.5px;
           font-weight: 700;
-          letter-spacing: 0.06em;
-          padding: 10px 16px;
-          border-radius: 10px;
+          letter-spacing: 0.04em;
+          padding: 9px 16px;
+          border-radius: 8px;
+          cursor: pointer;
           text-decoration: none;
-          transition: all 0.25s ease;
+          transition: all 0.15s ease;
           display: inline-flex;
           align-items: center;
-          gap: 4px;
+          justify-content: center;
         }
 
-        .proj-btn.secondary {
-          color: #cbd5e1;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.12);
+        .code-btn {
+          background: #ffffff;
+          color: #000000;
+          border: 2px solid #000000;
+          box-shadow: 3px 3px 0px #000000;
         }
 
-        .proj-btn.secondary:hover {
-          color: #ffffff;
-          background: rgba(255, 255, 255, 0.1);
-          border-color: rgba(255, 255, 255, 0.25);
-          transform: translateY(-1px);
+        .code-btn:hover {
+          background: var(--accent-peach, #ffd6ce);
+          color: var(--hf-peach-text, #8c2d24);
+          transform: translate(-1.5px, -1.5px);
+          box-shadow: 4.5px 4.5px 0px #000000;
         }
 
-        .proj-btn.primary {
-          border: 1px solid;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        .live-btn {
+          background: var(--accent, #e86c60);
+          color: #1c1c1c;
+          border: 2px solid #000000;
+          box-shadow: 3px 3px 0px #000000;
         }
 
-        .proj-btn.primary:hover {
-          transform: translateY(-1px);
-          filter: brightness(1.2);
-          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+        .live-btn:hover {
+          background: var(--accent-hover, #d75a4e);
+          transform: translate(-1.5px, -1.5px);
+          box-shadow: 4.5px 4.5px 0px #000000;
         }
 
-        /* BACK SIDE DETAILS */
-        .back-header {
-          margin-bottom: 24px;
+        .admin-btn {
+          background: #e0f2fe;
+          color: #0369a1;
+          border: 2px solid #000000;
+          box-shadow: 3px 3px 0px #000000;
         }
 
-        .status-badge {
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 10px;
-          font-weight: 700;
-          letter-spacing: 0.1em;
-          padding: 4px 10px;
-          border-radius: 20px;
-          border: 1px solid;
-          display: flex;
-          align-items: center;
-          gap: 6px;
-        }
-
-        .status-dot-pulse {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          animation: pulse-glow 2s infinite;
-        }
-
-        .back-subtitle {
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 11px;
-          color: #64748b;
-          letter-spacing: 0.15em;
-          margin-top: 6px;
-        }
-
-        .specs-grid {
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-          margin-bottom: 28px;
-        }
-
-        .spec-item {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
-
-        .spec-label {
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 10px;
-          color: #64748b;
-          letter-spacing: 0.12em;
-        }
-
-        .spec-value {
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 13px;
-          color: #f8fafc;
-          line-height: 1.4;
+        .admin-btn:hover {
+          background: #bae6fd;
+          transform: translate(-1.5px, -1.5px);
+          box-shadow: 4.5px 4.5px 0px #000000;
         }
       `}</style>
     </section>

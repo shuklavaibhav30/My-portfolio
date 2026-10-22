@@ -7,8 +7,7 @@ const COMMANDS = [
   { id: 'stats', label: 'Computing Nodes (Stats)', icon: '⎈', action: () => document.getElementById('stats')?.scrollIntoView({ behavior: 'smooth' }) },
   { id: 'projects', label: 'Explore Projects', icon: '⌥', action: () => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }) },
   { id: 'timeline', label: 'System Timeline', icon: '⏱', action: () => document.getElementById('timeline')?.scrollIntoView({ behavior: 'smooth' }) },
-  { id: 'theme-purple', label: 'Set Accent: Purple (Default)', icon: '❖', action: () => document.documentElement.style.setProperty('--accent', '#6366f1') },
-  { id: 'theme-green', label: 'Set Accent: Matrix Green', icon: '❖', action: () => document.documentElement.style.setProperty('--accent', '#10b981') },
+  { id: 'contact', label: 'Send Message (Contact)', icon: '✉', action: () => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }) },
   { id: 'github', label: 'Open GitHub Profile', icon: '↗', action: () => window.open('https://github.com/shuklavaibhav30', '_blank') }
 ];
 
@@ -81,8 +80,8 @@ export default function CommandPalette() {
             style={{
               position: 'fixed',
               inset: 0,
-              background: 'rgba(3, 3, 7, 0.8)',
-              backdropFilter: 'blur(8px)',
+              background: 'rgba(15, 23, 42, 0.5)',
+              backdropFilter: 'blur(6px)',
               zIndex: 999998
             }}
           />
@@ -96,37 +95,38 @@ export default function CommandPalette() {
               top: '20%',
               left: '50%',
               width: '90%',
-              maxWidth: '600px',
-              background: '#0a0a14',
-              border: '1px solid rgba(99, 102, 241, 0.2)',
-              borderRadius: '8px',
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(99, 102, 241, 0.1)',
+              maxWidth: '560px',
+              background: '#ffffff',
+              border: '2.5px solid #000000',
+              borderRadius: '16px',
+              boxShadow: '8px 8px 0px #000000',
               zIndex: 999999,
               overflow: 'hidden'
             }}
           >
-            <div style={{ padding: '16px', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center' }}>
-              <span style={{ color: '#6366f1', marginRight: '12px', fontFamily: "'JetBrains Mono', monospace" }}>&gt;</span>
+            <div style={{ padding: '16px', borderBottom: '2px solid #000000', display: 'flex', alignItems: 'center', background: '#f8fafc' }}>
+              <span style={{ color: 'var(--accent, #e86c60)', marginRight: '12px', fontFamily: "'JetBrains Mono', monospace", fontWeight: 900 }}>&gt;</span>
               <input
                 ref={inputRef}
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder="Type a command or search..."
+                placeholder="Search command or jump to section..."
                 style={{
                   width: '100%',
                   background: 'transparent',
                   border: 'none',
-                  color: '#f8fafc',
-                  fontSize: '16px',
-                  fontFamily: "'JetBrains Mono', monospace",
+                  color: '#000000',
+                  fontSize: '15px',
+                  fontWeight: 700,
+                  fontFamily: "'Space Grotesk', sans-serif",
                   outline: 'none'
                 }}
               />
             </div>
             
-            <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+            <div style={{ maxHeight: '300px', overflowY: 'auto', background: '#ffffff' }}>
               {filteredCommands.length === 0 ? (
-                <div style={{ padding: '24px', textAlign: 'center', color: '#64748b', fontSize: '14px', fontFamily: "'JetBrains Mono', monospace" }}>
+                <div style={{ padding: '24px', textAlign: 'center', color: '#64748b', fontSize: '13px', fontFamily: "'JetBrains Mono', monospace" }}>
                   No commands found.
                 </div>
               ) : (
@@ -136,16 +136,17 @@ export default function CommandPalette() {
                     onMouseEnter={() => setSelectedIndex(idx)}
                     onClick={() => { cmd.action(); setIsOpen(false); }}
                     style={{
-                      padding: '12px 16px',
+                      padding: '12px 18px',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '12px',
                       cursor: 'pointer',
-                      background: idx === selectedIndex ? 'rgba(99, 102, 241, 0.1)' : 'transparent',
-                      borderLeft: `2px solid ${idx === selectedIndex ? '#6366f1' : 'transparent'}`,
-                      color: idx === selectedIndex ? '#fff' : '#94a3b8',
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: '13px',
+                      background: idx === selectedIndex ? 'var(--accent, #e86c60)' : 'transparent',
+                      borderLeft: `4px solid ${idx === selectedIndex ? '#000000' : 'transparent'}`,
+                      color: '#000000',
+                      fontFamily: "'Space Grotesk', sans-serif",
+                      fontWeight: idx === selectedIndex ? 800 : 600,
+                      fontSize: '13.5px',
                       transition: 'all 0.1s'
                     }}
                   >
@@ -155,10 +156,10 @@ export default function CommandPalette() {
                 ))
               )}
             </div>
-            <div style={{ padding: '8px 16px', background: 'rgba(0,0,0,0.2)', borderTop: '1px solid rgba(255,255,255,0.02)', display: 'flex', justifyContent: 'flex-end', gap: '16px', color: '#64748b', fontSize: '10px', fontFamily: "'JetBrains Mono', monospace" }}>
-              <span><kbd style={S.kbd}>↑</kbd> <kbd style={S.kbd}>↓</kbd> to navigate</span>
-              <span><kbd style={S.kbd}>Enter</kbd> to select</span>
-              <span><kbd style={S.kbd}>Esc</kbd> to close</span>
+            <div style={{ padding: '10px 16px', background: '#f8fafc', borderTop: '2px solid #000000', display: 'flex', justifyContent: 'flex-end', gap: '16px', color: '#64748b', fontSize: '10.5px', fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>
+              <span><kbd style={S.kbd}>↑</kbd> <kbd style={S.kbd}>↓</kbd> navigate</span>
+              <span><kbd style={S.kbd}>Enter</kbd> select</span>
+              <span><kbd style={S.kbd}>Esc</kbd> close</span>
             </div>
           </motion.div>
         </>
@@ -169,10 +170,12 @@ export default function CommandPalette() {
 
 const S = {
   kbd: {
-    background: 'rgba(255,255,255,0.1)',
+    background: '#ffffff',
     padding: '2px 6px',
     borderRadius: '4px',
-    border: '1px solid rgba(255,255,255,0.05)',
+    border: '1.5px solid #000000',
+    color: '#000000',
+    boxShadow: '1px 1px 0px #000',
     margin: '0 2px'
   }
 }

@@ -115,19 +115,21 @@ export default function Skills({ isMobile }) {
           animate={headInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
-          <span className="eyebrow-label">// CURRENT_STACK</span>
+          <div style={{ display: 'inline-flex', marginBottom: '12px' }}>
+            <span className="eyebrow-label">// CURRENT_STACK</span>
+          </div>
           <h2 className="terminal-title">
-            What I <span className="highlight-gradient">Build With</span>
+            What I <span className="neo-highlight">Build With</span>
           </h2>
           <p className="terminal-sub">
-            A quick look at the technologies I use, what I'm learning, and how I approach building things.
+            A quick interactive console look at the technologies I use, what I'm mastering, and how I ship scalable code.
           </p>
         </motion.div>
 
         {/* Terminal Window */}
         <motion.div
           ref={termRef}
-          className="terminal-window glass-panel"
+          className="terminal-window"
           initial={{ opacity: 0, y: 25, scale: 0.98 }}
           animate={termInView ? { opacity: 1, y: 0, scale: 1 } : {}}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
@@ -151,7 +153,7 @@ export default function Skills({ isMobile }) {
           <div className="terminal-body">
             <div className="terminal-welcome-msg">
               Last login: {new Date().toDateString()} on ttys000<br />
-              Welcome to <span className="text-accent">vaibhav.dev</span> shell interface v2.4.0
+              Welcome to <span className="text-accent">vaibhav.dev</span> shell interface v2.5.0
               <br /><br />
             </div>
 
@@ -193,7 +195,7 @@ export default function Skills({ isMobile }) {
 
           {/* Quick Command Chips Footer */}
           <div className="terminal-quick-chips">
-            <span className="chips-label">QUICK ACTIONS:</span>
+            <span className="chips-label">QUICK COMMANDS:</span>
             {QUICK_COMMANDS.map(c => (
               <button
                 key={c.label}
@@ -210,7 +212,7 @@ export default function Skills({ isMobile }) {
       <style>{`
         .terminal-section {
           position: relative;
-          padding: 100px 24px;
+          padding: 110px 24px 70px;
           background: transparent;
           overflow: hidden;
         }
@@ -224,56 +226,73 @@ export default function Skills({ isMobile }) {
 
         .terminal-section-header {
           text-align: center;
-          margin-bottom: 44px;
+          margin-bottom: 40px;
         }
 
         .eyebrow-label {
+          display: inline-flex;
+          align-items: center;
+          background: var(--bg-card);
+          border: 2px solid var(--border);
+          box-shadow: 2px 2px 0px var(--border);
+          padding: 4px 12px;
+          border-radius: 9999px;
           font-family: 'JetBrains Mono', monospace;
           font-size: 11px;
-          color: var(--accent, #6366f1);
-          letter-spacing: 0.22em;
-          display: block;
-          margin-bottom: 12px;
-          font-weight: 700;
+          color: var(--text-main);
+          letter-spacing: 0.15em;
+          font-weight: 800;
         }
 
         .terminal-title {
+          font-family: 'Space Grotesk', sans-serif;
           font-size: clamp(2rem, 4.5vw, 3rem);
           font-weight: 800;
-          color: #f8fafc;
+          color: var(--text-main);
           letter-spacing: -0.02em;
           margin-bottom: 12px;
         }
 
-        .highlight-gradient {
-          background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
+        .neo-highlight {
+          background: var(--bg-card, #ffffff);
+          color: var(--text-main, #1c1c1c);
+          padding: 2px 14px;
+          border-radius: 10px;
+          border: 2.5px solid var(--border, #1c1c1c);
+          box-shadow: 4px 4px 0px var(--accent, #e86c60);
+          display: inline-block;
+          transition: all 0.15s ease;
+        }
+        .neo-highlight:hover {
+          transform: translate(-1px, -1px);
+          box-shadow: 5px 5px 0px var(--accent, #e86c60);
         }
 
         .terminal-sub {
-          color: #94a3b8;
-          font-size: 14.5px;
-          max-width: 520px;
+          color: var(--text-muted);
+          font-size: 15px;
+          max-width: 540px;
           margin: 0 auto;
           line-height: 1.6;
         }
 
         /* Terminal Window */
         .terminal-window {
-          border-radius: 16px;
-          background: #030307 !important;
-          backdrop-filter: blur(20px) saturate(180%) !important;
-          -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-          border: 1px solid rgba(99, 102, 241, 0.25) !important;
-          box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.95), 0 0 30px rgba(99, 102, 241, 0.15) !important;
+          border-radius: 20px;
+          background: var(--bg-card) !important;
+          border: var(--border-width) solid var(--border) !important;
+          box-shadow: var(--shadow-lg) !important;
           overflow: hidden;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .terminal-window:hover {
+          transform: translate(-2px, -2px);
+          box-shadow: var(--shadow-xl) !important;
         }
 
         .terminal-topbar {
-          background: #06060c;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          background: var(--bg-subtle);
+          border-bottom: 2px solid var(--border);
           padding: 14px 24px;
           display: flex;
           align-items: center;
@@ -290,43 +309,47 @@ export default function Skills({ isMobile }) {
           width: 12px;
           height: 12px;
           border-radius: 50%;
+          border: 1.5px solid var(--border);
         }
         .mac-dot.red { background: #ef4444; }
-        .mac-dot.yellow { background: #f59e0b; }
-        .mac-dot.green { background: #10b981; }
+        .mac-dot.yellow { background: #ffb347; }
+        .mac-dot.green { background: #4ade80; }
 
         .terminal-window-title {
           font-family: 'JetBrains Mono', monospace;
           font-size: 12px;
-          color: #94a3b8;
+          font-weight: 800;
+          color: var(--text-main);
           display: flex;
           align-items: center;
           gap: 6px;
         }
 
         .terminal-icon {
-          color: #6366f1;
+          color: var(--accent-green, #4ade80);
         }
 
         .terminal-status-badge {
           font-family: 'JetBrains Mono', monospace;
           font-size: 10px;
-          color: #10b981;
-          font-weight: 700;
+          color: #1b5e3b;
+          font-weight: 800;
           display: flex;
           align-items: center;
           gap: 6px;
-          background: rgba(16, 185, 129, 0.1);
-          border: 1px solid rgba(16, 185, 129, 0.25);
+          background: #e6f6ee;
+          border: 1.5px solid var(--border);
+          box-shadow: 2px 2px 0px var(--border);
           padding: 3px 10px;
-          border-radius: 12px;
+          border-radius: 9999px;
         }
 
         .status-live-dot {
           width: 6px;
           height: 6px;
           border-radius: 50%;
-          background: #10b981;
+          background: #4ade80;
+          border: 1px solid #000;
           animation: pulse-glow 2s infinite;
         }
 
@@ -334,27 +357,27 @@ export default function Skills({ isMobile }) {
         .terminal-body {
           font-family: 'JetBrains Mono', monospace;
           font-size: 13.5px;
-          padding: 28px 32px;
-          min-height: 320px;
-          max-height: 520px;
+          padding: 24px 28px;
+          min-height: 300px;
+          max-height: 480px;
           overflow-y: auto;
-          background: #030307;
-          color: #f8fafc;
+          background: var(--bg-card);
+          color: var(--text-main);
         }
 
         .terminal-welcome-msg {
-          color: #64748b;
-          font-size: 12.5px;
+          color: var(--text-muted);
+          font-size: 12px;
           line-height: 1.5;
         }
 
         .text-accent {
-          color: #6366f1;
-          font-weight: 600;
+          color: var(--accent);
+          font-weight: 800;
         }
 
         .terminal-history-block {
-          margin-bottom: 16px;
+          margin-bottom: 14px;
         }
 
         .terminal-prompt-line {
@@ -364,18 +387,25 @@ export default function Skills({ isMobile }) {
           flex-wrap: wrap;
         }
 
-        .ps1-user { color: #6366f1; font-weight: 700; }
-        .ps1-sep { color: #64748b; }
-        .ps1-path { color: #ec4899; }
-        .ps1-dollar { color: #f8fafc; margin-right: 4px; }
+        .ps1-user { color: #f59e0b; font-weight: 800; }
+        .ps1-sep { color: var(--text-muted); font-weight: 800; }
+        .ps1-path { color: #38bdf8; font-weight: 800; }
+        .ps1-dollar { color: var(--text-muted); font-weight: 900; margin-right: 4px; }
 
         .terminal-cmd-text {
-          color: #ffffff;
-          font-weight: 600;
+          color: var(--text-main);
+          font-weight: 800;
         }
 
         .terminal-output {
-          color: #cbd5e1;
+          color: var(--text-main);
+          background: var(--bg-subtle);
+          border-left: 3.5px solid var(--accent, #e86c60);
+          border-top: 1.5px solid var(--border);
+          border-right: 1.5px solid var(--border);
+          border-bottom: 1.5px solid var(--border);
+          padding: 10px 14px;
+          border-radius: 6px;
           margin-top: 6px;
           white-space: pre-wrap;
           line-height: 1.6;
@@ -384,8 +414,11 @@ export default function Skills({ isMobile }) {
         }
 
         .terminal-output.status-output {
-          color: #10b981;
-          font-weight: 600;
+          color: #1b5e3b;
+          font-weight: 800;
+          background: #e6f6ee;
+          border-left-color: #4ade80;
+          border-color: var(--border);
         }
 
         .terminal-input-form {
@@ -400,19 +433,20 @@ export default function Skills({ isMobile }) {
           background: transparent;
           border: none;
           outline: none;
-          color: #ffffff;
+          color: var(--text-main);
           font-family: 'JetBrains Mono', monospace;
           font-size: 13.5px;
+          font-weight: 700;
         }
 
         .terminal-input::placeholder {
-          color: #475569;
+          color: var(--text-faint);
         }
 
         /* Quick Chips Footer */
         .terminal-quick-chips {
-          background: #06060c;
-          border-top: 1px solid rgba(255, 255, 255, 0.08);
+          background: var(--bg-subtle);
+          border-top: 2px solid var(--border);
           padding: 14px 24px;
           display: flex;
           align-items: center;
@@ -423,8 +457,8 @@ export default function Skills({ isMobile }) {
         .chips-label {
           font-family: 'JetBrains Mono', monospace;
           font-size: 10px;
-          color: #64748b;
-          font-weight: 700;
+          color: var(--text-muted);
+          font-weight: 800;
           letter-spacing: 0.1em;
           margin-right: 4px;
         }
@@ -432,21 +466,24 @@ export default function Skills({ isMobile }) {
         .chip-btn {
           font-family: 'JetBrains Mono', monospace;
           font-size: 11px;
-          color: #94a3b8;
-          background: rgba(255, 255, 255, 0.04);
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          font-weight: 800;
+          color: var(--text-main);
+          background: var(--bg-card);
+          border: 1.5px solid var(--border);
+          box-shadow: 2px 2px 0px var(--border);
           padding: 4px 12px;
-          border-radius: 14px;
+          border-radius: 9999px;
           cursor: pointer;
-          transition: all 0.25s ease;
+          transition: all 0.15s ease;
         }
 
         .chip-btn:hover {
-          color: #ffffff;
-          background: rgba(99, 102, 241, 0.2);
-          border-color: rgba(99, 102, 241, 0.4);
-          transform: translateY(-1px);
+          background: var(--accent-peach, #ffd6ce);
+          color: var(--hf-peach-text, #8c2d24);
+          transform: translate(-1px, -1px);
+          box-shadow: 3px 3px 0px var(--border);
         }
+
       `}</style>
     </section>
   )

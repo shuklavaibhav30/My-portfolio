@@ -12,46 +12,6 @@ const SOCIALS = [
   { id: 'x', label: 'X', href: 'https://x.com/shuklagvk', path: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' }
 ]
 
-const QUICK_TAGS = ['React.js', 'Node.js', 'Express', 'MongoDB', 'TypeScript', 'Tailwind CSS', 'C++']
-
-function MagneticButton({ children, href, style, isPrimary, onClick }) {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const ref = useRef(null);
-  const isReduced = useReducedMotion();
-
-  const handleMouseMove = (e) => {
-    if (isReduced) return;
-    const rect = ref.current.getBoundingClientRect();
-    setPosition({
-      x: (e.clientX - (rect.left + rect.width / 2)) * 0.15,
-      y: (e.clientY - (rect.top + rect.height / 2)) * 0.15
-    });
-  };
-
-  const handleMouseLeave = () => setPosition({ x: 0, y: 0 });
-  const Tag = onClick ? 'button' : 'a';
-
-  return (
-    <Tag
-      href={onClick ? undefined : href}
-      onClick={onClick}
-      ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        ...style,
-        transform: `translate(${position.x}px, ${position.y}px)`,
-        textDecoration: 'none', display: 'inline-flex', alignItems: 'center',
-        position: 'relative', overflow: 'hidden',
-      }}
-      className={isPrimary ? "hero-btn primary" : "hero-btn ghost"}
-    >
-      <span style={{ position: 'relative', zIndex: 2 }}>{children}</span>
-      <div className="hero-btn-bg"></div>
-    </Tag>
-  );
-}
-
 export default function Hero({ isMobile }) {
   const [resumeTerminal, setResumeTerminal] = useState(false)
   const [resumeProgress, setResumeProgress] = useState(0)
@@ -61,14 +21,14 @@ export default function Hero({ isMobile }) {
   const mousePosition = useMousePosition();
   const isReduced = useReducedMotion();
 
-  const txImg = isReduced || isMobile ? 0 : (mousePosition.x - window.innerWidth / 2) * 0.015;
-  const tyImg = isReduced || isMobile ? 0 : (mousePosition.y - window.innerHeight / 2) * 0.015;
+  const txImg = isReduced || isMobile ? 0 : (mousePosition.x - window.innerWidth / 2) * 0.012;
+  const tyImg = isReduced || isMobile ? 0 : (mousePosition.y - window.innerHeight / 2) * 0.012;
 
   const RESUME_STEPS = [
-    { code: '01', text: 'Locating resume.pdf payload...', status: 'FOUND' },
-    { code: '02', text: 'Verifying SHA-256 integrity signature...', status: 'VERIFIED' },
-    { code: '03', text: 'Decrypting document stream...', status: 'OK' },
-    { code: '04', text: 'Launching viewer in new window...', status: 'READY' },
+    { code: '01', text: 'Fetching Vaibhav_Shukla_Resume.pdf...', status: 'OK' },
+    { code: '02', text: 'Verifying credentials & project milestones...', status: 'VERIFIED' },
+    { code: '03', text: 'Preparing PDF viewer stream...', status: 'SUCCESS' },
+    { code: '04', text: 'Launching document in new tab...', status: 'OPENING' },
   ];
 
   const handleResumeInit = (e) => {
@@ -88,9 +48,9 @@ export default function Hero({ isMobile }) {
         setTimeout(() => {
           window.open(resume, '_blank');
           setResumeTerminal(false);
-        }, 500);
+        }, 400);
       }
-    }, 220);
+    }, 200);
   };
 
   const scrollToProjects = (e) => {
@@ -100,17 +60,12 @@ export default function Hero({ isMobile }) {
 
   const container = { hidden: {}, show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } } }
   const item = {
-    hidden: { opacity: 0, y: 14, filter: 'blur(4px)' },
-    show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+    hidden: { opacity: 0, y: 16 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
   }
 
   return (
     <section id="hero" className="hero-section">
-      {/* Dynamic Background Glowing Orbs */}
-      <div className="hero-ambient-glow glow-1" />
-      <div className="hero-ambient-glow glow-2" />
-      <div className="hero-ambient-glow glow-3" />
-
       <AnimatePresence>
         {resumeTerminal && (
           <motion.div
@@ -121,9 +76,9 @@ export default function Hero({ isMobile }) {
             onClick={() => setResumeTerminal(false)}
           >
             <motion.div
-              initial={{ scale: 0.88, y: 20 }}
+              initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.92, y: 10 }}
+              exit={{ scale: 0.9, y: 10 }}
               transition={{ type: 'spring', stiffness: 350, damping: 25 }}
               className="resume-modal-card"
               onClick={(e) => e.stopPropagation()}
@@ -136,7 +91,7 @@ export default function Hero({ isMobile }) {
                   <span className="mac-dot green" />
                 </div>
                 <div className="resume-modal-title">
-                  <span className="lock-icon">🔒</span> RESUME_TRANSFER.PDF
+                  <span>RESUME_DOWNLOAD.PDF</span>
                 </div>
                 <div className="progress-perc">{resumeProgress}%</div>
               </div>
@@ -146,7 +101,7 @@ export default function Hero({ isMobile }) {
                 <motion.div
                   className="resume-progress-bar"
                   animate={{ width: `${resumeProgress}%` }}
-                  transition={{ ease: 'easeOut', duration: 0.25 }}
+                  transition={{ ease: 'easeOut', duration: 0.2 }}
                 />
               </div>
 
@@ -173,71 +128,73 @@ export default function Hero({ isMobile }) {
       <div className={`hero-grid ${isMobile ? 'mobile' : ''}`}>
         {/* LEFT COLUMN */}
         <motion.div className="hero-left" variants={container} initial="hidden" animate="show">
-          <motion.div variants={item} className="label-row">
-            <span className="section-label">// MERN STACK DEVELOPER</span>
+          
+          {/* Crisp Neo-Brutalist Name Banner with Coral Neo-Brutalist Offset Shadow */}
+          <motion.div variants={item} className="hero-yellow-banner">
+            <h1 className="banner-text">
+              VAIBHAV KUMAR SHUKLA<span className="banner-dot">.</span>
+            </h1>
           </motion.div>
 
-          <motion.h1 variants={item} className="hero-name">
-            <span className="name-white">VAIBHAV KUMAR</span>
-            <br />
-            <span className="name-gradient">SHUKLA</span>
-          </motion.h1>
+          {/* Role Badge - Clean without emojis */}
+          <motion.div variants={item} className="hero-role-row">
+            <span className="hero-role-badge">MERN STACK DEVELOPER</span>
+          </motion.div>
 
+          {/* Bio text */}
           <motion.p variants={item} className="hero-bio">
-            Architecting scalable MERN applications, AI-powered systems, and high-performance full-stack web platforms with modern developer experiences.
+            Full-Stack Developer building robust web platforms, role-scoped architectures, and AI micro-services with <strong>React.js</strong>, <strong>Node.js</strong>, <strong>Express</strong>, and <strong>MongoDB</strong>. Competitive programmer sharpening algorithms daily.
           </motion.p>
 
-          <motion.div variants={item} className="quick-tags-container">
-            {QUICK_TAGS.map((tag) => (
-              <span key={tag} className="hero-quick-tag">
-                {tag}
-              </span>
-            ))}
-          </motion.div>
-
+          {/* CTA Buttons */}
           <motion.div variants={item} className="cta-row">
-            <MagneticButton onClick={handleResumeInit} isPrimary={true}>
-              <svg viewBox="0 0 24 24" width={15} height={15} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px'}}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-              DOWNLOAD RESUME
-            </MagneticButton>
+            <button onClick={handleResumeInit} className="hero-btn primary">
+              <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>DOWNLOAD RESUME</span>
+            </button>
 
-            <MagneticButton onClick={scrollToProjects} isPrimary={false}>
-              EXPLORE PROJECTS ↓
-            </MagneticButton>
+            <button onClick={scrollToProjects} className="hero-btn white">
+              <span>EXPLORE PROJECTS ↓</span>
+            </button>
           </motion.div>
 
+          {/* Social Icons (White square boxes with 2px black border & shadow) */}
           <motion.div variants={item} className="hero-socials">
             {SOCIALS.map(s => (
-              <a key={s.id} href={s.href} target="_blank" rel="noreferrer" className="hero-social-icon" title={s.label}>
-                <svg viewBox="0 0 24 24" width={18} height={18} fill="currentColor"><path d={s.path} /></svg>
+              <a key={s.id} href={s.href} target="_blank" rel="noreferrer" className="hero-social-box" title={s.label}>
+                <svg viewBox="0 0 24 24" width={18} height={18} fill="currentColor">
+                  <path d={s.path} />
+                </svg>
               </a>
             ))}
           </motion.div>
         </motion.div>
 
-        {/* RIGHT COLUMN - CLEAN EMBEDDED TRANSPARENT PORTRAIT */}
+        {/* RIGHT COLUMN - REDESIGNED PHOTO SHOWCASE CARD (NO TEXT) */}
         <motion.div
           className="hero-right"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
         >
-          <motion.div
-            className={`portrait-wrapper ${isHoveringPortrait ? 'hovered' : ''}`}
-            style={{ x: txImg, y: tyImg }}
+          <div
+            className={`hero-photo-card ${isHoveringPortrait ? 'hovered' : ''}`}
             onMouseEnter={() => !isMobile && setIsHoveringPortrait(true)}
             onMouseLeave={() => !isMobile && setIsHoveringPortrait(false)}
           >
-            {/* Soft Ambient Radial Aura Light behind portrait cut-out */}
-            <div className="hero-portrait-aura" />
-
-            {/* Clean Embedded Portrait Cut-out Image */}
-            <img
-              src={profile}
-              alt="Vaibhav Kumar Shukla"
-              className="transparent-hero-cutout"
-            />
-          </motion.div>
+            <div className="photo-card-inner">
+              <img
+                src={profile}
+                alt="Vaibhav Kumar Shukla"
+                className="hero-portrait-img"
+                style={{ transform: `translate(${txImg}px, ${tyImg}px)` }}
+              />
+            </div>
+          </div>
         </motion.div>
       </div>
 
@@ -249,62 +206,12 @@ export default function Hero({ isMobile }) {
           overflow: hidden;
           display: flex;
           align-items: center;
-          padding: 120px 60px 80px;
-        }
-
-        /* Ambient Glow Background Orbs */
-        .hero-ambient-glow {
-          position: absolute;
-          border-radius: 50%;
-          filter: blur(90px);
-          pointer-events: none;
-          z-index: 0;
-        }
-        .glow-1 {
-          width: 450px;
-          height: 450px;
-          top: 10%;
-          left: -5%;
-          background: rgba(99, 102, 241, 0.12);
-          animation: glowFloat1 10s ease-in-out infinite alternate;
-        }
-        .glow-2 {
-          width: 400px;
-          height: 400px;
-          bottom: 15%;
-          right: 5%;
-          background: rgba(139, 92, 246, 0.12);
-          animation: glowFloat2 12s ease-in-out infinite alternate;
-        }
-        .glow-3 {
-          width: 350px;
-          height: 350px;
-          top: 40%;
-          left: 45%;
-          background: rgba(236, 72, 153, 0.07);
-          animation: glowFloat3 9s ease-in-out infinite alternate;
-        }
-
-        @keyframes glowFloat1 {
-          0% { transform: translate(0, 0) scale(1); }
-          100% { transform: translate(40px, 30px) scale(1.1); }
-        }
-        @keyframes glowFloat2 {
-          0% { transform: translate(0, 0) scale(1); }
-          100% { transform: translate(-30px, -40px) scale(1.15); }
-        }
-        @keyframes glowFloat3 {
-          0% { transform: translate(0, 0) scale(0.9); }
-          100% { transform: translate(25px, -25px) scale(1.1); }
-        }
-
-        @media (max-width: 900px) {
-          .hero-section { padding: 110px 20px 50px; }
+          padding: 130px 48px 80px;
         }
 
         .hero-grid {
           display: grid;
-          grid-template-columns: 1fr 44%;
+          grid-template-columns: 1.15fr 0.85fr;
           gap: 48px;
           align-items: center;
           width: 100%;
@@ -315,6 +222,7 @@ export default function Hero({ isMobile }) {
         }
         .hero-grid.mobile {
           grid-template-columns: 1fr;
+          gap: 36px;
         }
 
         /* LEFT COLUMN */
@@ -323,339 +231,403 @@ export default function Hero({ isMobile }) {
           flex-direction: column;
           align-items: flex-start;
         }
-
         .hero-grid.mobile .hero-left {
           align-items: center;
           text-align: center;
-          width: 100%;
         }
 
-        .label-row {
-          display: flex;
-          align-items: center;
-          gap: 14px;
-          flex-wrap: wrap;
-          margin-bottom: 12px;
-        }
-
-        .section-label {
-          font-family: 'JetBrains Mono', monospace;
-          color: var(--accent);
-          font-size: 11.5px;
-          letter-spacing: 0.18em;
-          font-weight: 700;
-        }
-
-        .hero-name {
-          font-size: clamp(2.8rem, 5.5vw, 4.2rem);
-          font-weight: 800;
-          line-height: 1.05;
-          letter-spacing: -0.02em;
+        /* Clean Hacktoberfest Name Banner */
+        .hero-yellow-banner {
+          background: var(--bg-card, #ffffff);
+          border: 2.5px solid var(--border, #1c1c1c);
+          box-shadow: 5px 5px 0px var(--accent, #e86c60);
+          border-radius: 14px;
+          padding: 12px 28px;
           margin-bottom: 18px;
+          width: fit-content;
+          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .hero-grid.mobile .hero-name {
+        .hero-yellow-banner:hover {
+          transform: translate(-2px, -2px);
+          box-shadow: 7px 7px 0px var(--accent, #e86c60);
+        }
+        .hero-grid.mobile .hero-yellow-banner {
+          width: 100%;
           text-align: center;
         }
-        .name-white { color: #f8fafc; }
-        .name-gradient {
-          background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 40%, #ec4899 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          text-shadow: 0 0 35px rgba(139, 92, 246, 0.25);
+        .banner-text {
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: clamp(2rem, 4.2vw, 3.4rem);
+          font-weight: 800;
+          color: var(--text-main, #1c1c1c);
+          letter-spacing: -0.02em;
+          line-height: 1.1;
+          margin: 0;
+          text-transform: uppercase;
+        }
+        .banner-dot {
+          color: var(--accent, #e86c60);
+          font-weight: 900;
+          margin-left: 2px;
         }
 
-        .hero-bio {
-          color: #94a3b8;
-          font-size: 14.5px;
-          line-height: 1.65;
-          max-width: 520px;
+        /* Role Badge */
+        .hero-role-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
           margin-bottom: 20px;
         }
-        .hero-grid.mobile .hero-bio {
-          text-align: center;
-        }
-
-        .quick-tags-container {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 7px;
-          margin-bottom: 28px;
-        }
-        .hero-grid.mobile .quick-tags-container {
+        .hero-grid.mobile .hero-role-row {
           justify-content: center;
         }
-
-        .hero-quick-tag {
-          background: rgba(255,255,255,0.035);
-          border: 1px solid rgba(255,255,255,0.08);
-          color: #cbd5e1;
+        .hero-role-badge {
+          display: inline-flex;
+          align-items: center;
           font-family: 'JetBrains Mono', monospace;
-          font-size: 11px;
-          padding: 4px 11px;
-          border-radius: 5px;
-          backdrop-filter: blur(8px);
-          transition: all 0.25s ease;
+          font-size: 11.5px;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: var(--text-main);
+          background: linear-gradient(180deg, #ffffff 0%, var(--bg-card) 60%, var(--bg-subtle) 100%);
+          border: 2px solid var(--border);
+          box-shadow: 
+            inset 0 1.5px 0.5px rgba(255, 255, 255, 0.85),
+            inset 0 -1.5px 2px rgba(0, 0, 0, 0.1),
+            3px 3px 0px var(--border);
+          padding: 7px 18px;
+          border-radius: 9999px;
+          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .hero-quick-tag:hover {
-          background: rgba(99, 102, 241, 0.15);
-          border-color: rgba(99, 102, 241, 0.35);
-          color: #ffffff;
-          transform: translateY(-2px);
+        :root[data-theme="dark"] .hero-role-badge {
+          background: linear-gradient(180deg, #24322c 0%, #19231e 60%, #121915 100%);
+          box-shadow: 
+            inset 0 1.5px 0.5px rgba(255, 255, 255, 0.25),
+            inset 0 -1.5px 2px rgba(0, 0, 0, 0.35),
+            3px 3px 0px var(--border);
+        }
+        .hero-role-badge:hover {
+          transform: translate(-1.5px, -1.5px);
+          box-shadow: 
+            inset 0 2px 1px rgba(255, 255, 255, 0.9),
+            4.5px 4.5px 0px var(--accent);
+          border-color: var(--border);
         }
 
-        .cta-row { display: flex; gap: 14px; margin-bottom: 28px; flex-wrap: wrap; }
+        /* Bio */
+        .hero-bio {
+          font-size: 15px;
+          line-height: 1.65;
+          color: var(--text-body);
+          max-width: 560px;
+          margin-bottom: 24px;
+        }
+        .hero-bio strong {
+          color: var(--text-main);
+          font-weight: 800;
+        }
+
+        /* CTA Row */
+        .cta-row {
+          display: flex;
+          gap: 14px;
+          margin-bottom: 26px;
+          flex-wrap: wrap;
+        }
         .hero-grid.mobile .cta-row {
           justify-content: center;
-          width: 100%;
         }
 
+        /* GLOSSY CTA BUTTONS */
         .hero-btn {
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 11px;
-          font-weight: 700;
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          gap: 9px;
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 13px;
+          font-weight: 800;
+          letter-spacing: 0.03em;
           padding: 13px 26px;
-          letter-spacing: 0.05em;
-          border-radius: 6px;
-          background: transparent;
-          border: none;
+          border-radius: 14px;
+          border: 2.5px solid var(--border);
           cursor: pointer;
-          backdrop-filter: blur(10px);
-          transition: all 0.3s ease;
+          overflow: hidden;
+          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
+
+        /* Glossy Top Curvature Highlight */
+        .hero-btn::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 48%;
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.08) 100%);
+          border-radius: 11px 11px 18px 18px;
+          pointer-events: none;
+          transition: opacity 0.2s ease;
+        }
+
+        /* Glossy Light Sweep Beam on Hover */
+        .hero-btn::after {
+          content: '';
+          position: absolute;
+          top: -50%;
+          bottom: -50%;
+          left: -70%;
+          width: 50%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.42), transparent);
+          transform: rotate(25deg);
+          pointer-events: none;
+          opacity: 0;
+          transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+        }
+        .hero-btn:hover::after {
+          opacity: 1;
+          transform: rotate(25deg) translateX(360%);
+        }
+
+        /* PRIMARY GLOSSY CORAL BUTTON (Download Resume) */
         .hero-btn.primary {
-          color: #fff;
-          background: linear-gradient(135deg, rgba(99,102,241,0.35) 0%, rgba(147,51,234,0.3) 100%);
-          border: 1px solid rgba(99,102,241,0.55);
-          box-shadow: 0 4px 20px rgba(99,102,241,0.18);
+          background: linear-gradient(180deg, #ff8b7e 0%, #e86c60 52%, #cf574b 100%);
+          color: #ffffff;
+          box-shadow: 
+            inset 0 1.5px 0.5px rgba(255, 255, 255, 0.7),
+            inset 0 -2.5px 3px rgba(0, 0, 0, 0.3),
+            4px 4px 0px var(--border);
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+        }
+        .hero-btn.primary svg {
+          filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.25));
         }
         .hero-btn.primary:hover {
-          box-shadow: 0 0 30px rgba(99,102,241,0.45);
-          border-color: rgba(99,102,241,0.8);
-          transform: translateY(-2px);
+          background: linear-gradient(180deg, #ff9b8f 0%, #f0766a 52%, #db5e52 100%);
+          transform: translate(-2px, -2px);
+          box-shadow: 
+            inset 0 2px 1px rgba(255, 255, 255, 0.85),
+            inset 0 -2.5px 3px rgba(0, 0, 0, 0.3),
+            6px 6px 0px var(--border),
+            0 0 16px rgba(232, 108, 96, 0.4);
         }
-        .hero-btn.primary .hero-btn-bg {
-          position: absolute; inset: 0;
-          background: linear-gradient(135deg, rgba(99,102,241,0.45) 0%, rgba(147,51,234,0.35) 100%);
-          transform: scaleX(0); transform-origin: left;
-          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-          z-index: 1;
+        .hero-btn.primary:active {
+          transform: translate(2px, 2px);
+          box-shadow: 
+            inset 0 1px 2px rgba(0, 0, 0, 0.4),
+            2px 2px 0px var(--border);
         }
-        .hero-btn.primary:hover .hero-btn-bg { transform: scaleX(1); }
 
-        .hero-btn.ghost {
-          color: #cbd5e1;
-          border: 1px solid rgba(255,255,255,0.12);
-          background: rgba(255,255,255,0.025);
+        /* SECONDARY GLOSSY BUTTON (Explore Projects) */
+        .hero-btn.white {
+          background: linear-gradient(180deg, #ffffff 0%, var(--bg-card) 55%, var(--bg-subtle) 100%);
+          color: var(--text-main);
+          box-shadow: 
+            inset 0 1.5px 0.5px rgba(255, 255, 255, 0.85),
+            inset 0 -2.5px 3px rgba(0, 0, 0, 0.15),
+            4px 4px 0px var(--border);
         }
-        .hero-btn.ghost .hero-btn-bg {
-          position: absolute; inset: 0;
-          background: rgba(255,255,255,0.06);
-          transform: scaleX(0); transform-origin: right;
-          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-          z-index: 1;
+        :root[data-theme="dark"] .hero-btn.white {
+          background: linear-gradient(180deg, #2a3731 0%, #1c2621 55%, #131b17 100%);
+          color: #ffffff;
+          box-shadow: 
+            inset 0 1.5px 0.5px rgba(255, 255, 255, 0.32),
+            inset 0 -2.5px 3px rgba(0, 0, 0, 0.4),
+            4px 4px 0px var(--border);
         }
-        .hero-btn.ghost:hover {
-          color: #f8fafc;
-          border-color: rgba(255,255,255,0.25);
-          box-shadow: 0 4px 15px rgba(255,255,255,0.06);
-          transform: translateY(-2px);
+        .hero-btn.white:hover {
+          transform: translate(-2px, -2px);
+          box-shadow: 
+            inset 0 2px 1px rgba(255, 255, 255, 0.9),
+            inset 0 -2.5px 3px rgba(0, 0, 0, 0.15),
+            6px 6px 0px var(--border);
         }
-        .hero-btn.ghost:hover .hero-btn-bg { transform: scaleX(1); }
+        :root[data-theme="dark"] .hero-btn.white:hover {
+          box-shadow: 
+            inset 0 2px 1px rgba(255, 255, 255, 0.45),
+            inset 0 -2.5px 3px rgba(0, 0, 0, 0.4),
+            6px 6px 0px var(--border),
+            0 0 14px rgba(255, 255, 255, 0.15);
+        }
+        .hero-btn.white:active {
+          transform: translate(2px, 2px);
+          box-shadow: 
+            inset 0 1px 2px rgba(0, 0, 0, 0.35),
+            2px 2px 0px var(--border);
+        }
 
-        /* Social Icons */
+        /* GLOSSY SOCIAL TILES */
         .hero-socials {
           display: flex;
-          gap: 12px;
+          gap: 10px;
         }
-        .hero-grid.mobile .hero-socials {
-          justify-content: center;
-          width: 100%;
-        }
-        .hero-social-icon {
-          width: 40px;
-          height: 40px;
-          border-radius: 8px;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.08);
-          backdrop-filter: blur(8px);
-          color: #94a3b8;
-          transition: all 0.25s ease;
+        .hero-social-box {
+          position: relative;
+          width: 44px;
+          height: 44px;
+          background: linear-gradient(180deg, #ffffff 0%, var(--bg-card) 55%, var(--bg-subtle) 100%);
+          border: 2px solid var(--border);
+          box-shadow: 
+            inset 0 1.5px 0.5px rgba(255, 255, 255, 0.8),
+            inset 0 -1.5px 2px rgba(0, 0, 0, 0.15),
+            3.5px 3.5px 0px var(--border);
+          border-radius: 12px;
           display: flex;
           align-items: center;
           justify-content: center;
+          color: var(--text-main);
+          overflow: hidden;
+          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .hero-social-icon:hover {
-          color: #ffffff;
-          background: rgba(99,102,241,0.18);
-          border-color: rgba(99,102,241,0.45);
-          transform: translateY(-3px);
-          box-shadow: 0 6px 16px rgba(99,102,241,0.25);
+        :root[data-theme="dark"] .hero-social-box {
+          background: linear-gradient(180deg, #2a3731 0%, #1c2621 55%, #131b17 100%);
+          box-shadow: 
+            inset 0 1.5px 0.5px rgba(255, 255, 255, 0.3),
+            inset 0 -1.5px 2px rgba(0, 0, 0, 0.4),
+            3.5px 3.5px 0px var(--border);
+        }
+        .hero-social-box::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 48%;
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.05) 100%);
+          border-radius: 9px 9px 12px 12px;
+          pointer-events: none;
+        }
+        .hero-social-box:hover {
+          transform: translate(-2px, -2px);
+          box-shadow: 
+            inset 0 2px 1px rgba(255, 255, 255, 0.9),
+            inset 0 -1.5px 2px rgba(0, 0, 0, 0.15),
+            5px 5px 0px var(--accent);
+          color: var(--accent);
+        }
+        :root[data-theme="dark"] .hero-social-box:hover {
+          box-shadow: 
+            inset 0 2px 1px rgba(255, 255, 255, 0.45),
+            inset 0 -1.5px 2px rgba(0, 0, 0, 0.4),
+            5px 5px 0px var(--accent),
+            0 0 12px rgba(255, 126, 114, 0.35);
+          color: var(--accent);
         }
 
-        /* RIGHT COLUMN - CLEAN EMBEDDED TRANSPARENT PORTRAIT */
+        /* RIGHT COLUMN: REDESIGNED PHOTO CARD (NO TEXT) */
         .hero-right {
           display: flex;
           justify-content: center;
           align-items: center;
-          position: relative;
         }
         .hero-grid.mobile .hero-right {
           order: -1;
-          margin-bottom: 24px;
         }
-
-        .portrait-wrapper {
+        .hero-photo-card {
           position: relative;
           width: 100%;
-          max-width: 420px;
+          max-width: 400px;
+          background: var(--bg-card);
+          border: 2.5px solid var(--border);
+          border-radius: 24px;
+          box-shadow: 8px 8px 0px var(--border);
+          padding: 14px;
+          overflow: hidden;
+          transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .hero-photo-card:hover {
+          transform: translate(-3px, -3px);
+          box-shadow: 12px 12px 0px var(--border);
+        }
+        :root[data-theme="dark"] .hero-photo-card:hover {
+          box-shadow: 12px 12px 0px var(--border), 0 0 25px rgba(232, 108, 96, 0.15);
+        }
+        .photo-card-inner {
+          position: relative;
+          width: 100%;
           height: 440px;
+          background: linear-gradient(180deg, var(--bg-subtle) 0%, var(--bg-card-alt) 100%);
+          border: 2px solid var(--border);
+          border-radius: 18px;
+          overflow: hidden;
           display: flex;
           align-items: flex-end;
           justify-content: center;
+          box-shadow: inset 0 1.5px 1px rgba(255, 255, 255, 0.7), inset 0 0 24px rgba(0, 0, 0, 0.05);
         }
-
-        .hero-portrait-aura {
-          position: absolute;
-          top: 15%;
-          left: 15%;
-          right: 15%;
-          bottom: 15%;
-          background: radial-gradient(circle, rgba(99,102,241,0.22) 0%, rgba(139,92,246,0.08) 50%, transparent 75%);
-          filter: blur(50px);
-          pointer-events: none;
-          z-index: 1;
-          transition: all 0.5s ease;
+        :root[data-theme="dark"] .photo-card-inner {
+          background: linear-gradient(180deg, #1d2a23 0%, #141c18 60%, #0d1310 100%);
+          box-shadow: inset 0 1.5px 0.5px rgba(255, 255, 255, 0.2), inset 0 0 30px rgba(0, 0, 0, 0.4);
         }
-
-        .portrait-wrapper.hovered .hero-portrait-aura {
-          background: radial-gradient(circle, rgba(99,102,241,0.38) 0%, rgba(236,72,153,0.18) 55%, transparent 75%);
-          filter: blur(60px);
-        }
-
-        .transparent-hero-cutout {
-          position: relative;
-          z-index: 2;
-          height: 440px;
-          max-height: 100%;
+        .hero-portrait-img {
+          height: 100%;
+          max-height: 440px;
           width: auto;
-          max-width: 100%;
           object-fit: contain;
-          object-position: bottom center;
-          image-rendering: -webkit-optimize-contrast;
-          -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 78%, rgba(0,0,0,0) 100%);
-          mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 78%, rgba(0,0,0,0) 100%);
-          filter: brightness(1.05) contrast(1.08) saturate(1.06) drop-shadow(0 0 16px rgba(99,102,241,0.4));
-          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .hero-photo-card:hover .hero-portrait-img {
+          transform: scale(1.03);
         }
 
-        .portrait-wrapper.hovered .transparent-hero-cutout {
-          transform: scale(1.03) translateY(-4px);
-          filter: brightness(1.07) contrast(1.1) saturate(1.08) drop-shadow(0 0 25px rgba(139,92,246,0.6));
-        }
-
-        @media (max-width: 900px) {
-          .portrait-wrapper { height: 350px; max-width: 320px; }
-          .transparent-hero-cutout { height: 350px; }
-        }
-
-        /* Resume overlay */
+        /* Modal */
         .resume-overlay {
           position: fixed; inset: 0; z-index: 999999;
-          background: rgba(3, 3, 7, 0.85);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
+          background: rgba(8, 16, 12, 0.7);
+          backdrop-filter: blur(8px);
           display: flex; align-items: center; justify-content: center;
           padding: 24px;
         }
-
         .resume-modal-card {
           width: 100%;
           max-width: 480px;
-          background: rgba(8, 8, 22, 0.92);
-          border: 1px solid rgba(99, 102, 241, 0.35);
-          border-radius: 18px;
-          box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.95), 0 0 40px rgba(99, 102, 241, 0.2);
+          background: var(--bg-card);
+          border: 2.5px solid var(--border);
+          border-radius: 16px;
+          box-shadow: var(--shadow-xl);
           overflow: hidden;
           font-family: 'JetBrains Mono', monospace;
+          color: var(--text-main);
         }
-
         .resume-modal-header {
-          background: rgba(6, 6, 14, 0.9);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-          padding: 14px 20px;
+          background: var(--bg-subtle);
+          border-bottom: 2px solid var(--border);
+          padding: 12px 18px;
           display: flex;
           align-items: center;
           justify-content: space-between;
         }
-
-        .resume-modal-title {
-          font-size: 11.5px;
-          color: #94a3b8;
-          font-weight: 700;
-          letter-spacing: 0.05em;
-          display: flex;
-          align-items: center;
-          gap: 6px;
+        .mac-buttons { display: flex; gap: 6px; }
+        .mac-dot {
+          width: 11px; height: 11px; border-radius: 50%; border: 1.5px solid var(--border);
         }
-
-        .lock-icon {
-          font-size: 12px;
-        }
-
-        .progress-perc {
-          font-size: 11px;
-          color: #6366f1;
-          font-weight: 700;
-        }
-
+        .mac-dot.red { background: #ef4444; }
+        .mac-dot.yellow { background: #facc15; }
+        .mac-dot.green { background: #22c55e; }
+        .resume-modal-title { font-size: 11px; font-weight: 800; color: var(--text-main); }
+        .progress-perc { font-size: 12px; font-weight: 800; color: var(--text-main); }
         .resume-progress-track {
-          height: 3px;
-          width: 100%;
-          background: rgba(255, 255, 255, 0.06);
-          position: relative;
+          height: 6px; width: 100%; background: var(--bg-subtle); border-bottom: 2px solid var(--border);
         }
-
         .resume-progress-bar {
-          height: 100%;
-          background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
-          box-shadow: 0 0 10px #6366f1;
+          height: 100%; background: var(--accent, #e86c60);
         }
-
         .resume-modal-body {
-          padding: 24px;
+          padding: 20px;
           display: flex;
           flex-direction: column;
-          gap: 12px;
-          min-height: 160px;
-          background: #030307;
+          gap: 10px;
+          background: var(--bg-card);
         }
-
         .resume-log-line {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          font-size: 12.5px;
+          display: flex; align-items: center; gap: 10px; font-size: 12px;
         }
-
-        .line-prefix {
-          color: #6366f1;
-          font-weight: 700;
-        }
-
-        .line-text {
-          color: #cbd5e1;
-          flex: 1;
-        }
-
+        .line-prefix { color: var(--accent); font-weight: 800; }
+        .line-text { color: var(--text-body); flex: 1; }
         .line-status {
-          color: #10b981;
-          font-size: 10.5px;
-          font-weight: 700;
-          background: rgba(16, 185, 129, 0.1);
-          border: 1px solid rgba(16, 185, 129, 0.25);
-          padding: 2px 8px;
-          border-radius: 10px;
+          color: #1c1c1c; font-weight: 800; background: var(--accent, #e86c60);
+          border: 1.5px solid var(--border); padding: 2px 8px; border-radius: 6px;
         }
       `}</style>
     </section>
