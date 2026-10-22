@@ -6,6 +6,7 @@ import Skills          from './components/Skills'
 import Stats           from './components/Stats'
 import Projects        from './components/Projects'
 import Timeline        from './components/Timeline'
+import Certificates    from './components/Certificates'
 import Experience      from './components/Experience'
 import Contact         from './components/Contact'
 import BootSequence    from './components/BootSequence'
@@ -79,6 +80,7 @@ export default function App() {
         <Experience isMobile={isMobile} />
         <Skills isMobile={isMobile} />
         <Projects isMobile={isMobile} />
+        <Certificates isMobile={isMobile} />
         <Timeline isMobile={isMobile} />
         <Contact isMobile={isMobile} />
       </main>

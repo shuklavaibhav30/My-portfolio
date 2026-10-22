@@ -7,6 +7,7 @@ const COMMANDS = [
   { id: 'stats', label: 'Computing Nodes (Stats)', icon: '⎈', action: () => document.getElementById('stats')?.scrollIntoView({ behavior: 'smooth' }) },
   { id: 'projects', label: 'Explore Projects', icon: '⌥', action: () => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }) },
   { id: 'timeline', label: 'System Timeline', icon: '⏱', action: () => document.getElementById('timeline')?.scrollIntoView({ behavior: 'smooth' }) },
+  { id: 'certificates', label: 'Certificates & Badges', icon: '📜', action: () => document.getElementById('certificates')?.scrollIntoView({ behavior: 'smooth' }) },
   { id: 'contact', label: 'Send Message (Contact)', icon: '✉', action: () => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }) },
   { id: 'github', label: 'Open GitHub Profile', icon: '↗', action: () => window.open('https://github.com/shuklavaibhav30', '_blank') }
 ];
