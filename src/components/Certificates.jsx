@@ -195,7 +195,7 @@ export default function Certificates({ isMobile }) {
                           src={cert.previewImg} 
                           alt={cert.title} 
                           className="cert-frame-img"
-                          loading="lazy"
+                          loading="eager"
                         />
                         <div className="cert-frame-overlay">
                           <span className="cert-frame-inspect-chip">
@@ -701,7 +701,7 @@ export default function Certificates({ isMobile }) {
           position: relative;
           width: 100%;
           aspect-ratio: 1.4 / 1;
-          background: #000;
+          background: #ffffff;
           border-radius: 8px;
           overflow: hidden;
           border: 1.5px solid var(--border);
