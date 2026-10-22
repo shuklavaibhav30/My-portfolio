@@ -13,9 +13,6 @@ const SOCIALS = [
 ]
 
 export default function Hero({ isMobile }) {
-  const [resumeTerminal, setResumeTerminal] = useState(false)
-  const [resumeProgress, setResumeProgress] = useState(0)
-  const [resumeLines, setResumeLines] = useState([])
   const [isHoveringPortrait, setIsHoveringPortrait] = useState(false)
 
   const mousePosition = useMousePosition();
@@ -23,35 +20,6 @@ export default function Hero({ isMobile }) {
 
   const txImg = isReduced || isMobile ? 0 : (mousePosition.x - window.innerWidth / 2) * 0.012;
   const tyImg = isReduced || isMobile ? 0 : (mousePosition.y - window.innerHeight / 2) * 0.012;
-
-  const RESUME_STEPS = [
-    { code: '01', text: 'Fetching Vaibhav_Shukla_Resume.pdf...', status: 'OK' },
-    { code: '02', text: 'Verifying credentials & project milestones...', status: 'VERIFIED' },
-    { code: '03', text: 'Preparing PDF viewer stream...', status: 'SUCCESS' },
-    { code: '04', text: 'Launching document in new tab...', status: 'OPENING' },
-  ];
-
-  const handleResumeInit = (e) => {
-    e.preventDefault();
-    setResumeTerminal(true);
-    setResumeLines([]);
-    setResumeProgress(0);
-
-    let step = 0;
-    const interval = setInterval(() => {
-      if (step < RESUME_STEPS.length) {
-        setResumeLines(prev => [...prev, RESUME_STEPS[step]]);
-        setResumeProgress(Math.round(((step + 1) / RESUME_STEPS.length) * 100));
-        step++;
-      } else {
-        clearInterval(interval);
-        setTimeout(() => {
-          window.open(resume, '_blank');
-          setResumeTerminal(false);
-        }, 400);
-      }
-    }, 200);
-  };
 
   const scrollToProjects = (e) => {
     e.preventDefault();
@@ -66,65 +34,6 @@ export default function Hero({ isMobile }) {
 
   return (
     <section id="hero" className="hero-section">
-      <AnimatePresence>
-        {resumeTerminal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="resume-overlay"
-            onClick={() => setResumeTerminal(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 10 }}
-              transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-              className="resume-modal-card"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Header Bar */}
-              <div className="resume-modal-header">
-                <div className="mac-buttons">
-                  <span className="mac-dot red" />
-                  <span className="mac-dot yellow" />
-                  <span className="mac-dot green" />
-                </div>
-                <div className="resume-modal-title">
-                  <span>RESUME_DOWNLOAD.PDF</span>
-                </div>
-                <div className="progress-perc">{resumeProgress}%</div>
-              </div>
-
-              {/* Progress Bar Track */}
-              <div className="resume-progress-track">
-                <motion.div
-                  className="resume-progress-bar"
-                  animate={{ width: `${resumeProgress}%` }}
-                  transition={{ ease: 'easeOut', duration: 0.2 }}
-                />
-              </div>
-
-              {/* Terminal Lines */}
-              <div className="resume-modal-body">
-                {resumeLines.map((l, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="resume-log-line"
-                  >
-                    <span className="line-prefix">[{l.code}]</span>
-                    <span className="line-text">{l.text}</span>
-                    <span className="line-status">{l.status}</span>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <div className={`hero-grid ${isMobile ? 'mobile' : ''}`}>
         {/* LEFT COLUMN */}
         <motion.div className="hero-left" variants={container} initial="hidden" animate="show">
@@ -148,14 +57,20 @@ export default function Hero({ isMobile }) {
 
           {/* CTA Buttons */}
           <motion.div variants={item} className="cta-row">
-            <button onClick={handleResumeInit} className="hero-btn primary">
+            <a
+              href={resume}
+              target="_blank"
+              rel="noreferrer"
+              download="Vaibhav_Kumar_Shukla_Resume.pdf"
+              className="hero-btn primary"
+            >
               <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                 <polyline points="7 10 12 15 17 10"></polyline>
                 <line x1="12" y1="15" x2="12" y2="3"></line>
               </svg>
               <span>DOWNLOAD RESUME</span>
-            </button>
+            </a>
 
             <button onClick={scrollToProjects} className="hero-btn white">
               <span>EXPLORE PROJECTS ↓</span>
@@ -412,6 +327,7 @@ export default function Hero({ isMobile }) {
           cursor: pointer;
           overflow: hidden;
           transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+          text-decoration: none;
         }
 
         /* Glossy Top Curvature Highlight */
@@ -649,65 +565,6 @@ export default function Hero({ isMobile }) {
         }
         .hero-photo-card:hover .hero-portrait-img {
           transform: scale(1.03);
-        }
-
-        /* Modal */
-        .resume-overlay {
-          position: fixed; inset: 0; z-index: 999999;
-          background: rgba(8, 16, 12, 0.7);
-          backdrop-filter: blur(8px);
-          display: flex; align-items: center; justify-content: center;
-          padding: 24px;
-        }
-        .resume-modal-card {
-          width: 100%;
-          max-width: 480px;
-          background: var(--bg-card);
-          border: 2.5px solid var(--border);
-          border-radius: 16px;
-          box-shadow: var(--shadow-xl);
-          overflow: hidden;
-          font-family: 'JetBrains Mono', monospace;
-          color: var(--text-main);
-        }
-        .resume-modal-header {
-          background: var(--bg-subtle);
-          border-bottom: 2px solid var(--border);
-          padding: 12px 18px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-        .mac-buttons { display: flex; gap: 6px; }
-        .mac-dot {
-          width: 11px; height: 11px; border-radius: 50%; border: 1.5px solid var(--border);
-        }
-        .mac-dot.red { background: #ef4444; }
-        .mac-dot.yellow { background: #facc15; }
-        .mac-dot.green { background: #22c55e; }
-        .resume-modal-title { font-size: 11px; font-weight: 800; color: var(--text-main); }
-        .progress-perc { font-size: 12px; font-weight: 800; color: var(--text-main); }
-        .resume-progress-track {
-          height: 6px; width: 100%; background: var(--bg-subtle); border-bottom: 2px solid var(--border);
-        }
-        .resume-progress-bar {
-          height: 100%; background: var(--accent, #e86c60);
-        }
-        .resume-modal-body {
-          padding: 20px;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-          background: var(--bg-card);
-        }
-        .resume-log-line {
-          display: flex; align-items: center; gap: 10px; font-size: 12px;
-        }
-        .line-prefix { color: var(--accent); font-weight: 800; }
-        .line-text { color: var(--text-body); flex: 1; }
-        .line-status {
-          color: #1c1c1c; font-weight: 800; background: var(--accent, #e86c60);
-          border: 1.5px solid var(--border); padding: 2px 8px; border-radius: 6px;
         }
       `}</style>
     </section>

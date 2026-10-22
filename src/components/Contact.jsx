@@ -539,38 +539,64 @@ export default function Contact({ isMobile }) {
           box-sizing: border-box;
         }
 
+        .footer-right {
+          justify-self: end;
+          text-align: right;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+        }
+
         @media (max-width: 768px) {
           .footer-grid {
-            grid-template-columns: minmax(105px, auto) 1fr;
-            gap: 32px 24px;
+            grid-template-columns: 1fr 1fr;
+            justify-content: space-between;
+            gap: 32px 16px;
             padding-top: 36px;
           }
           .footer-left {
             grid-column: 1 / -1;
+            text-align: left;
           }
           .footer-middle {
             grid-column: 1;
+            justify-self: start;
+            text-align: left;
             min-width: 0;
           }
           .footer-right {
             grid-column: 2;
+            justify-self: end;
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
             min-width: 0;
           }
         }
 
         .footer-grid.mobile {
-          grid-template-columns: minmax(105px, auto) 1fr;
-          gap: 32px 24px;
+          grid-template-columns: 1fr 1fr;
+          justify-content: space-between;
+          gap: 32px 16px;
         }
         .footer-grid.mobile .footer-left {
           grid-column: 1 / -1;
+          text-align: left;
         }
         .footer-grid.mobile .footer-middle {
           grid-column: 1;
+          justify-self: start;
+          text-align: left;
           min-width: 0;
         }
         .footer-grid.mobile .footer-right {
           grid-column: 2;
+          justify-self: end;
+          text-align: right;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
           min-width: 0;
         }
 
@@ -650,6 +676,8 @@ export default function Contact({ isMobile }) {
           word-break: break-word;
           overflow-wrap: break-word;
           min-width: 0;
+          align-items: flex-end;
+          text-align: right;
         }
 
         .footer-contact-link {
@@ -657,6 +685,7 @@ export default function Contact({ isMobile }) {
           text-decoration: none;
           transition: color 0.15s ease;
           word-break: break-all;
+          text-align: right;
         }
         .footer-contact-link:hover {
           color: var(--accent);
