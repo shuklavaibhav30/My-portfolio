@@ -38,7 +38,7 @@ export default function Experience({ isMobile }) {
   }
 
   return (
-    <section id="experience" style={S.section}>
+    <section id="experience" style={{ ...S.section, padding: isMobile ? '50px 16px' : '80px 24px' }}>
       <div style={S.inner}>
         <motion.div
           ref={ref}
@@ -61,7 +61,7 @@ export default function Experience({ isMobile }) {
           <motion.div
             style={{
               ...S.card,
-              padding: isMobile ? '24px 20px' : '36px 40px',
+              padding: isMobile ? '20px 16px' : '36px 40px',
               transform: isHovered && !isMobile && !isReduced ? 'translate(-3px, -3px)' : 'translate(0px, 0px)',
               boxShadow: isHovered ? '9px 9px 0px var(--border)' : 'var(--shadow-lg)',
             }}

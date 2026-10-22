@@ -1310,13 +1310,15 @@ export default function Stats({ isMobile }) {
           grid-template-columns: repeat(12, 1fr);
           gap: 20px;
           width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
         }
 
-        .bento-leetcode { grid-column: span 7; }
-        .bento-github { grid-column: span 5; }
-        .bento-codeforces { grid-column: span 4; }
-        .bento-codechef { grid-column: span 4; }
-        .bento-codolio { grid-column: span 4; }
+        .bento-leetcode { grid-column: span 7; min-width: 0; max-width: 100%; }
+        .bento-github { grid-column: span 5; min-width: 0; max-width: 100%; }
+        .bento-codeforces { grid-column: span 4; min-width: 0; max-width: 100%; }
+        .bento-codechef { grid-column: span 4; min-width: 0; max-width: 100%; }
+        .bento-codolio { grid-column: span 4; min-width: 0; max-width: 100%; }
 
         /* Bento Card Shell */
         .bento-card {
@@ -1331,6 +1333,10 @@ export default function Stats({ isMobile }) {
           flex-direction: column;
           justify-content: space-between;
           box-shadow: var(--shadow);
+          min-width: 0;
+          max-width: 100%;
+          box-sizing: border-box;
+          overflow: hidden;
           transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.25s ease, border-color 0.25s ease;
         }
 
@@ -1358,6 +1364,9 @@ export default function Stats({ isMobile }) {
           height: 100%;
           justify-content: space-between;
           gap: 18px;
+          min-width: 0;
+          max-width: 100%;
+          box-sizing: border-box;
         }
 
         /* Card Top Bar */
@@ -1724,7 +1733,10 @@ export default function Stats({ isMobile }) {
           flex-direction: column;
           gap: 8px;
           width: 100%;
+          max-width: 100%;
+          min-width: 0;
           box-sizing: border-box;
+          overflow: hidden;
         }
         .gh-heatmap-header {
           display: flex;
@@ -1765,11 +1777,15 @@ export default function Stats({ isMobile }) {
           color: var(--text-main);
         }
         .gh-heatmap-scroll {
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
           overflow-x: auto;
           overflow-y: hidden;
           padding-bottom: 4px;
           scrollbar-width: thin;
           scrollbar-color: var(--border) transparent;
+          -webkit-overflow-scrolling: touch;
         }
         .gh-heatmap-scroll::-webkit-scrollbar {
           height: 4px;
@@ -2101,7 +2117,7 @@ export default function Stats({ isMobile }) {
           box-shadow: 1.5px 1.5px 0px var(--border);
         }
 
-        /* Responsive */
+        /* Responsive Breakpoints */
         @media (max-width: 1024px) {
           .bento-leetcode { grid-column: span 12; }
           .bento-github { grid-column: span 12; }
@@ -2116,9 +2132,9 @@ export default function Stats({ isMobile }) {
         }
 
         @media (max-width: 768px) {
-          .stats-section { padding: 40px 16px 80px; }
+          .stats-section { padding: 40px 16px 70px; }
           .bento-metrics-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: minmax(0, 1fr);
             gap: 16px;
           }
           .bento-leetcode,
@@ -2127,21 +2143,67 @@ export default function Stats({ isMobile }) {
           .bento-codechef,
           .bento-codolio {
             grid-column: span 1;
+            min-width: 0;
+            max-width: 100%;
+          }
+          .bento-card {
+            padding: 20px 16px;
           }
           .leetcode-visual-split {
-            grid-template-columns: 1fr;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
           }
-          .leetcode-donut-pane { margin-bottom: 12px; }
+          .leetcode-donut-pane {
+            width: 100%;
+            margin-bottom: 6px;
+          }
+          .leetcode-bars-pane {
+            width: 100%;
+          }
           .telemetry-ribbon {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            padding: 16px;
+            padding: 14px 16px;
           }
           .ribbon-refresh-btn {
             grid-column: span 2;
             justify-content: center;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .stats-section { padding: 36px 12px 50px; }
+          .bento-card {
+            padding: 16px 14px;
+            border-radius: 16px;
+          }
+          .card-top-bar {
+            flex-wrap: wrap;
+            gap: 8px;
+          }
+          .platform-title {
+            font-size: 13px;
+          }
+          .hero-rating-number, .gh-counter {
+            font-size: 32px;
+          }
+          .cp-dual-metrics {
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+          }
+          .telemetry-ribbon {
+            padding: 12px;
+            gap: 8px;
+          }
+        }
+
+        @media (max-width: 360px) {
+          .cp-dual-metrics {
+            grid-template-columns: 1fr;
           }
         }
       `}</style>

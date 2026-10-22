@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import ThemeToggle from './ThemeToggle'
 
 const NAV_LINKS = [
   { label: 'Home',         href: '#hero' },
@@ -53,45 +54,48 @@ export default function Navbar() {
 
   return (
     <header className={`navbar-wrapper ${scrolled ? 'scrolled' : ''}`}>
-      <nav className="navbar-container">
-        {/* Logo */}
-        <a href="#hero" onClick={e => handleNav(e, '#hero')} className="navbar-logo">
-          <span className="logo-accent">&lt;</span>
-          <span className="logo-text">vaibhav.dev</span>
-          <span className="logo-accent"> /&gt;</span>
-          <span className="online-dot" title="Available for work" />
-        </a>
+      <div className="navbar-row">
+        {/* Invisible spacer on desktop to balance the theme toggle and keep navbar capsule perfectly centered */}
+        <div className="navbar-spacer" aria-hidden="true" />
 
-        {/* Desktop Links */}
-        {!isMobile && (
-          <div className="navbar-links">
-            {NAV_LINKS.map(({ label, href }) => {
-              const secId = href.substring(1)
-              const isActive = activeSection === secId
-              return (
-                <a
-                  key={label}
-                  href={href}
-                  onClick={e => handleNav(e, href)}
-                  className={`nav-item ${isActive ? 'active' : ''}`}
-                >
-                  <span className="nav-item-text">{label}</span>
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeNavIndicator"
-                      className="nav-active-pill"
-                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                    />
-                  )}
-                </a>
-              )
-            })}
-          </div>
-        )}
+        <nav className="navbar-container">
+          {/* Logo */}
+          <a href="#hero" onClick={e => handleNav(e, '#hero')} className="navbar-logo">
+            <span className="logo-accent">&lt;</span>
+            <span className="logo-text">vaibhav.dev</span>
+            <span className="logo-accent"> /&gt;</span>
+            <span className="online-dot" title="Available for work" />
+          </a>
 
-        {/* Desktop CTA */}
-        {!isMobile && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {/* Desktop Links */}
+          {!isMobile && (
+            <div className="navbar-links">
+              {NAV_LINKS.map(({ label, href }) => {
+                const secId = href.substring(1)
+                const isActive = activeSection === secId
+                return (
+                  <a
+                    key={label}
+                    href={href}
+                    onClick={e => handleNav(e, href)}
+                    className={`nav-item ${isActive ? 'active' : ''}`}
+                  >
+                    <span className="nav-item-text">{label}</span>
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeNavIndicator"
+                        className="nav-active-pill"
+                        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                  </a>
+                )
+              })}
+            </div>
+          )}
+
+          {/* Desktop CTA */}
+          {!isMobile && (
             <a
               href="#contact"
               onClick={e => handleNav(e, '#contact')}
@@ -99,12 +103,10 @@ export default function Navbar() {
             >
               CONTACT ME
             </a>
-          </div>
-        )}
+          )}
 
-        {/* Mobile Hamburger */}
-        {isMobile && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* Mobile Hamburger */}
+          {isMobile && (
             <button
               className="mobile-burger-btn"
               onClick={() => setMenuOpen(o => !o)}
@@ -114,9 +116,14 @@ export default function Navbar() {
               <span className={`burger-line ${menuOpen ? 'open-mid' : ''}`} />
               <span className={`burger-line ${menuOpen ? 'open-bot' : ''}`} />
             </button>
-          </div>
-        )}
-      </nav>
+          )}
+        </nav>
+
+        {/* Floating on the side of navbar rightmost side */}
+        <div className="navbar-floating-theme">
+          <ThemeToggle />
+        </div>
+      </div>
 
       {/* Mobile Menu Dropdown */}
       <AnimatePresence>
@@ -160,15 +167,51 @@ export default function Navbar() {
           left: 0;
           right: 0;
           z-index: 1000;
-          padding: 16px 24px;
+          padding: 16px 20px;
           display: flex;
           justify-content: center;
           transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
           pointer-events: none;
+          width: 100%;
+          box-sizing: border-box;
         }
 
         .navbar-wrapper.scrolled {
-          padding: 10px 24px;
+          padding: 10px 20px;
+        }
+
+        @media (max-width: 768px) {
+          .navbar-wrapper {
+            padding: 12px 14px;
+          }
+          .navbar-wrapper.scrolled {
+            padding: 8px 14px;
+          }
+        }
+
+        @media (max-width: 380px) {
+          .navbar-wrapper {
+            padding: 8px 8px;
+          }
+        }
+
+        .navbar-row {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 14px;
+          width: 100%;
+          max-width: 1200px;
+          pointer-events: none;
+          position: relative;
+        }
+
+        .navbar-spacer {
+          width: 48px;
+          height: 48px;
+          flex-shrink: 0;
+          visibility: hidden;
+          pointer-events: none;
         }
 
         .navbar-container {
@@ -177,14 +220,24 @@ export default function Navbar() {
           align-items: center;
           justify-content: space-between;
           width: 100%;
-          max-width: 920px;
-          height: 54px;
-          padding: 0 20px;
+          max-width: 880px;
+          height: 52px;
+          padding: 0 18px;
           border-radius: 9999px;
           background: var(--nav-bg, #3e6356) !important;
           border: 2.5px solid var(--border, #1c1c1c) !important;
           box-shadow: 4px 4px 0px var(--border, #1c1c1c) !important;
           transition: all 0.25s ease;
+          box-sizing: border-box;
+        }
+
+        .navbar-floating-theme {
+          pointer-events: auto;
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: transform 0.25s ease;
         }
 
         .navbar-wrapper.scrolled .navbar-container {
@@ -192,17 +245,44 @@ export default function Navbar() {
           transform: translateY(2px);
         }
 
+        .navbar-wrapper.scrolled .navbar-floating-theme {
+          transform: translateY(2px);
+        }
+
+        @media (max-width: 900px) {
+          .navbar-row {
+            justify-content: space-between;
+            gap: 10px;
+          }
+          .navbar-spacer {
+            display: none;
+          }
+          .navbar-container {
+            flex: 1;
+            min-width: 0;
+            max-width: none;
+            height: 48px;
+            padding: 0 14px;
+            border-width: 2px !important;
+            box-shadow: 3px 3px 0px var(--border, #1c1c1c) !important;
+          }
+        }
+
+
+
         /* Logo */
         .navbar-logo {
           display: flex;
           align-items: center;
-          gap: 4px;
+          gap: 3px;
           font-family: 'JetBrains Mono', monospace;
-          font-size: 14px;
+          font-size: clamp(12px, 3.6vw, 14.5px);
           font-weight: 800;
           color: var(--nav-text, #f6f4ee);
           text-decoration: none;
-          letter-spacing: 0.02em;
+          letter-spacing: 0.01em;
+          white-space: nowrap;
+          flex-shrink: 0;
         }
 
         .logo-accent {
@@ -333,17 +413,17 @@ export default function Navbar() {
         /* Mobile Dropdown */
         .mobile-dropdown {
           position: absolute;
-          top: 75px;
-          left: 20px;
-          right: 20px;
+          top: 66px;
+          left: 14px;
+          right: 14px;
           background: var(--bg-card, #ffffff);
           border: 2.5px solid var(--border, #1c1c1c);
-          border-radius: 20px;
-          box-shadow: 5px 5px 0px var(--border, #1c1c1c);
-          padding: 20px;
+          border-radius: 16px;
+          box-shadow: 4px 4px 0px var(--border, #1c1c1c);
+          padding: 16px;
           display: flex;
           flex-direction: column;
-          gap: 12px;
+          gap: 10px;
           pointer-events: auto;
         }
 

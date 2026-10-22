@@ -13,7 +13,6 @@ import BootSequence    from './components/BootSequence'
 import CustomCursor    from './components/CustomCursor'
 import CommandPalette  from './components/CommandPalette'
 import Background3D    from './components/Background3D'
-import ThemeToggle     from './components/ThemeToggle'
 
 const KONAMI_CODE = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight'];
 
@@ -61,7 +60,6 @@ export default function App() {
       <BootSequence onComplete={() => setBooting(false)} />
       <CustomCursor isMobile={isMobile} />
       <CommandPalette />
-      <ThemeToggle hidden={booting} />
       
       {isEasterEggActive && (
         <div style={{

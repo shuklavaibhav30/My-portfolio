@@ -279,11 +279,21 @@ export default function Projects({ isMobile }) {
           padding: 90px 24px;
           background: transparent;
           position: relative;
+          box-sizing: border-box;
+          width: 100%;
+          max-width: 100%;
+        }
+
+        @media (max-width: 768px) {
+          .projects-section {
+            padding: 50px 16px;
+          }
         }
 
         .projects-container {
           max-width: 1200px;
           margin: 0 auto;
+          box-sizing: border-box;
         }
 
         .section-header {
@@ -341,13 +351,35 @@ export default function Projects({ isMobile }) {
 
         .projects-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
           gap: 32px;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+
+        @media (max-width: 768px) {
+          .projects-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+          }
+          .card-content {
+            padding: 20px 16px 18px !important;
+          }
+          .project-actions {
+            gap: 8px !important;
+          }
+          .proj-btn {
+            flex: 1 1 auto;
+            text-align: center;
+            padding: 8px 12px !important;
+            font-size: 11px !important;
+          }
         }
 
         .projects-grid.mobile {
           grid-template-columns: 1fr;
-          gap: 24px;
+          gap: 20px;
         }
 
         /* PROJECT CARD */
@@ -359,6 +391,9 @@ export default function Projects({ isMobile }) {
           overflow: hidden;
           display: flex;
           flex-direction: column;
+          min-width: 0;
+          max-width: 100%;
+          box-sizing: border-box;
           transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 

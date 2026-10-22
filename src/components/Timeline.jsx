@@ -45,7 +45,7 @@ function TimelineItem({ item, index, isMobile }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div style={S.dotCol}>
+      <div style={{ ...S.dotCol, left: isMobile ? '-26px' : '-30px' }}>
         <motion.div
           initial={{ scale: 0, opacity: 0 }}
           animate={inView ? { scale: 1, opacity: 1 } : {}}
@@ -61,7 +61,7 @@ function TimelineItem({ item, index, isMobile }) {
       <motion.div
         style={{
           ...S.content,
-          padding: isMobile ? '18px' : '26px',
+          padding: isMobile ? '16px 14px' : '26px',
           boxShadow: hovered ? '7px 7px 0px var(--border)' : 'var(--shadow)',
           transform: hovered && !isMobile ? 'translate(-2px, -2px)' : 'none',
         }}
@@ -100,7 +100,7 @@ export default function Timeline({ isMobile }) {
   const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section id="timeline" style={S.section} ref={containerRef}>
+    <section id="timeline" style={{ ...S.section, padding: isMobile ? '50px 16px' : '90px 24px' }} ref={containerRef}>
       <div style={S.inner}>
         <motion.div ref={headRef} style={S.header} initial={{ opacity: 0, y: 15 }} animate={headInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }}>
           <div style={{ display: 'inline-flex', marginBottom: '12px' }}>
@@ -112,13 +112,13 @@ export default function Timeline({ isMobile }) {
           <p style={S.subheading}>A timeline of the milestones, academic foundations, and engineering track shaping my development journey.</p>
         </motion.div>
 
-        <div style={S.list}>
+        <div style={{ ...S.list, paddingLeft: isMobile ? '24px' : '32px' }}>
           {/* Base solid line */}
-          <div style={S.lineBg} />
+          <div style={{ ...S.lineBg, left: isMobile ? '3px' : '7px' }} />
 
           {/* Animated active line */}
           {!isReduced && (
-            <motion.div style={{ ...S.lineActive, height: lineHeight }} />
+            <motion.div style={{ ...S.lineActive, left: isMobile ? '3px' : '7px', height: lineHeight }} />
           )}
 
           {TIMELINE_ITEMS.map((item, i) => <TimelineItem key={i} item={item} index={i} isMobile={isMobile} />)}
@@ -129,7 +129,7 @@ export default function Timeline({ isMobile }) {
 }
 
 const S = {
-  section: { background: 'transparent', padding: '90px 24px', position: 'relative', overflow: 'hidden' },
+  section: { background: 'transparent', padding: '90px 24px', position: 'relative', overflow: 'hidden', width: '100%', boxSizing: 'border-box' },
   inner: { maxWidth: '820px', margin: '0 auto' },
   header: { textAlign: 'center', marginBottom: '60px' },
   eyebrow: {

@@ -253,8 +253,8 @@ export default function Contact({ isMobile }) {
           <div className="footer-right">
             <div className="footer-col-heading">GET IN TOUCH</div>
             <div className="footer-contact-details">
-              <div>+91 8400777282</div>
-              <div>imvksofficial@gmail.com</div>
+              <a href="tel:+918400777282" className="footer-contact-link">+91 8400777282</a>
+              <a href="mailto:imvksofficial@gmail.com" className="footer-contact-link">imvksofficial@gmail.com</a>
               <div>Ghaziabad / Lucknow (UP), India</div>
             </div>
           </div>
@@ -266,10 +266,21 @@ export default function Contact({ isMobile }) {
           padding: 90px 24px 40px;
           background: transparent;
           position: relative;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
         }
+
+        @media (max-width: 768px) {
+          .contact-section {
+            padding: 50px 16px 30px;
+          }
+        }
+
         .contact-container {
           max-width: 1200px;
           margin: 0 auto;
+          box-sizing: border-box;
         }
 
         .contact-grid {
@@ -369,6 +380,16 @@ export default function Contact({ isMobile }) {
           border-radius: 20px;
           box-shadow: var(--shadow-lg);
           padding: 32px;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+
+        @media (max-width: 768px) {
+          .form-card-container {
+            padding: 20px 16px;
+            border-radius: 16px;
+          }
         }
 
         .form-top-header {
@@ -514,10 +535,43 @@ export default function Contact({ isMobile }) {
           padding-top: 50px;
           border-top: 2.5px solid var(--border);
           align-items: start;
+          width: 100%;
+          box-sizing: border-box;
         }
+
+        @media (max-width: 768px) {
+          .footer-grid {
+            grid-template-columns: minmax(105px, auto) 1fr;
+            gap: 32px 24px;
+            padding-top: 36px;
+          }
+          .footer-left {
+            grid-column: 1 / -1;
+          }
+          .footer-middle {
+            grid-column: 1;
+            min-width: 0;
+          }
+          .footer-right {
+            grid-column: 2;
+            min-width: 0;
+          }
+        }
+
         .footer-grid.mobile {
-          grid-template-columns: 1fr;
-          gap: 32px;
+          grid-template-columns: minmax(105px, auto) 1fr;
+          gap: 32px 24px;
+        }
+        .footer-grid.mobile .footer-left {
+          grid-column: 1 / -1;
+        }
+        .footer-grid.mobile .footer-middle {
+          grid-column: 1;
+          min-width: 0;
+        }
+        .footer-grid.mobile .footer-right {
+          grid-column: 2;
+          min-width: 0;
         }
 
         .footer-name {
@@ -577,7 +631,9 @@ export default function Contact({ isMobile }) {
           font-size: 12px;
           font-weight: 700;
           color: var(--text-muted);
+          text-decoration: none;
           transition: color 0.15s ease;
+          white-space: nowrap;
         }
         .footer-nav-link:hover {
           color: var(--accent);
@@ -591,6 +647,19 @@ export default function Contact({ isMobile }) {
           display: flex;
           flex-direction: column;
           gap: 8px;
+          word-break: break-word;
+          overflow-wrap: break-word;
+          min-width: 0;
+        }
+
+        .footer-contact-link {
+          color: var(--text-muted);
+          text-decoration: none;
+          transition: color 0.15s ease;
+          word-break: break-all;
+        }
+        .footer-contact-link:hover {
+          color: var(--accent);
         }
       `}</style>
     </section>

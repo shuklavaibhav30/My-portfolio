@@ -212,9 +212,18 @@ export default function Skills({ isMobile }) {
       <style>{`
         .terminal-section {
           position: relative;
-          padding: 110px 24px 70px;
+          padding: 100px 24px 70px;
           background: transparent;
           overflow: hidden;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+
+        @media (max-width: 768px) {
+          .terminal-section {
+            padding: 50px 16px 40px;
+          }
         }
 
         .terminal-inner {
@@ -222,6 +231,8 @@ export default function Skills({ isMobile }) {
           margin: 0 auto;
           position: relative;
           z-index: 1;
+          width: 100%;
+          box-sizing: border-box;
         }
 
         .terminal-section-header {
@@ -484,6 +495,56 @@ export default function Skills({ isMobile }) {
           box-shadow: 3px 3px 0px var(--border);
         }
 
+        /* Mobile Responsive Overrides */
+        @media (max-width: 768px) {
+          .terminal-window {
+            border-radius: 16px;
+          }
+          .terminal-topbar {
+            padding: 10px 14px;
+            flex-wrap: wrap;
+            gap: 8px;
+          }
+          .terminal-body {
+            padding: 16px 14px;
+            font-size: 12.5px;
+            min-height: 220px;
+            max-height: 380px;
+          }
+          .terminal-output {
+            font-size: 11.5px;
+            padding: 8px 10px;
+          }
+          .terminal-quick-chips {
+            padding: 10px 14px;
+            gap: 6px;
+          }
+          .chip-btn {
+            font-size: 10px;
+            padding: 3px 9px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .terminal-window-title {
+            font-size: 11px;
+          }
+          .terminal-status-badge {
+            font-size: 9px;
+            padding: 2px 7px;
+          }
+          .mac-dot {
+            width: 10px;
+            height: 10px;
+          }
+          .terminal-body {
+            font-size: 11.5px;
+            padding: 14px 10px;
+          }
+          .terminal-cmd-text {
+            word-break: break-all;
+          }
+        }
       `}</style>
     </section>
   )

@@ -471,11 +471,21 @@ export default function Certificates({ isMobile }) {
           padding: 100px 24px;
           position: relative;
           overflow: hidden;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+
+        @media (max-width: 768px) {
+          .certs-section {
+            padding: 50px 16px;
+          }
         }
 
         .certs-container {
           max-width: 1200px;
           margin: 0 auto;
+          box-sizing: border-box;
         }
 
         .certs-header {
@@ -654,6 +664,7 @@ export default function Certificates({ isMobile }) {
           gap: 28px;
           padding: 24px;
           align-items: center;
+          box-sizing: border-box;
         }
 
         /* Alternating reverse */
@@ -672,12 +683,27 @@ export default function Certificates({ isMobile }) {
           .cert-slate-reverse .cert-slate-body {
             grid-template-columns: 1fr;
             gap: 20px;
+            padding: 18px 16px;
           }
           .cert-slate-reverse .cert-frame-wrapper {
             order: 1;
           }
           .cert-slate-reverse .cert-slate-content {
             order: 2;
+          }
+          .cert-slate-topbar {
+            padding: 10px 14px;
+          }
+          .cert-slate-actions {
+            gap: 8px !important;
+          }
+          .cert-btn-primary-download,
+          .cert-btn-secondary-action {
+            flex: 1 1 auto;
+            text-align: center;
+            justify-content: center;
+            font-size: 11px !important;
+            padding: 9px 12px !important;
           }
         }
 
@@ -971,6 +997,8 @@ export default function Certificates({ isMobile }) {
         @media (max-width: 620px) {
           .badge-card {
             width: 100%;
+            min-width: 0;
+            padding: 14px;
           }
         }
 

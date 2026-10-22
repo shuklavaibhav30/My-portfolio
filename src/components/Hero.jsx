@@ -207,6 +207,22 @@ export default function Hero({ isMobile }) {
           display: flex;
           align-items: center;
           padding: 130px 48px 80px;
+          box-sizing: border-box;
+          width: 100%;
+          max-width: 100%;
+        }
+
+        @media (max-width: 900px) {
+          .hero-section {
+            min-height: auto;
+            padding: 100px 16px 50px;
+          }
+        }
+
+        @media (max-width: 380px) {
+          .hero-section {
+            padding: 85px 12px 40px;
+          }
         }
 
         .hero-grid {
@@ -219,10 +235,43 @@ export default function Hero({ isMobile }) {
           margin: 0 auto;
           position: relative;
           z-index: 2;
+          box-sizing: border-box;
         }
+
+        @media (max-width: 900px) {
+          .hero-grid {
+            grid-template-columns: 1fr;
+            gap: 32px;
+          }
+          .hero-right {
+            order: -1;
+          }
+          .hero-left {
+            align-items: center;
+            text-align: center;
+          }
+          .hero-yellow-banner {
+            width: 100% !important;
+            text-align: center;
+            padding: 10px 16px !important;
+          }
+          .hero-role-row {
+            justify-content: center;
+          }
+          .cta-row {
+            justify-content: center;
+          }
+          .hero-socials {
+            justify-content: center;
+          }
+          .hero-bio {
+            text-align: center;
+          }
+        }
+
         .hero-grid.mobile {
           grid-template-columns: 1fr;
-          gap: 36px;
+          gap: 32px;
         }
 
         /* LEFT COLUMN */
@@ -230,6 +279,9 @@ export default function Hero({ isMobile }) {
           display: flex;
           flex-direction: column;
           align-items: flex-start;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
         }
         .hero-grid.mobile .hero-left {
           align-items: center;
@@ -245,6 +297,8 @@ export default function Hero({ isMobile }) {
           padding: 12px 28px;
           margin-bottom: 18px;
           width: fit-content;
+          max-width: 100%;
+          box-sizing: border-box;
           transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .hero-yellow-banner:hover {
@@ -254,16 +308,18 @@ export default function Hero({ isMobile }) {
         .hero-grid.mobile .hero-yellow-banner {
           width: 100%;
           text-align: center;
+          padding: 10px 16px;
         }
         .banner-text {
           font-family: 'Space Grotesk', sans-serif;
-          font-size: clamp(2rem, 4.2vw, 3.4rem);
+          font-size: clamp(1.4rem, 5.8vw, 3.4rem);
           font-weight: 800;
           color: var(--text-main, #1c1c1c);
           letter-spacing: -0.02em;
-          line-height: 1.1;
+          line-height: 1.15;
           margin: 0;
           text-transform: uppercase;
+          word-break: break-word;
         }
         .banner-dot {
           color: var(--accent, #e86c60);
@@ -277,6 +333,7 @@ export default function Hero({ isMobile }) {
           align-items: center;
           gap: 10px;
           margin-bottom: 20px;
+          flex-wrap: wrap;
         }
         .hero-grid.mobile .hero-role-row {
           justify-content: center;
@@ -535,6 +592,29 @@ export default function Hero({ isMobile }) {
           padding: 14px;
           overflow: hidden;
           transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+          box-sizing: border-box;
+        }
+        @media (max-width: 600px) {
+          .cta-row {
+            gap: 10px;
+            width: 100%;
+          }
+          .hero-btn {
+            flex: 1 1 140px;
+            max-width: 100%;
+            padding: 12px 16px;
+            font-size: 12px;
+            justify-content: center;
+          }
+          .hero-photo-card {
+            max-width: min(340px, 100%);
+            padding: 10px;
+            border-radius: 20px;
+          }
+          .photo-card-inner {
+            height: clamp(280px, 46vh, 380px) !important;
+            border-radius: 14px;
+          }
         }
         .hero-photo-card:hover {
           transform: translate(-3px, -3px);

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-export default function ThemeToggle({ hidden = false }) {
+
+export default function ThemeToggle({ hidden = false, className = '' }) {
   const [theme, setTheme] = useState('light')
   const [isRotating, setIsRotating] = useState(false)
 
@@ -16,7 +17,6 @@ export default function ThemeToggle({ hidden = false }) {
       if (currentDocTheme) {
         setTheme(currentDocTheme)
       } else {
-        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches
         const defaultTheme = 'light'   // always default to light
         setTheme(defaultTheme)
         document.documentElement.setAttribute('data-theme', defaultTheme)
@@ -50,7 +50,7 @@ export default function ThemeToggle({ hidden = false }) {
 
   return (
     <aside
-      className="floating-theme-wrapper"
+      className={`floating-theme-wrapper ${className}`}
       aria-label="Theme Switcher"
       style={hidden ? { visibility: 'hidden', pointerEvents: 'none' } : undefined}
     >
@@ -106,7 +106,6 @@ export default function ThemeToggle({ hidden = false }) {
                   strokeLinejoin="round"
                 >
                   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor" fillOpacity="0.18" />
-                  {/* Subtle Star Sparkles */}
                   <circle cx="18" cy="5" r="1" fill="currentColor" stroke="none" />
                   <circle cx="21" cy="9" r="0.75" fill="currentColor" stroke="none" />
                 </svg>
@@ -155,14 +154,12 @@ export default function ThemeToggle({ hidden = false }) {
 
       <style>{`
         .floating-theme-wrapper {
-          position: fixed;
-          top: 20px;
-          right: 24px;
-          z-index: 99999;
           display: flex;
           align-items: center;
           justify-content: center;
           pointer-events: auto;
+          position: relative;
+          z-index: 1001;
         }
 
         .floating-theme-btn {
@@ -170,10 +167,10 @@ export default function ThemeToggle({ hidden = false }) {
           width: 48px;
           height: 48px;
           border-radius: 50%;
-          background: var(--bg-card);
-          border: 2.5px solid var(--border);
-          box-shadow: 3.5px 3.5px 0px var(--border);
-          color: var(--text-main);
+          background: var(--bg-card, #ffffff);
+          border: 2.5px solid var(--border, #1c1c1c);
+          box-shadow: 3.5px 3.5px 0px var(--border, #1c1c1c);
+          color: var(--text-main, #1c1c1c);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -188,27 +185,27 @@ export default function ThemeToggle({ hidden = false }) {
 
         .floating-theme-btn:hover {
           transform: translate(-2px, -2px);
-          box-shadow: 5px 5px 0px var(--accent);
-          border-color: var(--border);
+          box-shadow: 5px 5px 0px var(--accent, #e86c60);
+          border-color: var(--border, #1c1c1c);
         }
 
         .floating-theme-btn:active {
           transform: translate(1px, 1px);
-          box-shadow: 1.5px 1.5px 0px var(--border);
+          box-shadow: 1.5px 1.5px 0px var(--border, #1c1c1c);
         }
 
         .theme-burst-ring {
           position: absolute;
           inset: -3px;
           border-radius: 50%;
-          border: 2.5px solid var(--accent);
+          border: 2.5px solid var(--accent, #e86c60);
           pointer-events: none;
         }
 
         .icon-container {
           position: relative;
-          width: 24px;
-          height: 24px;
+          width: 22px;
+          height: 22px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -235,20 +232,16 @@ export default function ThemeToggle({ hidden = false }) {
           filter: drop-shadow(0 0 5px rgba(232, 108, 96, 0.45));
         }
 
-        /* Responsive placement on mobile */
-        @media (max-width: 768px) {
-          .floating-theme-wrapper {
-            top: 14px;
-            right: 14px;
-          }
+        @media (max-width: 900px) {
           .floating-theme-btn {
             width: 42px;
             height: 42px;
             border-width: 2px;
-            box-shadow: 2.5px 2.5px 0px var(--border);
+            box-shadow: 2.5px 2.5px 0px var(--border, #1c1c1c);
           }
         }
       `}</style>
     </aside>
   )
 }
+
